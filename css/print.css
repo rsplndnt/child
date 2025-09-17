@@ -106,27 +106,23 @@
   }
 
   /* ====== 印刷時：h4の横にh3を右寄せで表示 ====== */
-  .procedure-item {
-    position: relative;
-    padding-top: 30px !important; /* h3用のスペース確保 */
-  }
-  
   .procedure-item h4 {
-    display: inline-block !important;
-    max-width: 60% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: baseline !important;
+    width: 100% !important;
   }
   
-  /* h3を右上に配置（JavaScriptで動的に追加） */
-  .procedure-item .print-h3 {
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    margin: 0 !important;
+  /* h3を右側に配置（JavaScriptで動的に追加） */
+  .procedure-item h4 .print-h3 {
+    margin-left: auto !important;
     font-size: 11pt !important;
     color: #666 !important;
     font-weight: normal !important;
     border: none !important;
     padding: 0 !important;
+    padding-left: 20px !important;
+    flex-shrink: 0 !important;
   }
   
     /* 手順レイアウトは1カラムに */

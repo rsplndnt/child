@@ -891,13 +891,13 @@
       const h2 = section.querySelector('.step-header h2');
       if (!h2) return;
       
-      // h3要素を作成
+      // h3要素を作成してh4の中に追加
       const h3 = document.createElement('span');
       h3.className = 'print-h3';
       h3.textContent = h2.textContent.trim();
       
-      // h4の親要素に追加
-      item.insertBefore(h3, h4);
+      // h4の中に追加（h4の最後に）
+      h4.appendChild(h3);
     });
   }
   
