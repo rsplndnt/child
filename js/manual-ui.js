@@ -466,6 +466,17 @@
               // サブリスト内のアクティブ状態を更新
               document.querySelectorAll('.toc-sublist a').forEach(x => x.classList.remove('active'));
               na.classList.add('active');
+              
+              // 大項目のアクティブクラスを削除して、has-active-childクラスを追加
+              document.querySelectorAll('.toc .toc-link').forEach(link => {
+                link.classList.remove('has-active-child');
+              });
+              const parentLink = section.querySelector('.toc-link');
+              if (parentLink) {
+                parentLink.classList.remove('active');
+                parentLink.classList.add('has-active-child');
+              }
+              
               setTimeout(() => scrollToElement(anchor), 40);
               if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
             });
@@ -624,7 +635,10 @@
       if (!targetHash) return;
       tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-target') === targetHash));
       sections.forEach(sec => sec.classList.toggle('is-hidden', `#${sec.id}` !== targetHash));
-      document.querySelectorAll('.toc .toc-link').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('.toc .toc-link').forEach(a => {
+        a.classList.remove('active');
+        a.classList.remove('has-active-child');
+      });
       const left = document.querySelector(`.toc .toc-link[href="${targetHash}"]`);
       left && left.classList.add('active');
       

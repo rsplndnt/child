@@ -623,6 +623,14 @@ body {
 .toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
 .toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
 .toc .toc-section h3 .toc-link.active i{ color:#fff; }
+/* 中項目が選択されている時の大項目のスタイル */
+.toc .toc-section h3 .toc-link.has-active-child{ 
+  background: var(--hovered-variant); 
+  color: var(--color-primary-700); 
+}
+.toc .toc-section h3 .toc-link.has-active-child i{ 
+  color: var(--color-primary-700); 
+}
 
 /* レスポンシブ */
 @media (max-width: 1024px){
@@ -841,7 +849,10 @@ body {
   color: var(--color-primary-700);
 }
 .toc .toc-link.active .toc-toggle-icon {
-  color: #fff;
+  color: #fff; /* アクティブ時は白 */
+}
+.toc .toc-link.has-active-child .toc-toggle-icon {
+  color: var(--color-primary-700); /* 中項目選択時は通常色 */
 }
 
 .toc .toc-sublist {
