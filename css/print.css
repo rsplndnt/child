@@ -177,17 +177,11 @@
     #print-toc ol { list-style: none !important; padding: 0 !important; margin: 0 !important; }
     #print-toc li { font-size: 10pt !important; margin: 0 0 2mm !important; color:#333 !important; }
 
-    /* 目次の次のページからページ番号開始 */
+    /* 目次の次のページからページ番号開始（CSSカウンタで中央下） */
     .print-page-reset { display:block !important; break-before: page !important; counter-reset: page 0 !important; height: 0 !important; margin: 0 !important; }
-    .print-footer { 
-      display:block !important; 
-      position: fixed !important; 
-      left: 0 !important; right: 0 !important; bottom: 8mm !important; 
-      text-align: center !important; 
-      font-size: 9pt !important; color:#666 !important; 
-      z-index: 9999 !important;
-    }
-    .print-footer::after { content: 'p.' counter(page, decimal-leading-zero); }
+    .print-footer { display:block !important; text-align:center !important; position: fixed !important; left:0 !important; right:0 !important; bottom:8mm !important; }
+    body { counter-increment: page; }
+    .print-footer::after { content: 'p.' counter(page, decimal-leading-zero); font-size: 9pt !important; color:#666 !important; }
   
     /* 寄せ/孤行の軽減（対応ブラウザ向け） */
     p, li { orphans: 3; widows: 3; }
