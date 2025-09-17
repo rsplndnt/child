@@ -168,8 +168,8 @@
 
     /* ====== 印刷用 目次とフッター ====== */
     /* 1ページ目: 既存のイラスト入り表紙（#top セクションを表紙扱い） */
-    #top { display:block !important; page-break-after: always !important; }
-    /* 2ページ目: 自動生成した目次（#print-toc） */
+    .print-cover { display:block !important; page-break-after: always !important; }
+    /* 2ページ目: 自動生成した目次（#print-toc を #topのすぐ後にJSで挿入） */
     #print-toc { display:block !important; page-break-after: always !important; max-width: 120mm !important; margin: 0 auto 0 auto !important; }
     #print-toc h2 { font-size: 14pt !important; margin: 0 0 6mm !important; color:#111 !important; border-bottom: 1px solid #bbb !important; padding-bottom: 3mm !important; }
     #print-toc ol { list-style: none !important; counter-reset: toc; padding: 0 !important; margin: 0 !important; }

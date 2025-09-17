@@ -44,11 +44,7 @@
 </head>
 
 <body>
-    <!-- 印刷専用：表紙（既存）＋ 目次 + ページ番号用の要素 -->
-    <div id="print-toc" style="display:none">
-      <h2>目次</h2>
-      <ol id="print-toc-list"></ol>
-    </div>
+    <!-- 印刷専用：ページ番号用の要素（現在は未使用） -->
     <div class="print-page-reset" style="display:none"></div>
     <div class="print-footer" style="display:none"> </div>
     <div class="manual-wrapper">
@@ -138,7 +134,7 @@
 
 
                 <!-- ========== TOP Page ========== -->
-                <section id="top" class="step-section">
+                <section id="top" class="step-section print-cover">
                     <header class="step-header">
                         <h2><span class="step-number">TOP</span> しゃべり描き翻訳でできること</h2>
                     </header>

@@ -924,9 +924,22 @@
         li.textContent = txt;
         tocRoot.appendChild(li);
       });
-      // 目次を表紙(#top)の直後に出すため、#print-toc を可視化
-      const tocBlock = document.getElementById('print-toc');
-      if (tocBlock) tocBlock.style.display = 'block';
+      // 目次ブロックが未配置なら生成して表紙(#top)の直後に挿入
+      let tocBlock = document.getElementById('print-toc');
+      if (!tocBlock) {
+        tocBlock = document.createElement('div');
+        tocBlock.id = 'print-toc';
+        const h2 = document.createElement('h2'); h2.textContent = '目次';
+        const ol = document.createElement('ol'); ol.id = 'print-toc-list';
+        tocBlock.appendChild(h2); tocBlock.appendChild(ol);
+        const top = document.getElementById('top');
+        if (top && top.parentNode) {
+          top.parentNode.insertBefore(tocBlock, top.nextElementSibling);
+        } else {
+          document.body.insertBefore(tocBlock, document.body.firstChild);
+        }
+      }
+      tocBlock.style.display = 'block';
     } catch (_) {}
   });
   
