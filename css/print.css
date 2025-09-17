@@ -109,7 +109,7 @@
   .procedure-item h4 {
     display: flex !important;
     justify-content: space-between !important;
-    align-items: baseline !important;
+    align-items: flex-end !important;  /* 下揃えに変更 */
     width: 100% !important;
   }
   
