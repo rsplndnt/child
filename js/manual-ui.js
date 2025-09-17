@@ -627,6 +627,9 @@
       document.querySelectorAll('.toc .toc-link').forEach(a => a.classList.remove('active'));
       const left = document.querySelector(`.toc .toc-link[href="${targetHash}"]`);
       left && left.classList.add('active');
+      
+      // 左TOCのサブリスト内のアクティブ状態もクリア
+      document.querySelectorAll('.toc-sublist a.active').forEach(a => a.classList.remove('active'));
 
       // #topの場合は特別な処理
       if (targetHash === '#top') {
