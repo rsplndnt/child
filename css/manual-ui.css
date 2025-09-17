@@ -574,7 +574,7 @@ body {
   font-weight: 700;
 }
 .toc .toc-section h3 .toc-link{
-  display: grid; grid-template-columns: 28px 1fr; column-gap: 12px;
+  display: grid; grid-template-columns: 28px 1fr auto; column-gap: 12px;
   align-items: center; padding: 12px 14px;
   border-radius: 12px; color: var(--color-primary); text-decoration: none;
   line-height: 1.6; white-space: normal; word-break: break-word; hyphens: auto;
@@ -783,27 +783,18 @@ body {
 }
 
 /* ====== 左TOC: サブ項目の展開トグル ====== */
-.toc .toc-toggle {
-  appearance: none;
-  border: none;
-  background: transparent;
+.toc .toc-toggle-icon {
+  font-size: 20px;
+  line-height: 1;
   color: var(--color-primary);
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 8px;
-  display: block;
-  width: 100%;
-  text-align: left;
-  margin-bottom: 8px;
+  transition: transform 0.2s ease;
 }
-.toc .toc-toggle .material-icons { 
-  font-size: 20px; 
-  line-height: 1; 
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 8px;
+.toc .toc-link:hover .toc-toggle-icon {
+  color: var(--color-primary-700);
 }
-.toc .toc-toggle:hover { background: var(--hovered-variant); }
+.toc .toc-link.active .toc-toggle-icon {
+  color: #fff;
+}
 
 .toc .toc-sublist {
   list-style: none;

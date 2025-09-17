@@ -413,24 +413,19 @@
         const items = Array.from(rightGroup.querySelectorAll('a'));
         if (!items.length) return;
 
-        // toc-section内（h3の外）にトグルボタンを追加
+        // リンク内にトグルアイコンを追加（テキストの右側）
         const h3 = link.closest('h3');
         if (!h3) return;
         const section = h3.parentElement;
         if (!section || !section.classList.contains('toc-section')) return;
         
-        let toggle = section.querySelector('.toc-toggle');
-        if (!toggle) {
-          toggle = document.createElement('button');
-          toggle.className = 'toc-toggle';
-          toggle.setAttribute('type', 'button');
-          toggle.setAttribute('aria-label', 'サブ項目の展開');
-          const mi = document.createElement('span');
-          mi.className = 'material-icons';
-          mi.textContent = 'expand_more';
-          toggle.appendChild(mi);
-          // h3の直後に追加
-          h3.insertAdjacentElement('afterend', toggle);
+        // リンク内にトグルアイコンがなければ追加
+        let toggleIcon = link.querySelector('.toc-toggle-icon');
+        if (!toggleIcon) {
+          toggleIcon = document.createElement('span');
+          toggleIcon.className = 'toc-toggle-icon material-icons';
+          toggleIcon.textContent = 'expand_more';
+          link.appendChild(toggleIcon);
         }
 
         // 左TOCにサブリストを生成
@@ -472,24 +467,33 @@
         // 初期状態の反映
         const key = groupId;
         const isOpen = Boolean(state[key]);
-        applyTocOpenState({ sublist, toggle, open: isOpen });
+        const toggleIcon = link.querySelector('.toc-toggle-icon');
+        applyTocOpenState({ sublist, toggleIcon, open: isOpen });
 
-        // トグル
-        toggle.addEventListener('click', (e) => {
-          e.preventDefault(); e.stopPropagation();
+        // リンククリック時の処理を上書き（トグルも同時に行う）
+        link.removeEventListener('click', link._originalHandler);
+        link._originalHandler = (e) => {
+          e.preventDefault();
+          // セクション切り替え
+          const href = link.getAttribute('href');
+          if (href) {
+            activateSection(href, { closeMobile: true, scrollToTop: true });
+          }
+          // トグル処理
           const nowOpen = !sublist.classList.contains('show');
-          applyTocOpenState({ sublist, toggle, open: nowOpen });
+          applyTocOpenState({ sublist, toggleIcon, open: nowOpen });
           state[key] = nowOpen;
           saveTocOpenState(state);
-        });
+        };
+        link.addEventListener('click', link._originalHandler);
       });
     }
-    function applyTocOpenState({ sublist, toggle, open }) {
-      if (!sublist || !toggle) return;
+    function applyTocOpenState({ sublist, toggleIcon, open }) {
+      if (!sublist) return;
       sublist.classList.toggle('show', !!open);
-      const mi = toggle.querySelector('.material-icons');
-      if (mi) mi.textContent = open ? 'expand_less' : 'expand_more';
-      toggle.setAttribute('aria-expanded', String(!!open));
+      if (toggleIcon) {
+        toggleIcon.textContent = open ? 'expand_less' : 'expand_more';
+      }
     }
 
     function removeExternalClearButtons() {
