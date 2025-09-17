@@ -96,9 +96,10 @@
     // remove duplicate/外部クリア要素（安全に）
     removeExternalClearButtons();
 
-    // ノーマライズ & placeholder
+    // ノーマライズ & placeholder & ダミーコンテンツ
     normalizeLabels();
     insertPlaceholders();
+    addDummyContent();
 
     // 初期化時に✕ボタンを非表示
     const closeBtn = document.getElementById('sidebarCloseBtn');
@@ -822,6 +823,56 @@
       }
     });
   }
+
+  /* ---------------- ダミーのワンポイントアドバイスと注意事項を追加 ---------------- */
+  function addDummyContent() {
+    const steps = document.querySelectorAll('.content-panel .step-with-image');
+    steps.forEach((step, index) => {
+      const stepText = step.querySelector('.step-text');
+      if (!stepText) return;
+      
+      // 既存のnote-cardがない場合は追加
+      if (!stepText.querySelector('.note-card')) {
+        const noteCard = document.createElement('aside');
+        noteCard.className = 'note-card';
+        noteCard.setAttribute('role', 'note');
+        noteCard.innerHTML = `
+          <h5>⚠ 注意事項・補足事項</h5>
+          <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
+        `;
+        stepText.appendChild(noteCard);
+      }
+      
+      // 既存のstep-adviceがない場合は追加（step-with-subsection内でない場合のみ）
+      const isSubsection = step.parentElement && step.parentElement.classList.contains('step-with-subsection');
+      if (!isSubsection && !step.querySelector('.step-advice')) {
+        const stepAdvice = document.createElement('div');
+        stepAdvice.className = 'step-advice';
+        stepAdvice.innerHTML = `
+          <h5>ワンポイントアドバイス</h5>
+          <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
+        `;
+        step.appendChild(stepAdvice);
+      }
+    });
+  }
+
+  /* ---------------- 注意事項とワンポイントアドバイスの表示/非表示切り替え ---------------- */
+  function toggleContentVisibility(type, show) {
+    if (type === 'notes') {
+      document.querySelectorAll('.note-card').forEach(el => {
+        el.style.display = show ? '' : 'none';
+      });
+    } else if (type === 'advice') {
+      document.querySelectorAll('.step-advice').forEach(el => {
+        el.style.display = show ? '' : 'none';
+      });
+    }
+  }
+  
+  // グローバルに公開（コンソールから呼び出し可能）
+  window.toggleNotes = (show = true) => toggleContentVisibility('notes', show);
+  window.toggleAdvice = (show = true) => toggleContentVisibility('advice', show);
 
   /* ---------------- Search module factory ---------------- */
   function createSearchModule({ sectionsSelector = '.content-panel .step-section', procedureSelector = '.procedure-item', searchInput, resultsPanel, onJump }) {
