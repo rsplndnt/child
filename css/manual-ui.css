@@ -567,13 +567,21 @@ body {
 
 /* TOC（左） */
 .toc{ padding: 12px; }
-.toc .toc-section{ margin-bottom: 12px; }
-.toc .toc-section h3{ margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+.toc .toc-section{ margin-bottom: 12px; position: relative; }
+.toc .toc-section h3{ 
+  margin: 0 0 8px; 
+  font-size: 14px; 
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .toc .toc-section h3 .toc-link{
   display: grid; grid-template-columns: 28px 1fr; column-gap: 12px;
   align-items: center; padding: 12px 14px;
   border-radius: 12px; color: var(--color-primary); text-decoration: none;
   line-height: 1.6; white-space: normal; word-break: break-word; hyphens: auto;
+  flex: 1;
 }
 .toc .toc-section h3 .toc-link i{ 
   font-size: 18px; 
@@ -777,4 +785,41 @@ body {
     background: var(--outline-variant);
     margin: 12px 16px;
 }
+
+/* ====== 左TOC: サブ項目の展開トグル ====== */
+.toc .toc-toggle {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.toc .toc-toggle .material-icons { font-size: 20px; line-height: 1; display: block; }
+.toc .toc-toggle:hover { background: var(--hovered-variant); }
+
+.toc .toc-sublist {
+  list-style: none;
+  padding-left: 40px; /* アイコン列 + 余白分 */
+  margin: 6px 0 12px;
+  display: none;
+}
+.toc .toc-sublist.show { display: block; }
+.toc .toc-sublist li { margin: 6px 0; }
+.toc .toc-sublist a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 13px;
+}
+.toc .toc-sublist a:hover { background: var(--hovered-variant); }
+
+/* ====== レイアウト: 右カラム撤去 + メイン中央寄せ ====== */
+.sub-items-panel { display: none !important; }
+.manual-content { gap: 0 !important; justify-content: center; }
+.content-panel { flex: 0 1 1200px; max-width: 1200px; margin: 0 auto; }
 

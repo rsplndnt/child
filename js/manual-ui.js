@@ -104,7 +104,8 @@
       closeBtn.style.display = 'none';
     }
 
-    // NOTE: サイドバー内のトグル機能は削除済み（後で実装してください）
+    // 左TOCにサブ項目（右カラムの内容）を生成し、Expand More/Lessで開閉・永続化
+    setupLeftTocSubitems({ tocLinks, subGroups });
 
     // タブクリック -> セクション切替
     tabs.forEach(tab => {
@@ -384,6 +385,109 @@
     window.addEventListener('resize', debounce(updateTabsForViewport, 120));
 
     /* ---------- helper functions (inside init scope) ---------- */
+
+    // 左TOC: サブ項目生成とトグル（localStorageに永続化）
+    const TOC_OPEN_STATE_KEY = 'mb-manual-lefttoc-open';
+    function loadTocOpenState() {
+      try { return JSON.parse(localStorage.getItem(TOC_OPEN_STATE_KEY) || '{}'); } catch (_) { return {}; }
+    }
+    function saveTocOpenState(state) {
+      try { localStorage.setItem(TOC_OPEN_STATE_KEY, JSON.stringify(state || {})); } catch (_) {}
+    }
+    function setupLeftTocSubitems({ tocLinks, subGroups }) {
+      if (!tocLinks || !tocLinks.length) return;
+      const state = loadTocOpenState();
+      const getGroupIdByHash = (hash) => {
+        if (!hash) return null;
+        if (hash === '#top') return 'sub-items-top';
+        const m = String(hash).match(/^#section(\d+)/i);
+        return m ? `sub-items-section${m[1]}` : null;
+      };
+
+      tocLinks.forEach(link => {
+        const hash = link.getAttribute('href');
+        const groupId = getGroupIdByHash(hash);
+        if (!groupId) return;
+        const rightGroup = document.getElementById(groupId);
+        if (!rightGroup) return;
+        const items = Array.from(rightGroup.querySelectorAll('a'));
+        if (!items.length) return;
+
+        // h3 内でリンクの後にトグルボタンを追加
+        const h3 = link.closest('h3');
+        if (!h3) return;
+        let toggle = h3.querySelector('.toc-toggle');
+        if (!toggle) {
+          toggle = document.createElement('button');
+          toggle.className = 'toc-toggle';
+          toggle.setAttribute('type', 'button');
+          toggle.setAttribute('aria-label', 'サブ項目の展開');
+          const mi = document.createElement('span');
+          mi.className = 'material-icons';
+          mi.textContent = 'expand_more';
+          toggle.appendChild(mi);
+          // リンクの後に追加
+          link.insertAdjacentElement('afterend', toggle);
+        }
+
+        // 左TOCにサブリストを生成
+        let sublist = h3.parentElement.querySelector('.toc-sublist');
+        if (!sublist) {
+          sublist = document.createElement('ul');
+          sublist.className = 'toc-sublist';
+          h3.parentElement.appendChild(sublist);
+        }
+        if (!sublist.hasChildNodes()) {
+          items.forEach(a => {
+            const li = document.createElement('li');
+            const na = document.createElement('a');
+            na.href = a.getAttribute('href');
+            na.textContent = a.textContent || '';
+            na.addEventListener('click', (e) => {
+              e.preventDefault();
+              const anchor = na.getAttribute('href');
+              if (!anchor) return;
+              // 対象セクションを特定して切替（右カラムと同様の挙動）
+              let sectionHash = '#top';
+              const anchorEl = document.querySelector(anchor);
+              if (anchorEl) {
+                const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
+                if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
+              } else {
+                const m2 = anchor.match(/^#(section\d+)/i);
+                if (m2) sectionHash = `#${m2[1]}`;
+              }
+              activateSection(sectionHash, { scrollToTop: false });
+              setTimeout(() => scrollToElement(anchor), 40);
+              if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+            });
+            li.appendChild(na);
+            sublist.appendChild(li);
+          });
+        }
+
+        // 初期状態の反映
+        const key = groupId;
+        const isOpen = Boolean(state[key]);
+        applyTocOpenState({ sublist, toggle, open: isOpen });
+
+        // トグル
+        toggle.addEventListener('click', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          const nowOpen = !sublist.classList.contains('show');
+          applyTocOpenState({ sublist, toggle, open: nowOpen });
+          state[key] = nowOpen;
+          saveTocOpenState(state);
+        });
+      });
+    }
+    function applyTocOpenState({ sublist, toggle, open }) {
+      if (!sublist || !toggle) return;
+      sublist.classList.toggle('show', !!open);
+      const mi = toggle.querySelector('.material-icons');
+      if (mi) mi.textContent = open ? 'expand_less' : 'expand_more';
+      toggle.setAttribute('aria-expanded', String(!!open));
+    }
 
     function removeExternalClearButtons() {
       const ids = ['manualSearchClear', 'manualSearchClearOuter'];
