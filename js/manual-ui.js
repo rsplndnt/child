@@ -131,7 +131,7 @@
       });
     }
 
-    // 左TOCクリック
+    // 左TOCクリック（後でsetupLeftTocSubitems内で上書きされる）
     tocLinks.forEach(a => {
       a.addEventListener('click', (e) => {
         e.preventDefault();
@@ -476,21 +476,26 @@
         applyTocOpenState({ sublist, toggleIcon, open: isOpen });
 
         // リンククリック時の処理を上書き（トグルも同時に行う）
-        link.removeEventListener('click', link._originalHandler);
-        link._originalHandler = (e) => {
+        // 既存のイベントリスナーをすべて削除
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        const newToggleIcon = newLink.querySelector('.toc-toggle-icon');
+        
+        newLink.addEventListener('click', (e) => {
           e.preventDefault();
           // セクション切り替え
-          const href = link.getAttribute('href');
+          const href = newLink.getAttribute('href');
           if (href) {
             activateSection(href, { closeMobile: true, scrollToTop: true });
           }
-          // トグル処理
-          const nowOpen = !sublist.classList.contains('show');
-          applyTocOpenState({ sublist, toggleIcon, open: nowOpen });
-          state[key] = nowOpen;
-          saveTocOpenState(state);
-        };
-        link.addEventListener('click', link._originalHandler);
+          // トグル処理（サブ項目がある場合のみ）
+          if (items.length > 0) {
+            const nowOpen = !sublist.classList.contains('show');
+            applyTocOpenState({ sublist, toggleIcon: newToggleIcon, open: nowOpen });
+            state[key] = nowOpen;
+            saveTocOpenState(state);
+          }
+        });
       });
     }
     function applyTocOpenState({ sublist, toggleIcon, open }) {
@@ -744,7 +749,13 @@
   function normalizeLabels() {
     const strip = s => (s || '').replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim();
     // 左TOCのテキスト部分のみ数字を削除
-    document.querySelectorAll('.toc .toc-link span').forEach(el => el.textContent = strip(el.textContent));
+    document.querySelectorAll('.toc .toc-link span').forEach(el => {
+      const text = el.textContent || '';
+      const stripped = strip(text);
+      if (text !== stripped) {
+        el.textContent = stripped;
+      }
+    });
     // タブも数字を削除（モバイルでは非表示だが念のため）
     document.querySelectorAll('.content-tabs .tab').forEach(el => el.textContent = strip(el.textContent));
     // 右カラム（現在非表示）のテキストも数字削除
