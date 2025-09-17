@@ -116,7 +116,7 @@
   /* h3を右側に配置（JavaScriptで動的に追加） */
   .procedure-item h4 .print-h3 {
     margin-left: auto !important;
-    font-size: 11pt !important;
+    font-size: 9pt !important;  /* 11pt → 9ptに縮小 */
     color: #666 !important;
     font-weight: normal !important;
     border: none !important;
