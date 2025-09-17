@@ -140,6 +140,8 @@
     .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
     .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
     img { break-inside: avoid; page-break-inside: avoid; }
+    /* ワンポイントアドバイスは常に全幅 */
+    .step-advice { grid-column: 1 / -1 !important; }
   
     /* テキスト・リストの読みやすさ */
     .procedure-text { width: 100% !important; }
