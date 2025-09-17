@@ -65,10 +65,14 @@
   });
 
   function init() {
+    console.log('[Manual UI] Initializing...');
     // 二重初期化ガード（重複読み込み/多重バインド防止）
     const INIT_FLAG = 'data-mb-manual-ui-init';
     const root = document.documentElement;
-    if (root.getAttribute(INIT_FLAG) === '1') { return; }
+    if (root.getAttribute(INIT_FLAG) === '1') { 
+      console.log('[Manual UI] Already initialized, skipping');
+      return; 
+    }
     root.setAttribute(INIT_FLAG, '1');
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
@@ -95,6 +99,7 @@
     removeExternalClearButtons();
 
     // ノーマライズ & placeholder
+    console.log('[Manual UI] Normalizing labels...');
     normalizeLabels();
     insertPlaceholders();
 
@@ -105,9 +110,11 @@
     }
 
     // 左TOCにサブ項目（右カラムの内容）を生成し、Expand More/Lessで開閉・永続化
+    console.log('[Manual UI] Setting up left TOC subitems...');
     setupLeftTocSubitems({ tocLinks, subGroups });
     
     // トグルボタン追加後に再度数字を削除（念のため）
+    console.log('[Manual UI] Re-normalizing labels after toggle setup...');
     normalizeLabels();
 
     // タブクリック -> セクション切替
@@ -410,11 +417,18 @@
       tocLinks.forEach(link => {
         const hash = link.getAttribute('href');
         const groupId = getGroupIdByHash(hash);
-        if (!groupId) return;
+        if (!groupId) {
+          console.log('[Manual UI] No group ID for hash:', hash);
+          return;
+        }
         const rightGroup = document.getElementById(groupId);
         // サブ項目がない章はスキップ
-        if (!rightGroup) return;
+        if (!rightGroup) {
+          console.log('[Manual UI] No right group found for:', groupId);
+          return;
+        }
         const items = Array.from(rightGroup.querySelectorAll('a'));
+        console.log('[Manual UI] Found items for', groupId, ':', items.length);
         // リンクがない場合はトグル不要なのでスキップ
         if (!items.length) return;
 
@@ -749,10 +763,13 @@
   function normalizeLabels() {
     const strip = s => (s || '').replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim();
     // 左TOCのテキスト部分のみ数字を削除
-    document.querySelectorAll('.toc .toc-link span').forEach(el => {
+    const tocSpans = document.querySelectorAll('.toc .toc-link span');
+    console.log('[Manual UI] Found TOC spans:', tocSpans.length);
+    tocSpans.forEach(el => {
       const text = el.textContent || '';
       const stripped = strip(text);
       if (text !== stripped) {
+        console.log('[Manual UI] Stripping:', text, '->', stripped);
         el.textContent = stripped;
       }
     });
