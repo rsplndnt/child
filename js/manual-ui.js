@@ -447,7 +447,13 @@
             const li = document.createElement('li');
             const na = document.createElement('a');
             na.href = a.getAttribute('href');
-            na.textContent = a.textContent || '';
+            // section1の場合は数字を残す、それ以外は数字を削除
+            const text = a.textContent || '';
+            if (groupId === 'sub-items-section1') {
+              na.textContent = text; // 数字を残す
+            } else {
+              na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
+            }
             na.addEventListener('click', (e) => {
               e.preventDefault();
               const anchor = na.getAttribute('href');
