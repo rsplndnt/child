@@ -915,10 +915,11 @@
       if (!tocRoot) return;
       tocRoot.innerHTML = '';
       const sections = Array.from(document.querySelectorAll('.content-panel .step-section'));
-      sections.forEach(sec => {
+      sections.forEach((sec, idx) => {
         const h2 = sec.querySelector('.step-header h2');
         if (!h2) return;
-        const txt = (h2.textContent || '').trim().replace(/^\s*\d+\s*[\.|\)\-]?\s*/, '');
+        let txt = (h2.textContent || '').trim().replace(/^\s*\d+\s*[\.|\)\-]?\s*/, '');
+        if (sec.id === 'top') { txt = '0. ' + txt.replace(/^TOP\s*/i, ''); }
         const li = document.createElement('li');
         li.textContent = txt;
         tocRoot.appendChild(li);
