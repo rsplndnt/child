@@ -489,7 +489,7 @@ body {
 .procedure-steps{
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   border-top: 2px solid var(--color-primary) !important;
   padding-top: 16px !important;
   margin-top: 12px !important;
