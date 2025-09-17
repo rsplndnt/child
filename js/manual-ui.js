@@ -923,6 +923,9 @@
         li.textContent = txt;
         tocRoot.appendChild(li);
       });
+      // 目次を表紙(#top)の直後に出すため、#print-toc を可視化
+      const tocBlock = document.getElementById('print-toc');
+      if (tocBlock) tocBlock.style.display = 'block';
     } catch (_) {}
   });
   
