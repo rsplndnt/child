@@ -413,10 +413,13 @@
         const items = Array.from(rightGroup.querySelectorAll('a'));
         if (!items.length) return;
 
-        // h3 内でリンクの後にトグルボタンを追加
+        // toc-section内（h3の外）にトグルボタンを追加
         const h3 = link.closest('h3');
         if (!h3) return;
-        let toggle = h3.querySelector('.toc-toggle');
+        const section = h3.parentElement;
+        if (!section || !section.classList.contains('toc-section')) return;
+        
+        let toggle = section.querySelector('.toc-toggle');
         if (!toggle) {
           toggle = document.createElement('button');
           toggle.className = 'toc-toggle';
@@ -426,16 +429,16 @@
           mi.className = 'material-icons';
           mi.textContent = 'expand_more';
           toggle.appendChild(mi);
-          // リンクの後に追加
-          link.insertAdjacentElement('afterend', toggle);
+          // h3の直後に追加
+          h3.insertAdjacentElement('afterend', toggle);
         }
 
         // 左TOCにサブリストを生成
-        let sublist = h3.parentElement.querySelector('.toc-sublist');
+        let sublist = section.querySelector('.toc-sublist');
         if (!sublist) {
           sublist = document.createElement('ul');
           sublist.className = 'toc-sublist';
-          h3.parentElement.appendChild(sublist);
+          section.appendChild(sublist);
         }
         if (!sublist.hasChildNodes()) {
           items.forEach(a => {

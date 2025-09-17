@@ -572,16 +572,12 @@ body {
   margin: 0 0 8px; 
   font-size: 14px; 
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 .toc .toc-section h3 .toc-link{
   display: grid; grid-template-columns: 28px 1fr; column-gap: 12px;
   align-items: center; padding: 12px 14px;
   border-radius: 12px; color: var(--color-primary); text-decoration: none;
   line-height: 1.6; white-space: normal; word-break: break-word; hyphens: auto;
-  flex: 1;
 }
 .toc .toc-section h3 .toc-link i{ 
   font-size: 18px; 
@@ -793,17 +789,26 @@ body {
   background: transparent;
   color: var(--color-primary);
   cursor: pointer;
-  padding: 6px;
+  padding: 6px 12px;
   border-radius: 8px;
-  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
 }
-.toc .toc-toggle .material-icons { font-size: 20px; line-height: 1; display: block; }
+.toc .toc-toggle .material-icons { 
+  font-size: 20px; 
+  line-height: 1; 
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
 .toc .toc-toggle:hover { background: var(--hovered-variant); }
 
 .toc .toc-sublist {
   list-style: none;
   padding-left: 40px; /* アイコン列 + 余白分 */
-  margin: 6px 0 12px;
+  margin: 0 0 12px;
   display: none;
 }
 .toc .toc-sublist.show { display: block; }
