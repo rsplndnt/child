@@ -63,8 +63,15 @@ body {
   margin: 0;
 }
 
-/* タイトルとバージョンの間に余白 */
-.sidebar-header .version-info{ margin-top: 8px; }
+/* バージョン情報を右寄せ */
+.sidebar-header .version-info{ 
+  margin-top: 8px; 
+  text-align: right;
+}
+.sidebar-header .version-info .version{
+  font-size: 13px;
+  opacity: 0.9;
+}
 
 /* Arrow Menu Close Button */
 .arrow-menu-close {
