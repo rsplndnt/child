@@ -500,7 +500,7 @@ body {
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
-.procedure-item h4{ color: var(--color-primary); margin: 0 0 12px; font-size: 16px; }
+.procedure-item h4{ color: var(--color-primary); margin: 0 0 12px; font-size: 18px; }
 .procedure-layout{ display: flex; gap: 24px; align-items: flex-start; }
 .procedure-image{
   flex: 0 0 380px; border-radius: 8px; overflow: hidden;
@@ -623,7 +623,7 @@ body {
 /* 右カラム（中項目） */
 .sub-items-group{ display:none; }
 .sub-items-group.active{ display:block; }
-.sub-items-group h4{ font-size:16px; color:var(--color-primary); margin:0; }
+.sub-items-group h4{ font-size:18px; color:var(--color-primary); margin:0; }
 .sub-items-group h4 + ul{
   border-top: 1px solid var(--outline-variant);
   padding-top: 14px; margin-top: 18px;
