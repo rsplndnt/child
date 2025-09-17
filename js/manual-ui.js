@@ -784,8 +784,16 @@
     });
     // タブも数字を削除（モバイルでは非表示だが念のため）
     document.querySelectorAll('.content-tabs .tab').forEach(el => el.textContent = strip(el.textContent));
-    // 右カラム（現在非表示）のテキストも数字削除
-    document.querySelectorAll('.sub-items-group h4, .sub-items-group a').forEach(el => el.textContent = strip(el.textContent));
+    // 右カラム（現在非表示）のテキストも数字削除（section1以外）
+    document.querySelectorAll('.sub-items-group h4').forEach(el => el.textContent = strip(el.textContent));
+    document.querySelectorAll('.sub-items-group a').forEach(el => {
+      // section1のリンクは数字を残す
+      const parent = el.closest('.sub-items-group');
+      if (parent && parent.id === 'sub-items-section1') {
+        return; // スキップ
+      }
+      el.textContent = strip(el.textContent);
+    });
     // 手順項目の数字削除（section1以外）
     document.querySelectorAll('.content-panel .procedure-item h4').forEach(el => {
       // section1のh4は数字を残す
