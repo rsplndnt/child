@@ -843,9 +843,8 @@
         stepText.appendChild(noteCard);
       }
       
-      // 既存のstep-adviceがない場合は追加（step-with-subsection内でない場合のみ）
-      const isSubsection = step.parentElement && step.parentElement.classList.contains('step-with-subsection');
-      if (!isSubsection && !step.querySelector('.step-advice')) {
+      // 既存のstep-adviceがない場合は追加
+      if (!step.querySelector('.step-advice')) {
         const stepAdvice = document.createElement('div');
         stepAdvice.className = 'step-advice';
         stepAdvice.innerHTML = `
