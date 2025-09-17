@@ -495,13 +495,12 @@ body {
   margin-top: 12px !important;
 }
 .step-with-image{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* 50% 50% */
   gap: 16px;
   align-items: flex-start;
 }
 .step-image{
-  flex: 0 0 50%;  /* 画像をコンテナの50%幅に */
-  max-width: 50%;
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--outline-variant);
@@ -513,7 +512,6 @@ body {
   height: auto;
 }
 .step-text{
-  flex: 1 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -543,6 +541,37 @@ body {
   font-weight: 700;
 }
 .note-card p{
+  margin: 0;
+  font-size: 13px;
+  color: var(--on-surface);
+  line-height: 1.5;
+}
+
+/* ★ワンポイントアドバイス */
+.step-advice{
+  background: #E8F5E9;              /* 薄緑色 */
+  border: 1px solid #C8E6C9;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+  grid-column: 1 / -1;  /* グリッド全体に広がる */
+}
+.step-advice h5{
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #2E7D32;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.step-advice h5::before{
+  content: "💡";
+  font-size: 16px;
+}
+.step-advice p{
   margin: 0;
   font-size: 13px;
   color: var(--on-surface);
@@ -599,9 +628,19 @@ body {
 @media (max-width: 1024px){
   .procedure-layout{ flex-direction: column; }
   .procedure-image{ flex: 1 1 auto; max-width: 100%; }
+  .step-with-image{
+    grid-template-columns: 200px 1fr;  /* モバイルでは画像を固定幅に */
+  }
+}
+@media (max-width: 768px){
+  .step-with-image{
+    grid-template-columns: 1fr;  /* スマホでは縦並び */
+  }
   .step-image{
-    flex: 0 0 200px;  /* モバイルでは固定幅に戻す */
-    max-width: 200px;
+    max-width: 100%;
+  }
+  .step-advice{
+    grid-column: 1;  /* 縦並びの場合は通常配置 */
   }
 }
 @media (max-width: 768px){
