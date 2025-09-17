@@ -494,6 +494,21 @@ body {
   padding-top: 16px !important;
   margin-top: 12px !important;
 }
+
+/* サブセクション付きステップ用のクラス */
+.step-with-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step-subsection-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+  padding: 8px 0;
+}
 .step-with-image{
   display: grid;
   grid-template-columns: 1fr 1fr;  /* 50% 50% */
