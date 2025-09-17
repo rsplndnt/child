@@ -891,10 +891,14 @@
       const h2 = section.querySelector('.step-header h2');
       if (!h2) return;
       
+      // 先頭の数字や記号（01. / 1) / 1- など）を除去
+      const raw = (h2.textContent || '').trim();
+      const cleaned = raw.replace(/^\s*\d+\s*[\.|\)\-]?\s*/, '');
+      
       // h3要素を作成してh4の中に追加
       const h3 = document.createElement('span');
       h3.className = 'print-h3';
-      h3.textContent = h2.textContent.trim();
+      h3.textContent = cleaned;
       
       // h4の中に追加（h4の最後に）
       h4.appendChild(h3);
