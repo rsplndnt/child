@@ -73,7 +73,7 @@ body {
   width: 40px;
   height: auto;
   flex-shrink: 0;
-  margin-top: 2px;  /* 画像位置を微調整 */
+  margin-top: 4px;  /* 画像位置を微調整 */
 }
 .sidebar-header h1 span{
   line-height: 1.3;
