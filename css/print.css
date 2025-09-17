@@ -90,20 +90,44 @@
     /* 番号は印刷でも非表示 */
     .step-number { display: none !important; }
   
-    /* カード風パーツの装飾をフラット化 */
-    .step-objective,
-    .step-content h3 {
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 0 5mm !important;
-    }
-    .step-content h3 {
-      font-size: 13pt !important;
-      border-bottom: 1px solid #ddd !important;
-      padding-bottom: 2mm !important;
-    }
+  /* カード風パーツの装飾をフラット化 */
+  .step-objective,
+  .step-content h3 {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 5mm !important;
+  }
+  .step-content h3 {
+    font-size: 13pt !important;
+    border-bottom: 1px solid #ddd !important;
+    padding-bottom: 2mm !important;
+  }
+
+  /* ====== 印刷時：h4の横にh3を右寄せで表示 ====== */
+  .procedure-item {
+    position: relative;
+    padding-top: 30px !important; /* h3用のスペース確保 */
+  }
+  
+  .procedure-item h4 {
+    display: inline-block !important;
+    max-width: 60% !important;
+  }
+  
+  /* h3を右上に配置（JavaScriptで動的に追加） */
+  .procedure-item .print-h3 {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    font-size: 11pt !important;
+    color: #666 !important;
+    font-weight: normal !important;
+    border: none !important;
+    padding: 0 !important;
+  }
   
     /* 手順レイアウトは1カラムに */
     .procedure-layout { display: block !important; gap: 0 !important; }

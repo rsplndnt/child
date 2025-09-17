@@ -873,6 +873,42 @@
   window.toggleNotes = (show = true) => toggleContentVisibility('notes', show);
   window.toggleAdvice = (show = true) => toggleContentVisibility('advice', show);
 
+  /* ---------------- 印刷時にh3をh4の横に追加 ---------------- */
+  function addPrintH3() {
+    // 既存のprint-h3を削除
+    document.querySelectorAll('.print-h3').forEach(el => el.remove());
+    
+    // 各procedure-itemにh3を追加
+    document.querySelectorAll('.procedure-item').forEach(item => {
+      const h4 = item.querySelector('h4');
+      if (!h4) return;
+      
+      // h4が属するセクションを特定
+      const section = h4.closest('.step-section');
+      if (!section) return;
+      
+      // セクションのh2を取得
+      const h2 = section.querySelector('.step-header h2');
+      if (!h2) return;
+      
+      // h3要素を作成
+      const h3 = document.createElement('span');
+      h3.className = 'print-h3';
+      h3.textContent = h2.textContent.trim();
+      
+      // h4の親要素に追加
+      item.insertBefore(h3, h4);
+    });
+  }
+  
+  // 印刷前にh3を追加
+  window.addEventListener('beforeprint', addPrintH3);
+  
+  // 印刷後にh3を削除（画面表示を元に戻す）
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll('.print-h3').forEach(el => el.remove());
+  });
+
   /* ---------------- Search module factory ---------------- */
   function createSearchModule({ sectionsSelector = '.content-panel .step-section', procedureSelector = '.procedure-item', searchInput, resultsPanel, onJump }) {
     const sections = Array.from(document.querySelectorAll(sectionsSelector));
