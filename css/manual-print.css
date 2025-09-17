@@ -1,0 +1,202 @@
+/* ===========================
+   印刷スタイル: manual-print.css
+   =========================== */
+
+/* 画面では印刷専用要素を隠す */
+.only-print { display: none !important; }
+
+/* 印刷用: すべての章を出力、表紙→改ページ→本文 */
+@media print {
+  /* 高品質印刷 */
+  :root {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* セクションカウンターの初期化 */
+  body {
+    counter-reset: section-counter;
+  }
+
+  /* 用紙と余白（必要に応じて調整） */
+  @page {
+    size: A4;
+    margin: 14mm 16mm;
+  }
+
+  /* レイアウトのフレックス/固定高を解除して自然に縦積み */
+  .manual-wrapper,
+  .manual-content,
+  .content-panel {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 画面専用UIは非表示 */
+  .hamburger-menu,
+  .menu-overlay,
+  .manual-sidebar,
+  .sub-items-panel,
+  .content-tabs,
+  .breadcrumb,
+  .version-info {
+    display: none !important;
+  }
+
+  /* 画面用の余白は印刷ではリセット */
+  .manual-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    border: 0 !important;
+  }
+
+  /* ===== 表紙 ===== */
+  .print-cover.only-print {
+    display: block !important;
+    page-break-after: always;     /* 表紙のあと改ページ */
+    text-align: center;
+    padding-top: 35mm;
+  }
+  .print-cover.only-print img {
+    display: block;
+    max-width: 60%;
+    height: auto;
+    margin: 0 auto 12mm;
+  }
+  .print-cover.only-print h1 {
+    font-size: 22pt;
+    margin: 0;
+    font-weight: 700;
+    color: #0b0b0b;
+  }
+
+  /* ===== 本文全章を印刷 ===== */
+  /* 画面では隠しているセクションも印刷時は全部表示 */
+  .step-section { 
+    display: block !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    margin: 0 0 10mm !important;
+    padding: 0 !important;
+    break-inside: avoid;          /* 章の途中で改ページをできるだけ避ける */
+  }
+
+  /* 章ごとに改ページ（表紙の直後は除く） */
+  .step-section + .step-section {
+    break-before: page;
+  }
+
+  /* セクション見出しの余白を印刷向けに */
+  .step-header h2 {
+    font-size: 16pt !important;
+    margin: 0 0 6mm !important;
+    color: #0b0b0b !important;
+    page-break-after: avoid !important;   /* 見出し直後で改ページしない */
+    display: block !important;            /* 確実に表示 */
+  }
+
+  /* 見出しブロックは途中で分割しない */
+  .step-header { 
+    break-inside: avoid !important; 
+    page-break-inside: avoid !important;
+    display: block !important;            /* 確実に表示 */
+  }
+
+  /* 各セクションの見出しを強制表示 */
+  .step-section .step-header {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* 隠されているセクションも印刷時は表示 */
+  .step-section.is-hidden {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* h2見出しを確実に表示 */
+  .step-section h2,
+  .step-header h2 {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 16pt !important;
+    margin: 0 0 6mm !important;
+    color: #0b0b0b !important;
+    page-break-after: avoid !important;
+  }
+
+  /* インラインスタイルを上書き */
+  h2[style*="display: none"],
+  h2[style*="visibility: hidden"] {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* セクション全体の表示を強制 */
+  section[style*="display: none"],
+  section[style*="visibility: hidden"] {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* セクション見出しの余白を印刷向けに */
+  .step-header h2 {
+    font-size: 16pt !important;
+    margin: 0 0 6mm !important;
+    color: #0071B8 !important;
+    page-break-after: avoid !important;   /* 見出し直後で改ページしない */
+  }
+
+  /* 見出しブロックは途中で分割しない */
+  .step-header { 
+    break-inside: avoid !important; 
+    page-break-inside: avoid !important;
+  }
+
+  /* 小見出しや本文の最小調整 */
+  .step-objective {
+    background: transparent !important;
+    margin: 0 0 6mm !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+
+  /* 手順項目のElevationを削除 */
+  .procedure-item {
+    box-shadow: none !important;
+    background: transparent !important;
+    border: 0 !important;
+  }
+  .step-content h3 {
+    font-size: 12pt !important;
+    margin: 0 0 4mm !important;
+    padding: 0 0 2mm !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+
+  /* 画像は枠線なしで最大幅 */
+  .procedure-image {
+    border: 0 !important;
+    box-shadow: none !important;
+    margin: 0 0 4mm !important;
+  }
+  .procedure-image img {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* リンクの装飾は印刷では邪魔なので除去 */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}
+
+/* 画面側との干渉回避：
+   表紙を入れたせいで :first-of-type 調整が崩れる場合の軽微な補正 */
+.print-cover + .step-section { margin-top: 8px; }

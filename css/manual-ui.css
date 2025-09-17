@@ -1,0 +1,780 @@
+/* ===== Base | brand tokens & resets ===== */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  color: #111;
+  background: #f5f7fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root{
+  --color-primary: #0071B8;
+  --color-primary-700: #005a91;
+  --color-secondary: #B1E1FF;
+  --color-tertiary: #EFF7FC;
+
+  --on-surface: #0f172a;
+  --on-surface-variant: #6B777D;
+  --surface: #FFFFFF;
+  --outline-variant: #D4D7D8;
+  --hovered-variant: rgba(0,0,0,0.051);
+  --caution: #FFD76B;
+
+  --sidebar-w: 320px;     /* 初期幅（JSで保存/復元） */
+  --sidebar-w-min: 240px;
+  --sidebar-w-max: 520px;
+}
+
+/* a11y focus */
+:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
+
+/* 全体レイアウト（外枠カードは使わない） */
+.manual-wrapper{
+  display: flex;
+  min-height: 100vh;
+  height: 100dvh; /* 各カラムを独立スクロールに */
+  overflow: hidden; /* 親でのスクロールを止める */
+}
+
+/* サイドバー */
+.manual-sidebar{
+  flex: 0 0 var(--sidebar-w);
+  max-width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--outline-variant);
+  position: relative;
+  top: 0;
+  height: 100dvh;          /* 固定の縦サイズ */
+  overflow-y: auto;        /* 左カラムも独立スクロール */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.sidebar-header{
+  padding: 24px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  position: relative;
+}
+.sidebar-header h1{
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* タイトルとバージョンの間に余白 */
+.sidebar-header .version-info{ margin-top: 8px; }
+
+/* Arrow Menu Close Button */
+.arrow-menu-close {
+  position: absolute;
+  top: 50vh;
+  right: -20px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  z-index: 999999 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.arrow-menu-close:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.arrow-menu-close .material-icons {
+  font-size: 18px;
+}
+
+/* 検索・ジャンプ機能 */
+.search-section {
+  position: relative;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.search-box {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto; /* 入力 + 検索ボタン（オーバーフロー防止） */
+  column-gap: 8px;
+  align-items: center;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 8px 56px 8px 12px; /* 右側にclear分を広めに確保（28px+余白） */
+  min-width: 0; /* grid内で縮められるように */
+  height: 36px; /* ボタンと高さを一致 */
+  box-sizing: border-box; /* 高さにpadding/borderを含める */
+  border: 1px solid var(--outline-variant);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--on-surface);
+  transition: border-color 0.2s ease;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 113, 184, 0.1);
+}
+
+.search-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  justify-self: end; /* 右端に収める */
+}
+
+.search-btn:hover {
+  background: var(--color-primary-700);
+}
+
+.search-btn .material-icons {
+  font-size: 18px;
+}
+
+.clear-btn {
+  position: absolute;
+  top: 50%;
+  right: calc(36px + 8px + 10px); /* search 36 + gap 8 + 余白 10 */
+  transform: translateY(-50%);
+  width: 22px; /* 80% */
+  height: 22px; /* 80% */
+  background: #e0e0e0;
+  border: none;
+  border-radius: 50%;
+  color: #555;
+  cursor: pointer;
+  display: none; /* JSで有無を制御 */
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  z-index: 1;
+}
+
+.clear-btn:hover { background: #d0d0d0; }
+
+.clear-btn .material-icons { font-size: 14px; } /* 80% */
+
+
+/* 検索ハイライト */
+.search-highlight {
+  background: var(--caution);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* 検索フォーカス */
+.search-focus {
+  background: var(--color-secondary) !important;
+  border: 2px solid var(--color-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 0 4px rgba(0, 113, 184, 0.2) !important;
+  animation: searchFocusPulse 1s ease-in-out;
+}
+
+@keyframes searchFocusPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* ジャンプハイライト */
+.jump-highlight {
+  background: var(--color-secondary);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+  animation: jumpPulse 0.5s ease-in-out;
+}
+
+@keyframes jumpPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Arrow Menu Open Button */
+.arrow-menu-open {
+  position: fixed;
+  top: 50vh;
+  left: 20px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 64px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 16px;
+  color: #fff;
+  cursor: pointer;
+  display: none; /* デフォルトで非表示 */
+  align-items: center;
+  justify-content: center;
+  transition: none; /* 位置の変化を防ぐためtransitionを無効化 */
+  box-shadow: 0 2px 8px rgba(0, 113, 184, 0.3);
+  z-index: 1000;
+}
+
+.arrow-menu-open:hover {
+  background: var(--color-primary-700);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.arrow-menu-open .material-icons {
+  font-size: 20px;
+}
+
+/* サイドバーが隠れている時にArrow Menu Openボタンを表示 */
+.manual-sidebar.hidden ~ .arrow-menu-open {
+  display: flex;
+}
+
+/* ===== Hamburger (drop-in replacement) ===== */
+.hamburger-menu{
+  display: none; /* ≤768pxで表示（下の@mediaで上書き） */
+  position: fixed; top: 16px; left: 16px;
+  width: 44px; height: 44px;
+  border: none; border-radius: 12px;
+  background: var(--color-primary); color: #fff;
+  z-index: 1001; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.hamburger-menu .material-icons {
+  font-size: 24px;
+  color: #fff;
+  line-height: 1;
+  transition: opacity 0.3s ease;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-menu .menu-icon {
+  opacity: 1;
+}
+
+.hamburger-menu .close-icon {
+  opacity: 0;
+}
+
+/* ハンバーガーがアクティブ（メニュー表示中）のときは✕を表示 */
+.hamburger-menu.active .menu-icon { opacity: 0; }
+.hamburger-menu.active .close-icon { opacity: 1; }
+
+/* タブレット以下（1024px以下）ではハンバーガーメニューを表示 */
+@media (max-width: 1024px) {
+  .hamburger-menu {
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* デスクトップ時（1025px以上）はハンバーガーメニューを非表示 */
+@media (min-width: 1025px) {
+  .hamburger-menu {
+    display: none !important;
+  }
+}
+
+/* 左カラムが開いている時はハンバーガーメニューを非表示（アニメーションと同期） */
+.manual-sidebar.active ~ .hamburger-menu {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* 左カラムが閉じられた時はハンバーガーメニューを表示 */
+.manual-sidebar:not(.active) ~ .hamburger-menu {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* サイドバー閉じるボタン */
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  z-index: 1003;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-close-btn .material-icons {
+  font-size: 20px;
+  color: #fff;
+}
+
+/* モバイル時のみ閉じるボタンを表示 */
+@media (max-width: 768px) {
+  .sidebar-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.menu-overlay{
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000; opacity: 0; transition: opacity .2s;
+}
+.menu-overlay.active{ display: block; opacity: 1; }
+
+@media (max-width:768px){
+  /* モバイル時はArrow Menu Openボタンを表示 */
+  .arrow-menu-open{ display: flex !important; }
+  
+  /* モバイルメニューではArrow Menu Closeボタンを非表示 */
+  .manual-sidebar.mobile .arrow-menu-close{ display: none !important; }
+  
+  /* モバイル時の検索セクション調整 */
+  .search-section {
+    padding: 12px 12px; /* 余白を少し詰めてボタンのはみ出しを防止 */
+  }
+  
+  .search-box input {
+    font-size: 16px; /* iOS Safari のズーム防止 */
+    padding-right: 56px; /* モバイルでも✕の余白を広めに確保 */
+  }
+  .search-btn { justify-self: end; }
+  
+  /* モバイル時のサイドバー幅調整 */
+  .manual-sidebar.mobile {
+    width: 100vw;
+    max-width: 320px;
+  }
+}
+
+/* タブレット幅（769–1024px）でもドロワーを有効化 */
+@media (min-width: 769px) and (max-width: 1024px){
+  /* HTML内<style>の display:none !important を強制上書き */
+  .manual-wrapper .manual-sidebar{ display: block !important; }
+  .manual-sidebar.mobile{
+    display: block !important; /* manual_pdf.html内のdisplay:noneを上書き */
+    position: fixed; inset: 0 auto 0 0;
+    transform: translateX(-100%); transition: transform .2s ease;
+    z-index: 1002; width: min(86vw, 320px); max-width: none;
+    box-shadow: 2px 0 10px rgba(0,0,0,.1);
+  }
+  .manual-sidebar.mobile.active{ transform: translateX(0); }
+  .sidebar-resizer{ display: none; }
+  .manual-content{ padding: 84px 18px 20px; gap: 18px; }
+}
+
+/* リサイズハンドル */
+.sidebar-resizer{
+  width: 6px; cursor: col-resize;
+  background: transparent;
+}
+.sidebar-resizer:hover{ background: var(--hovered-variant); }
+
+/* メインエリア */
+.manual-content{
+  flex: 1 1 auto;
+  display: flex; gap: 30px;
+  padding: 28px 32px;
+  min-width: 0;
+  transition: margin-left 0.3s ease;
+  height: 100dvh;           /* 独立スクロール領域 */
+  overflow-y: auto;         /* メインカラムだけスクロール */
+}
+.content-panel{
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sub-items-panel{
+  flex: 0 0 320px; max-width: 320px;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  position: sticky; top: 58px;
+  height: fit-content; max-height: calc(100dvh - 56px);
+  overflow: auto;
+}
+
+
+/* セクション */
+.step-section{
+  margin-bottom: 28px;
+}
+.step-section.is-hidden{ display: none; }
+.step-header h2{ margin: 0 0 18px; font-size: 28px; color: var(--color-primary); }
+.step-number{ display: none !important; } /* 数字は不要 */
+
+.step-objective{
+  /* やや濃い塗り + 細い枠線でカード化 */
+  background: rgba(177, 225, 255, 0.32); /* var(--color-secondary)を薄く */
+  border: 1px solid var(--outline-variant);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 16px 16px 0 16px; border-radius: 10px; margin: 12px 0 20px;
+}
+
+/* このセクションで理解/達成すること の見出し余白を詰める */
+.step-objective h3{ margin: 0 0 10px; }
+.step-content h3{
+  font-size: 18px; margin: 0 0 14px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--outline-variant);
+}
+
+/* 手順 - h4単位で座布団 */
+.procedure-item{ 
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.procedure-item h4{ color: var(--color-primary); margin: 0 0 12px; font-size: 16px; }
+.procedure-layout{ display: flex; gap: 24px; align-items: flex-start; }
+.procedure-image{
+  flex: 0 0 380px; border-radius: 8px; overflow: hidden;
+  border: 2px solid var(--outline-variant);
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.procedure-image img{ display:block; width:100%; height:auto; }
+.procedure-text{ flex: 1 1 auto; min-width: 0; }
+
+/* 新しい手順構造 - 各ステップごとに画像 */
+.procedure-steps{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-top: 2px solid var(--color-primary) !important;
+  padding-top: 16px !important;
+  margin-top: 12px !important;
+}
+.step-with-image{
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.step-image{
+  flex: 0 0 200px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--outline-variant);
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+.step-image img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.step-text{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.step-text p{
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ★独立した注意事項カード */
+.note-card{
+  background: #FFF7E6;              /* 読みやすい淡黄色 */
+  border: 1px solid #FDE8BE;
+  /* border-left: 4px solid var(--caution); */
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 14px 0 0;                  /* 本文直後の余白 */
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+}
+.note-card h5{
+  margin: 0 0 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #A56B00;
+  font-weight: 700;
+}
+.note-card p{
+  margin: 0;
+  font-size: 14px;
+  color: var(--on-surface);
+}
+/* レイアウト上、同じ列で縦積み */
+/* procedure-itemの直下に来る想定 - 必要ならここで幅調整 */
+
+/* 右カラム（中項目） */
+.sub-items-group{ display:none; }
+.sub-items-group.active{ display:block; }
+.sub-items-group h4{ font-size:16px; color:var(--color-primary); margin:0; }
+.sub-items-group h4 + ul{
+  border-top: 1px solid var(--outline-variant);
+  padding-top: 14px; margin-top: 18px;
+}
+.sub-items-group ul{ list-style:none !important; padding-left:0 !important; margin:0; }
+.sub-items-group li{ margin:0 0 8px; }
+.sub-items-group a{
+  display:block; padding:10px 12px; border-radius:10px;
+  color: var(--color-primary); text-decoration:none; font-size:14px; line-height:1.6;
+}
+.sub-items-group a:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
+.sub-items-group a.active{
+  background: var(--color-primary); color:#fff; border: 1px solid transparent; text-shadow: 0 1px #0001;
+}
+
+/* TOC（左） */
+.toc{ padding: 12px; }
+.toc .toc-section{ margin-bottom: 12px; }
+.toc .toc-section h3{ margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+.toc .toc-section h3 .toc-link{
+  display: grid; grid-template-columns: 28px 1fr; column-gap: 12px;
+  align-items: center; padding: 12px 14px;
+  border-radius: 12px; color: var(--color-primary); text-decoration: none;
+  line-height: 1.6; white-space: normal; word-break: break-word; hyphens: auto;
+}
+.toc .toc-section h3 .toc-link i{ 
+  font-size: 18px; 
+  color: var(--color-primary); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
+.toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
+.toc .toc-section h3 .toc-link.active i{ color:#fff; }
+
+/* レスポンシブ */
+@media (max-width: 1024px){
+  .procedure-layout{ flex-direction: column; }
+  .procedure-image{ flex: 1 1 auto; max-width: 100%; }
+}
+@media (max-width: 768px){
+  .sub-items-panel{ display: none; } /* モバイルで右カラムを非表示 */
+}
+
+/* タブレットとモバイル（1024px以下）でサイドバーをドロワー化 */
+@media (max-width: 1024px){
+  .hamburger-menu{ 
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+  }
+  .manual-sidebar{
+    position: fixed !important; 
+    top: 0;
+    left: 0;
+    transform: translateX(-100%) !important; 
+    transition: transform .3s ease;
+    z-index: 1002 !important; 
+    width: 280px !important; 
+    height: 100vh !important;
+    max-width: none;
+    box-shadow: 2px 0 10px rgba(0,0,0,.1);
+    display: block !important; /* 強制的に表示 */
+  }
+  .manual-sidebar.active{ 
+    transform: translateX(0) !important; 
+  }
+  .manual-sidebar.mobile.active{ 
+    transform: translateX(0) !important; 
+  }
+  .sidebar-resizer{ display: none; }
+  .manual-content{ 
+    margin-left: 0 !important; /* サイドバー分のマージンを削除 */
+    padding: 84px 18px 20px; 
+    gap: 18px; 
+  }
+}
+
+/* メニューオーバーレイ */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.menu-overlay.active {
+  display: block;
+  opacity: 1;
+}
+@media (max-width: 480px){
+  .step-section{ padding: 22px; }
+  .step-header h2{ font-size: 22px; }
+}
+
+
+/* ※旧 .notes は廃止（残っていても未使用） */
+
+/* ヘッダータイトルリンクのスタイル */
+.header-title-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    transition: color 0.2s ease;
+}
+
+.header-title-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+.header-title-link:focus {
+    outline: none;
+}
+
+/* ===== Search Results Panel ===== */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-results.show {
+  display: block;
+}
+
+/* 検索ヒットなしの状態 */
+.sr-empty {
+  padding: 20px 16px;
+  color: #666;
+}
+.sr-empty-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+.sr-empty-sub {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #777;
+}
+
+.sr-head {
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.sr-item {
+  display: block;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.sr-item:hover {
+  background-color: #f8f9fa;
+  text-decoration: none;
+}
+
+.sr-item:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.sr-breadcrumb {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.sr-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.sr-snippet {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.search-hit {
+  background-color: #ffe28a; /* 濃い黄色 */
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+.search-hit-live {
+  background-color: #ffe28a; /* 濃い黄色に統一 */
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* 青いジャンプ枠ハイライトは無効化（クラス自体は残す） */
+.search-focus { outline: none !important; animation: none !important; }
+
+@keyframes search-focus-pulse { from { opacity: 1; } to { opacity: 1; } }
+
+/* TOC dividerのスタイル */
+.toc-divider {
+    height: 1px;
+    background: var(--outline-variant);
+    margin: 12px 16px;
+}
+

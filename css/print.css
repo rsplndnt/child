@@ -1,0 +1,157 @@
+/* ================================
+   印刷最適化（A4縦・1カラム・全章出力）
+   ================================ */
+   @page {
+    size: A4 portrait;
+    margin: 16mm 14mm; /* 上下 / 左右 */
+  }
+  
+  /* できる限り画面の色を維持 */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  @media print {
+  
+    /* 背景/外枠の除去＆1カラム化 */
+    html, body { background: #fff !important; }
+    .manual-wrapper { display: block !important; background: #fff !important; min-height: auto !important; }
+  
+    /* 画面専用UIは非表示（サイドバー・タブなど） */
+    .manual-sidebar,
+    .hamburger-menu,
+    .menu-overlay,
+    .sub-items-panel,
+    .result-panel,
+    .content-tabs,
+    nav.breadcrumb,
+    .version-info {
+      display: none !important;
+    }
+  
+    /* 中央カラムを全幅に */
+    .manual-content {
+      display: block !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      max-width: none !important;
+    }
+    .content-panel {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  
+    /* ====== 全章出力（タブの非表示状態を無視） ====== */
+    /* JSで付いている .is-hidden を無効化して全セクションを出す */
+    .step-section.is-hidden { display: block !important; }
+    /* 念のため hidden 属性・visibility の影響も無効化（中央パネル配下だけ） */
+    .content-panel [hidden] { display: block !important; visibility: visible !important; }
+  
+    /* セクションの紙面向けレイアウト */
+    .step-section {
+      background: #fff !important;
+      color: #000 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      padding: 0 0 12mm 0 !important; /* 下だけ余白 */
+      margin: 0 !important;
+      break-inside: avoid-page;    /* 途中分割を抑制 */
+      page-break-inside: avoid;    /* 旧プロパティ互換 */
+    }
+  
+    /* 次の章は新しいページから（章頭出し） */
+    .step-section + .step-section {
+      break-before: page;         /* 章区切りで改ページ */
+      page-break-before: always;  /* 旧プロパティ互換 */
+    }
+  
+    /* 見出しと直後の要素は分割しない */
+    .step-header,
+    .step-header h2,
+    .step-objective,
+    .step-content h3,
+    .procedure-item,
+    .notes {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  
+    /* 見出しサイズ微調整（紙面） */
+    .step-header h2 {
+      font-size: 20pt !important;
+      margin: 0 0 6mm !important;
+      color: #111 !important;
+    }
+  
+    /* 番号は印刷でも非表示 */
+    .step-number { display: none !important; }
+  
+    /* カード風パーツの装飾をフラット化 */
+    .step-objective,
+    .step-content h3 {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 0 5mm !important;
+    }
+    .step-content h3 {
+      font-size: 13pt !important;
+      border-bottom: 1px solid #ddd !important;
+      padding-bottom: 2mm !important;
+    }
+  
+    /* 手順レイアウトは1カラムに */
+    .procedure-layout { display: block !important; gap: 0 !important; }
+  
+    /* 画像は最大幅で表示、装飾は除去 */
+    .procedure-image,
+    .procedure-image img {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+    }
+    .procedure-image {
+      border: 0 !important;
+      box-shadow: none !important;
+      margin: 0 0 4mm !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    img { break-inside: avoid; page-break-inside: avoid; }
+  
+    /* テキスト・リストの読みやすさ */
+    .procedure-text { width: 100% !important; }
+    .procedure-text ol,
+    .procedure-text ul {
+      margin: 0 0 4mm 6mm !important;
+    }
+    .procedure-text li {
+      margin: 1.2mm 0 !important;
+      line-height: 1.6 !important;
+    }
+  
+    /* 注意枠は紙面用に簡素化 */
+    .notes {
+      background: transparent !important;
+      border-left: 3px solid #bbb !important;
+      padding: 3mm 4mm !important;
+      margin-top: 4mm !important;
+      color: #333 !important;
+    }
+  
+    /* 余計な固定配置・アニメの抑止（sticky等の不具合回避） */
+    * {
+      animation: none !important;
+      transition: none !important;
+      position: static !important;
+    }
+  
+    /* 寄せ/孤行の軽減（対応ブラウザ向け） */
+    p, li { orphans: 3; widows: 3; }
+  }
+  

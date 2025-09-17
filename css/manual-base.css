@@ -1,0 +1,311 @@
+/* ===== Base | brand tokens & resets ===== */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  color: #111;
+  background: #f5f7fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root{
+  --color-primary: #0071B8;
+  --color-primary-700: #005a91;
+  --color-secondary: #B1E1FF;
+  --color-tertiary: #EFF7FC;
+
+  --on-surface: #0f172a;
+  --on-surface-variant: #6B777D;
+  --surface: #FFFFFF;
+  --outline-variant: #D4D7D8;
+  --hovered-variant: rgba(0,0,0,0.051);
+  --caution: #FFD76B;
+
+  --sidebar-w: 320px;     /* 初期幅（JSで保存/復元） */
+  --sidebar-w-min: 240px;
+  --sidebar-w-max: 520px;
+}
+
+/* a11y focus */
+:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
+
+/* 全体レイアウト（外枠カードは使わない） */
+.manual-wrapper{
+  display: flex;
+  min-height: 100vh;
+}
+
+/* サイドバー */
+.manual-sidebar{
+  flex: 0 0 var(--sidebar-w);
+  max-width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--outline-variant);
+  position: sticky; top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+}
+.sidebar-header{
+  padding: 24px 20px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-700) 100%);
+  color: #fff;
+}
+.sidebar-header h1{
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ハンバーガー */
+.hamburger-menu{
+  display: none;
+  position: fixed;
+  left: 16px; top: 16px;
+  width: 44px; height: 44px;
+  background: var(--color-primary);
+  border: 0; border-radius: 10px;
+  z-index: 1001; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,113,184,.25);
+}
+.hamburger-menu span{
+  position: absolute; left: 10px; right: 10px; height: 2px; background: #fff; transition: .2s;
+}
+.hamburger-menu span:nth-child(1){ top: 14px; }
+.hamburger-menu span:nth-child(2){ top: 21px; }
+.hamburger-menu span:nth-child(3){ top: 28px; }
+.hamburger-menu.active span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+.hamburger-menu.active span:nth-child(2){ opacity: 0; }
+.hamburger-menu.active span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+.menu-overlay{
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000; opacity: 0; transition: opacity .2s;
+}
+.menu-overlay.active{ display:block; opacity:1; }
+
+/* リサイズハンドル */
+.sidebar-resizer{
+  width: 6px; cursor: col-resize;
+  background: transparent;
+}
+.sidebar-resizer:hover{ background: var(--hovered-variant); }
+
+/* メインエリア */
+.manual-content{
+  flex: 1 1 auto;
+  display: flex; gap: 30px;
+  padding: 28px 32px;
+  min-width: 0;
+}
+.content-panel{
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sub-items-panel{
+  flex: 0 0 320px; max-width: 320px;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  position: sticky; top: 28px;
+  height: fit-content; max-height: calc(100dvh - 56px);
+  overflow: auto;
+}
+
+/* タブ（モバイルでは非表示） */
+.content-tabs{
+  position: sticky; top: 0; z-index: 5;
+  display: flex; gap: 8px; padding: 8px; margin-bottom: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--outline-variant);
+  border-radius: 18px;
+}
+.content-tabs .tab{
+  appearance: none; border: 1px solid var(--outline-variant);
+  background: var(--surface); color: var(--on-surface);
+  border-radius: 999px; padding: 10px 14px;
+  font-size: 14px; line-height: 1; cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+.content-tabs .tab:hover{ background: var(--hovered-variant); }
+.content-tabs .tab.active{
+  background: var(--color-primary); color: #fff; border-color: var(--color-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+/* セクション */
+.step-section{
+  /* background: var(--surface); */
+  /* border-radius: 12px; */
+  /* padding: 32px; */
+  margin-bottom: 28px;
+}
+.step-section.is-hidden{ display: none; }
+.step-header h2{ margin: 0 0 8px; font-size: 28px; }
+.step-number{ display: none !important; } /* 数字は不要 */
+
+.step-objective{
+  background: var(--color-tertiary);
+  padding: 16px; border-radius: 8px; margin: 12px 0 20px;
+}
+.step-content h3{
+  font-size: 18px; margin: 24px 0 14px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--outline-variant);
+}
+
+/* 手順 */
+.procedure-item{ margin-bottom: 26px; }
+.procedure-item h4{ color: var(--color-primary); margin: 0 0 12px; font-size: 16px; }
+.procedure-layout{ display: flex; gap: 24px; align-items: flex-start; }
+.procedure-image{
+  flex: 0 0 380px; border-radius: 8px; overflow: hidden;
+  border: 2px solid var(--outline-variant);
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.procedure-image img{ display:block; width:100%; height:auto; }
+.procedure-text{ flex: 1 1 auto; min-width: 0; }
+
+.notes{
+  background: #FFF5D6;
+  border-left: 4px solid var(--caution);
+  padding: 12px 14px; border-radius: 6px; margin-top: 12px;
+  font-size: 14px;
+}
+
+/* 右カラム（中項目） */
+.sub-items-group{ display:none; }
+.sub-items-group.active{ display:block; }
+.sub-items-group h4{ font-size:16px; color:var(--color-primary); margin:0; }
+.sub-items-group h4 + ul{
+  border-top: 1px solid var(--outline-variant);
+  padding-top: 14px; margin-top: 10px;
+}
+.sub-items-group ul{ list-style:none !important; padding-left:0 !important; margin:0; }
+.sub-items-group li{ margin:0 0 8px; }
+.sub-items-group a{
+  display:block; padding:10px 12px; border-radius:10px;
+  color: var(--color-primary); text-decoration:none; font-size:14px; line-height:1.6;
+}
+.sub-items-group a:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
+.sub-items-group a.active{
+  background: var(--color-primary); color:#fff; border: 1px solid transparent; text-shadow: 0 1px #0001;
+}
+
+/* TOC（左） */
+.toc{ padding: 12px; }
+.toc .toc-section{ margin-bottom: 12px; }
+.toc .toc-section h3{ margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+.toc .toc-section h3 .toc-link{
+  display: grid; grid-template-columns: 28px 1fr; column-gap: 12px;
+  align-items: center; padding: 12px 14px;
+  border-radius: 12px; color: var(--color-primary); text-decoration: none;
+  line-height: 1.6; white-space: normal; word-break: break-word; hyphens: auto;
+}
+.toc .toc-section h3 .toc-link i{ font-size: 18px; color: var(--color-primary); }
+.toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
+.toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
+.toc .toc-section h3 .toc-link.active i{ color:#fff; }
+
+/* レスポンシブ */
+@media (max-width: 1024px){
+  .procedure-layout{ flex-direction: column; }
+  .procedure-image{ flex: 1 1 auto; max-width: 100%; }
+}
+@media (max-width: 768px){
+  .hamburger-menu{ display:block; }
+  .manual-sidebar{
+    position: fixed; inset: 0 auto 0 0;
+    transform: translateX(-100%); transition: transform .2s ease;
+    z-index: 1002; width: min(86vw, 320px); max-width: none;
+    box-shadow: 2px 0 10px rgba(0,0,0,.1);
+  }
+  .manual-sidebar.active{ transform: translateX(0); }
+  .sidebar-resizer{ display: none; }
+  .content-tabs{ display: none; } /* 依頼：モバイルでタブは不要 */
+  .manual-content{ padding: 84px 18px 20px; gap: 18px; }
+  .sub-items-panel{ display: none; } /* モバイルの右カラムは非表示 */
+}
+@media (max-width: 480px){
+  .step-section{ padding: 22px; }
+  .step-header h2{ font-size: 22px; }
+}
+
+/* ===============================
+   Tabs: パディング/角丸を調整（上書き）
+   =============================== */
+
+/* タブの入れ物（ボックス） */
+.content-tabs{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;          /* 折り返し可 */
+  gap: 8px;
+  padding: 10px 12px !important;          /* ← 内側の余白をしっかり確保 */
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--outline-variant) !important;
+  border-radius: 12px !important;         /* ← ボックスの角丸は小さめ */
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  /* 以前の「下線だけ」の名残を消す */
+  border-bottom: none !important;
+}
+
+/* 個々のタブ */
+.content-tabs .tab{
+  appearance: none;
+  border: 1px solid var(--outline-variant) !important;
+  background: var(--surface);
+  color: var(--on-surface);
+  border-radius: 8px !important;          /* ← タブ本体の角丸（小さめ） */
+  padding: 8px 12px !important;           /* ← タブ内テキストの左右も詰まらないように */
+  line-height: 1;                         /* 文字中心寄せ */
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+.content-tabs .tab:hover{ background: var(--hovered-variant); }
+
+/* アクティブタブ */
+.content-tabs .tab.active{
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+/* Sticky直下のコンテンツが詰まって見えないよう微調整 */
+.content-panel > .step-section:first-of-type{
+  margin-top: 8px !important;
+}
+
+/* タブレット/モバイルでの内側余白も維持 */
+@media (max-width: 1024px){
+  .content-tabs{ padding: 10px 12px !important; }
+}
+@media (max-width: 768px){
+  .content-tabs{ padding: 10px 12px !important; }
+}
+
+/* === Tabs: 下ボーダーを復活させる（最優先で上書き） === */
+.content-tabs{
+  /* 枠線を四辺に出す */
+  border: 1px solid var(--outline-variant) !important;
+  border-bottom: 1px solid var(--outline-variant) !important; /* ← これで確実に復活 */
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+  margin-bottom: 16px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+
+/* もし以前の定義に `border-bottom: none !important;` が残っていたら削除してOK */
+
+
