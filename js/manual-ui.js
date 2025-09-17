@@ -908,6 +908,24 @@
   // 印刷前にh3を追加
   window.addEventListener('beforeprint', addPrintH3);
   
+  // 印刷前に目次を生成
+  window.addEventListener('beforeprint', () => {
+    try {
+      const tocRoot = document.getElementById('print-toc-list');
+      if (!tocRoot) return;
+      tocRoot.innerHTML = '';
+      const sections = Array.from(document.querySelectorAll('.content-panel .step-section'));
+      sections.forEach(sec => {
+        const h2 = sec.querySelector('.step-header h2');
+        if (!h2) return;
+        const txt = (h2.textContent || '').trim().replace(/^\s*\d+\s*[\.|\)\-]?\s*/, '');
+        const li = document.createElement('li');
+        li.textContent = txt;
+        tocRoot.appendChild(li);
+      });
+    } catch (_) {}
+  });
+  
   // 印刷後にh3を削除（画面表示を元に戻す）
   window.addEventListener('afterprint', () => {
     document.querySelectorAll('.print-h3').forEach(el => el.remove());

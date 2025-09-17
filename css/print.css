@@ -125,23 +125,20 @@
     flex-shrink: 0 !important;
   }
   
-    /* 手順レイアウトは1カラムに */
-    .procedure-layout { display: block !important; gap: 0 !important; }
+    /* 手順レイアウトをPC同等の2カラムに（画像50% + テキスト50%） */
+    .step-with-image { 
+      display: grid !important; 
+      grid-template-columns: 1fr 1fr !important; 
+      gap: 6mm !important; 
+      align-items: flex-start !important; 
+      break-inside: avoid !important; 
+      page-break-inside: avoid !important; 
+    }
   
     /* 画像は最大幅で表示、装飾は除去 */
-    .procedure-image,
-    .procedure-image img {
-      width: 100% !important;
-      max-width: 100% !important;
-      height: auto !important;
-    }
-    .procedure-image {
-      border: 0 !important;
-      box-shadow: none !important;
-      margin: 0 0 4mm !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
+    .procedure-image, .step-image { border: 0 !important; box-shadow: none !important; }
+    .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
+    .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
     img { break-inside: avoid; page-break-inside: avoid; }
   
     /* テキスト・リストの読みやすさ */
@@ -165,11 +162,23 @@
     }
   
     /* 余計な固定配置・アニメの抑止（sticky等の不具合回避） */
-    * {
-      animation: none !important;
-      transition: none !important;
-      position: static !important;
-    }
+    * { animation: none !important; transition: none !important; }
+
+    /* ====== 印刷用 目次とフッター ====== */
+    #print-cover, #print-toc { display: block !important; }
+    #print-cover { page-break-after: always !important; text-align: center !important; margin: 30mm 0 20mm !important; }
+    #print-cover .title { font-size: 22pt !important; margin: 0 0 4mm !important; color:#111 !important; }
+    #print-cover .subtitle { font-size: 12pt !important; color:#666 !important; }
+
+    #print-toc { page-break-after: always !important; }
+    #print-toc h2 { font-size: 14pt !important; margin: 0 0 6mm !important; color:#111 !important; }
+    #print-toc ol { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+    #print-toc li { font-size: 10pt !important; margin: 0 0 2mm !important; color:#333 !important; }
+
+    /* 目次の次のページからページ番号開始 */
+    .print-page-reset { break-before: page !important; counter-reset: page 0 !important; height: 0 !important; margin: 0 !important; }
+    .print-footer { position: fixed !important; right: 10mm !important; bottom: 8mm !important; font-size: 9pt !important; color:#666 !important; }
+    .print-footer::after { content: 'p.' counter(page); }
   
     /* 寄せ/孤行の軽減（対応ブラウザ向け） */
     p, li { orphans: 3; widows: 3; }
