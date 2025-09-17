@@ -500,7 +500,8 @@ body {
   align-items: flex-start;
 }
 .step-image{
-  flex: 0 0 200px;
+  flex: 0 0 50%;  /* 画像をコンテナの50%幅に */
+  max-width: 50%;
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--outline-variant);
@@ -514,6 +515,9 @@ body {
 .step-text{
   flex: 1 1 auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 .step-text p{
   margin: 0;
@@ -528,20 +532,21 @@ body {
   /* border-left: 4px solid var(--caution); */
   border-radius: 10px;
   padding: 14px 16px;
-  margin: 14px 0 0;                  /* 本文直後の余白 */
+  margin: 0;  /* step-text内でのgapで制御 */
   box-shadow: 0 2px 6px rgba(0,0,0,.04);
 }
 .note-card h5{
   margin: 0 0 6px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.4;
   color: #A56B00;
   font-weight: 700;
 }
 .note-card p{
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--on-surface);
+  line-height: 1.5;
 }
 /* レイアウト上、同じ列で縦積み */
 /* procedure-itemの直下に来る想定 - 必要ならここで幅調整 */
@@ -594,6 +599,10 @@ body {
 @media (max-width: 1024px){
   .procedure-layout{ flex-direction: column; }
   .procedure-image{ flex: 1 1 auto; max-width: 100%; }
+  .step-image{
+    flex: 0 0 200px;  /* モバイルでは固定幅に戻す */
+    max-width: 200px;
+  }
 }
 @media (max-width: 768px){
   .sub-items-panel{ display: none; } /* モバイルで右カラムを非表示 */
