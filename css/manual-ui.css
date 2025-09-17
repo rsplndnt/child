@@ -924,5 +924,5 @@ body {
 /* ====== レイアウト: 右カラム撤去 + メイン中央寄せ ====== */
 .sub-items-panel { display: none !important; }
 .manual-content { gap: 0 !important; justify-content: center; }
-.content-panel { flex: 0 1 1200px; max-width: 1200px; margin: 0 auto; }
+.content-panel { flex: 0 1 768px; max-width: 768px; margin: 0 auto; }
 
