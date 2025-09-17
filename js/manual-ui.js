@@ -106,6 +106,9 @@
 
     // 左TOCにサブ項目（右カラムの内容）を生成し、Expand More/Lessで開閉・永続化
     setupLeftTocSubitems({ tocLinks, subGroups });
+    
+    // トグルボタン追加後に再度数字を削除（念のため）
+    normalizeLabels();
 
     // タブクリック -> セクション切替
     tabs.forEach(tab => {
@@ -409,15 +412,11 @@
         const groupId = getGroupIdByHash(hash);
         if (!groupId) return;
         const rightGroup = document.getElementById(groupId);
-        // サブ項目がない章（用語、製品仕様など）はスキップ
+        // サブ項目がない章はスキップ
         if (!rightGroup) return;
         const items = Array.from(rightGroup.querySelectorAll('a'));
-        // リンクがない場合もスキップ
-        if (!items.length) {
-          // ただし、pタグがある場合（用語など）はそれもサブ項目として扱うかを判断
-          const hasContent = rightGroup.querySelector('p');
-          if (!hasContent) return;
-        }
+        // リンクがない場合はトグル不要なのでスキップ
+        if (!items.length) return;
 
         // リンク内にトグルアイコンを追加（テキストの右側）
         const h3 = link.closest('h3');
