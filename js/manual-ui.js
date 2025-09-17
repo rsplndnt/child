@@ -409,9 +409,15 @@
         const groupId = getGroupIdByHash(hash);
         if (!groupId) return;
         const rightGroup = document.getElementById(groupId);
+        // サブ項目がない章（用語、製品仕様など）はスキップ
         if (!rightGroup) return;
         const items = Array.from(rightGroup.querySelectorAll('a'));
-        if (!items.length) return;
+        // リンクがない場合もスキップ
+        if (!items.length) {
+          // ただし、pタグがある場合（用語など）はそれもサブ項目として扱うかを判断
+          const hasContent = rightGroup.querySelector('p');
+          if (!hasContent) return;
+        }
 
         // リンク内にトグルアイコンを追加（テキストの右側）
         const h3 = link.closest('h3');
@@ -421,7 +427,7 @@
         
         // リンク内にトグルアイコンがなければ追加
         let toggleIcon = link.querySelector('.toc-toggle-icon');
-        if (!toggleIcon) {
+        if (!toggleIcon && items.length > 0) {
           toggleIcon = document.createElement('span');
           toggleIcon.className = 'toc-toggle-icon material-icons';
           toggleIcon.textContent = 'expand_more';
@@ -738,9 +744,13 @@
   /* ---------------- normalize labels ---------------- */
   function normalizeLabels() {
     const strip = s => (s || '').replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim();
+    // 左TOCのテキスト部分のみ数字を削除
     document.querySelectorAll('.toc .toc-link span').forEach(el => el.textContent = strip(el.textContent));
+    // タブも数字を削除（モバイルでは非表示だが念のため）
     document.querySelectorAll('.content-tabs .tab').forEach(el => el.textContent = strip(el.textContent));
+    // 右カラム（現在非表示）のテキストも数字削除
     document.querySelectorAll('.sub-items-group h4, .sub-items-group a').forEach(el => el.textContent = strip(el.textContent));
+    // 手順項目の数字削除
     document.querySelectorAll('.content-panel .procedure-item h4').forEach(el => el.textContent = strip(el.textContent));
   }
 
