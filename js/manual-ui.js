@@ -108,9 +108,6 @@
 
     // 左TOCにサブ項目（右カラムの内容）を生成し、Expand More/Lessで開閉・永続化
     setupLeftTocSubitems({ tocLinks, subGroups });
-    
-    // トグルボタン追加後に再度数字を削除（念のため）
-    normalizeLabels();
 
     // タブクリック -> セクション切替
     tabs.forEach(tab => {
