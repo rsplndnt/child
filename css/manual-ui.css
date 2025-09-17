@@ -811,8 +811,16 @@ body {
   color: var(--color-primary);
   text-decoration: none;
   font-size: 13px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
-.toc .toc-sublist a:hover { background: var(--hovered-variant); }
+.toc .toc-sublist a:hover { 
+  background: var(--hovered-variant); 
+  color: var(--color-primary-700);
+}
+.toc .toc-sublist a.active {
+  background: var(--color-primary);
+  color: #fff;
+}
 
 /* ====== レイアウト: 右カラム撤去 + メイン中央寄せ ====== */
 .sub-items-panel { display: none !important; }
