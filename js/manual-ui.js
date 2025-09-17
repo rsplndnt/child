@@ -486,7 +486,7 @@
         // 初期状態の反映
         const key = groupId;
         const isOpen = Boolean(state[key]);
-        const toggleIcon = link.querySelector('.toc-toggle-icon');
+        // toggleIconは既に上で宣言済み
         applyTocOpenState({ sublist, toggleIcon, open: isOpen });
 
         // リンククリック時の処理を上書き（トグルも同時に行う）
