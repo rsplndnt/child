@@ -881,22 +881,42 @@
       if (!t) return true;
       if (/ダミー/.test(t)) return true;
       if (/後日追記予定/.test(t)) return true;
+      if (/詳細は後日追記/.test(t)) return true;
+      if (/併用時の制限など/.test(t)) return true;
+      if (/トランスクリプト機能利用時のしゃべり描きの制限など/.test(t)) return true;
+      if (/可能回数の制限/.test(t)) return true;
+      if (/左のマイクボタンを押して入力したら左吹き出し/.test(t)) return true;
+      if (/しゃべり描きマイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
+      if (/よく失敗するところを詳細に書いてあげる/.test(t)) return true;
+      if (/よくある質問と回答/.test(t)) return true;
       return false;
     };
 
     document.querySelectorAll('.note-card').forEach(card => {
+      // pタグとliタグの両方を探す
       const ps = Array.from(card.querySelectorAll('p'));
-      const content = ps.map(p => (p.textContent || '').trim()).join('\n');
+      const lis = Array.from(card.querySelectorAll('li'));
+      const content = [...ps, ...lis].map(el => (el.textContent || '').trim()).join('\n');
+      
+      // ダミーコンテンツや空の場合はis-emptyを追加、そうでなければ削除
       if (isEmptyText(content)) {
         card.classList.add('is-empty');
+      } else {
+        card.classList.remove('is-empty');
       }
     });
 
     document.querySelectorAll('.step-advice').forEach(card => {
+      // pタグとliタグの両方を探す
       const ps = Array.from(card.querySelectorAll('p'));
-      const content = ps.map(p => (p.textContent || '').trim()).join('\n');
+      const lis = Array.from(card.querySelectorAll('li'));
+      const content = [...ps, ...lis].map(el => (el.textContent || '').trim()).join('\n');
+      
+      // ダミーコンテンツや空の場合はis-emptyを追加、そうでなければ削除
       if (isEmptyText(content)) {
         card.classList.add('is-empty');
+      } else {
+        card.classList.remove('is-empty');
       }
     });
   }
