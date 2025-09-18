@@ -139,21 +139,17 @@
   /* 手順レイアウトをPC同等の2カラムに（テキスト左50% + 画像右50%） */
   .step-with-image { 
     display: grid !important; 
-    grid-template-columns: 1fr 1fr !important; 
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto auto !important; /* 3行構成を明示 */
     gap: 6mm !important; 
     align-items: flex-start !important; 
     break-inside: avoid !important; 
-    page-break-inside: avoid !important; 
-    grid-auto-flow: dense !important; /* PC表示と同じ */
+    page-break-inside: avoid !important;
   }
 
-  /* テキストを左側（1列目）に配置 */
-  .step-text {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 3mm !important;
+  /* step-textをグリッドコンテナとして扱わない */
+  .step-with-image .step-text {
+    display: contents !important; /* 子要素を親グリッドに直接配置 */
   }
 
   /* 画像を右側（2列目）に配置 */
@@ -170,12 +166,21 @@
   .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
   img { break-inside: avoid; page-break-inside: avoid; }
   
-  /* 注意事項・補足事項は全幅（印刷時のみ） */
-  .step-with-image .note-card {
+  /* step-text内のol/pだけを1列目に配置 */
+  .step-with-image .step-text > ol,
+  .step-with-image .step-text > p {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+  
+  /* 注意事項・補足事項は全幅（2列目まで） */
+  .step-with-image .note-card,
+  .step-with-image .step-text .note-card {
     grid-column: 1 / -1 !important;
     grid-row: 2 !important;
     width: 100% !important;
-    margin-top: 3mm !important;
+    margin: 3mm 0 !important;
+    display: block !important;
   }
   
   /* ワンポイントアドバイスは常に全幅（グリッドの下部） */
