@@ -675,10 +675,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   font-size: var(--sd-font-size-lg); /* md → lg */
   line-height: var(--sd-line-height-normal);
   list-style: none;
-  counter-reset: step-counter;
 }
 .step-text ol li{
-  counter-increment: step-counter;
   position: relative;
   padding-left: 40px;
   margin-bottom: 12px;
@@ -700,8 +698,17 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   justify-content: center;
   font-size: 18px;
   font-weight: bold;
-  content: counter(step-counter);
 }
+/* 各リストアイテムに番号を設定 */
+.step-text ol li:nth-child(1)::before { content: '1'; }
+.step-text ol li:nth-child(2)::before { content: '2'; }
+.step-text ol li:nth-child(3)::before { content: '3'; }
+.step-text ol li:nth-child(4)::before { content: '4'; }
+.step-text ol li:nth-child(5)::before { content: '5'; }
+.step-text ol li:nth-child(6)::before { content: '6'; }
+.step-text ol li:nth-child(7)::before { content: '7'; }
+.step-text ol li:nth-child(8)::before { content: '8'; }
+.step-text ol li:nth-child(9)::before { content: '9'; }
 
 /* ★独立した注意事項カード */
 .note-card{
