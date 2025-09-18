@@ -28,6 +28,91 @@ body {
   --sidebar-w-max: 520px;
 }
 
+/* ================================
+   Design Tokens (System)
+   画像のスケールに合わせて定義
+   ================================ */
+:root{
+  /* Reference: Dimension Scale */
+  --sd-scale-0: 0px;
+  --sd-scale-1: 1px;
+  --sd-scale-2: 2px;
+  --sd-scale-3: 4px;
+  --sd-scale-4: 8px;
+  --sd-scale-5: 12px;
+  --sd-scale-6: 16px;
+  --sd-scale-7: 20px;
+  --sd-scale-8: 24px;
+  --sd-scale-9: 28px;
+  --sd-scale-10: 32px;
+  --sd-scale-11: 36px;
+  --sd-scale-12: 40px;
+  --sd-scale-13: 48px;
+  --sd-scale-14: 56px;
+  --sd-scale-15: 64px;
+  --sd-scale-16: 72px;
+  --sd-scale-17: 80px;
+  --sd-scale-18: 96px;
+
+  /* Spacing (System Tokens) */
+  --sd-spacing-none: var(--sd-scale-0);
+  --sd-spacing-twoXS: var(--sd-scale-3); /* 4px */
+  --sd-spacing-xs: var(--sd-scale-4);    /* 8px */
+  --sd-spacing-sm: var(--sd-scale-5);    /* 12px */
+  --sd-spacing-md: var(--sd-scale-6);    /* 16px */
+  --sd-spacing-lg: var(--sd-scale-7);    /* 20px */
+  --sd-spacing-xl: var(--sd-scale-8);    /* 24px */
+  --sd-spacing-2xl: var(--sd-scale-10);  /* 32px */
+  --sd-spacing-3xl: var(--sd-scale-12);  /* 40px */
+  --sd-spacing-4xl: var(--sd-scale-13);  /* 48px */
+  --sd-spacing-5xl: var(--sd-scale-15);  /* 64px */
+  --sd-spacing-6xl: var(--sd-scale-17);  /* 80px */
+
+  /* Border (System Tokens) */
+  --sd-border-medium: 2px;
+  --sd-border-thick: 3px;
+  --sd-border-extra: 4px;
+
+  /* Radius (System Tokens) */
+  --sd-radius-xs: 2px;
+  --sd-radius-sm: 4px;
+  --sd-radius-md: 8px;
+  --sd-radius-lg: 12px;
+  --sd-radius-xl: 16px;
+  --sd-radius-full: 9999px;
+
+  /* Breakpoints */
+  --sd-breakpoint-sm: 640px;
+  --sd-breakpoint-md: 768px;
+  --sd-breakpoint-lg: 1024px;
+  --sd-breakpoint-xl: 1280px;
+  --sd-breakpoint-compact: 0px;
+  --sd-breakpoint-expanded: var(--sd-breakpoint-md);
+
+  /* Elevation (Shadows) */
+  --sd-shadow-1: 0 1px 2px rgba(0,0,0,.08), 0 1px 1px rgba(0,0,0,.04);
+  --sd-shadow-2: 0 2px 4px rgba(0,0,0,.10), 0 1px 1px rgba(0,0,0,.04);
+  --sd-shadow-3: 0 4px 8px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.06);
+  --sd-shadow-4: 0 8px 16px rgba(0,0,0,.14), 0 4px 4px rgba(0,0,0,.08);
+  --sd-shadow-5: 0 12px 24px rgba(0,0,0,.16), 0 8px 8px rgba(0,0,0,.10);
+
+  /* Typography */
+  --sd-font-sans: "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  --sd-font-mono: "Noto Sans Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --sd-font-weight-regular: 400;
+  --sd-font-weight-medium: 500;
+  --sd-font-weight-bold: 700;
+  --sd-font-size-xs: 12px;
+  --sd-font-size-sm: 14px;
+  --sd-font-size-md: 16px;
+  --sd-font-size-lg: 18px;
+  --sd-font-size-xl: 24px;
+  --sd-font-size-2xl: 32px;
+  --sd-line-height-tight: 1.3;
+  --sd-line-height-normal: 1.6;
+  --sd-line-height-loose: 1.8;
+}
+
 /* a11y focus */
 :focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
 
@@ -541,6 +626,7 @@ body {
   align-items: flex-start;
 }
 .step-image{
+  grid-column: 2;  /* 画像を右側に */
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--outline-variant);
@@ -552,6 +638,7 @@ body {
   height: auto;
 }
 .step-text{
+  grid-column: 1;  /* テキストを左側に */
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -676,9 +763,8 @@ body {
 @media (max-width: 1024px){
   .procedure-layout{ flex-direction: column; }
   .procedure-image{ flex: 1 1 auto; max-width: 100%; }
-  .step-with-image{
-    grid-template-columns: 200px 1fr;  /* モバイルでは画像を固定幅に */
-  }
+  .step-with-image{ grid-template-columns: 1fr; }
+  .step-image{ grid-column: 1; }
 }
 @media (max-width: 768px){
   .step-with-image{
