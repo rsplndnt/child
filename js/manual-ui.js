@@ -235,6 +235,10 @@
 
     // 初期表示のセクション
     activateSection('#top', { scrollToTop: false });
+    
+    // デバッグ用: グローバルに公開
+    window.debugActivateSection = activateSection;
+    window.debugSections = sections;
     // 検索モジュール
     const searchModule = createSearchModule({
       sectionsSelector: '.content-panel .step-section',
@@ -670,6 +674,11 @@
 
     function activateSection(targetHash, opts = {}) {
       if (!targetHash) return;
+      
+      // デバッグ用
+      console.log(`[activateSection] Switching to: ${targetHash}`);
+      console.log(`[activateSection] Found ${sections.length} sections`);
+      
       tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-target') === targetHash));
       sections.forEach(sec => {
         const shouldBeHidden = `#${sec.id}` !== targetHash;
@@ -677,6 +686,7 @@
           sec.classList.add('is-hidden');
         } else {
           sec.classList.remove('is-hidden');
+          console.log(`[activateSection] Showing section: ${sec.id}`);
         }
       });
       document.querySelectorAll('.toc .toc-link').forEach(a => {
