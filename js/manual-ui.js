@@ -100,6 +100,7 @@
     normalizeLabels();
     insertPlaceholders();
     addDummyContent();
+    markEmptyInfoCards();
 
     // 初期化時に✕ボタンを非表示
     const closeBtn = document.getElementById('sidebarCloseBtn');
@@ -834,7 +835,7 @@
       // 既存のnote-cardがない場合は追加
       if (!stepText.querySelector('.note-card')) {
         const noteCard = document.createElement('aside');
-        noteCard.className = 'note-card';
+        noteCard.className = 'note-card is-empty';
         noteCard.setAttribute('role', 'note');
         noteCard.innerHTML = `
           <h5>⚠ 注意事項・補足事項</h5>
@@ -846,7 +847,7 @@
       // 既存のstep-adviceがない場合は追加
       if (!step.querySelector('.step-advice')) {
         const stepAdvice = document.createElement('div');
-        stepAdvice.className = 'step-advice';
+        stepAdvice.className = 'step-advice is-empty';
         stepAdvice.innerHTML = `
           <h5>ワンポイントアドバイス</h5>
           <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
@@ -856,15 +857,51 @@
     });
   }
 
+  // ダミー/空の注意事項・アドバイスを自動でis-emptyに
+  function markEmptyInfoCards() {
+    const isEmptyText = (txt) => {
+      const t = (txt || '').replace(/\s+/g, '').trim();
+      if (!t) return true;
+      if (/ダミー/.test(t)) return true;
+      if (/後日追記予定/.test(t)) return true;
+      return false;
+    };
+
+    document.querySelectorAll('.note-card').forEach(card => {
+      const ps = Array.from(card.querySelectorAll('p'));
+      const content = ps.map(p => (p.textContent || '').trim()).join('\n');
+      if (isEmptyText(content)) {
+        card.classList.add('is-empty');
+      }
+    });
+
+    document.querySelectorAll('.step-advice').forEach(card => {
+      const ps = Array.from(card.querySelectorAll('p'));
+      const content = ps.map(p => (p.textContent || '').trim()).join('\n');
+      if (isEmptyText(content)) {
+        card.classList.add('is-empty');
+      }
+    });
+  }
+
   /* ---------------- 注意事項とワンポイントアドバイスの表示/非表示切り替え ---------------- */
   function toggleContentVisibility(type, show) {
     if (type === 'notes') {
       document.querySelectorAll('.note-card').forEach(el => {
-        el.style.display = show ? '' : 'none';
+        if (show) {
+          // ダミー(is-empty)は表示しない
+          el.style.display = el.classList.contains('is-empty') ? 'none' : '';
+        } else {
+          el.style.display = 'none';
+        }
       });
     } else if (type === 'advice') {
       document.querySelectorAll('.step-advice').forEach(el => {
-        el.style.display = show ? '' : 'none';
+        if (show) {
+          el.style.display = el.classList.contains('is-empty') ? 'none' : '';
+        } else {
+          el.style.display = 'none';
+        }
       });
     }
   }

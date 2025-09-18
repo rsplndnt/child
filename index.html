@@ -1,16 +1,11 @@
-<!--
-  templateType: "page"
-  label: "翻訳サイネージマニュアル（完全版）"
-  isAvailableForNewContent: true
--->
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>翻訳サイネージ ユーザーマニュアル</title>
-    <meta name="description" content="多言語対応デジタルサイネージシステムの完全操作ガイド">
+    <title>しゃべり描き翻訳 ユーザーマニュアル</title>
+    <meta name="description" content="しゃべり描き翻訳アプリケーションの完全操作ガイド">
 
     <!-- Fonts / Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +35,6 @@
         /* インラインスタイルは削除 - CSSファイルで管理 */
     </style>
 
-
     <script src="js/manual-ui.js"></script>
 
 </head>
@@ -48,10 +42,9 @@
 <body>
     <!-- 印刷専用：ページ番号用の要素（現在は未使用） -->
     <div class="print-page-reset" style="display:none"></div>
-    <div class="print-footer" style="display:none"> </div>
+    <div class="print-footer" style="display:none"></div>
     <div class="manual-wrapper">
         <div class="menu-overlay" id="menuOverlay"></div>
-
 
         <!-- 左：サイドバー（大項目） -->
         <aside class="manual-sidebar" id="sidebarMenu" aria-label="大項目ナビ">
@@ -62,7 +55,7 @@
                         <span>しゃべり描き翻訳<br>ユーザーマニュアル</span>
                     </a></h1>
                 <div class="version-info">
-                    <span class="version">v1.1</span>
+                    <span class="version">v1.0</span>
                 </div>
                 <!-- モバイル用閉じるボタン -->
                 <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="メニューを閉じる">
@@ -84,7 +77,6 @@
                 <div id="manualSearchResults" class="search-results"></div>
             </div>
 
-
             <nav class="toc">
                 <!-- TOPセクションは左TOCには表示しない -->
                 <div class="toc-section">
@@ -97,7 +89,7 @@
                 </div>
                 <div class="toc-section">
                     <h3><a class="toc-link" href="#section3"><i class="fas fa-mouse-pointer"></i><span>3.
-                                基本の操作を行う</span></a></h3>
+                                しゃべり描き翻訳を操作する</span></a></h3>
                 </div>
                 <div class="toc-section">
                     <h3><a class="toc-link" href="#section4"><i class="fas fa-microphone"></i><span>4.
@@ -108,14 +100,13 @@
                     <h3><a class="toc-link" href="#section5"><i class="fas fa-book"></i><span>5. 用語</span></a></h3>
                 </div>
                 <div class="toc-section">
-                    <h3><a class="toc-link" href="#section6"><i class="fas fa-info"></i><span>6. 製品仕様</span></a></h3>
+                    <h3><a class="toc-link" href="#section6"><i class="fas fa-circle-question"></i><span>6. FAQ</span></a></h3>
                 </div>
                 <div class="toc-section">
-                    <h3><a class="toc-link" href="#section7"><i class="fas fa-circle-question"></i><span>7. FAQ</span></a></h3>
+                    <h3><a class="toc-link" href="#section7"><i class="fas fa-info"></i><span>7. 製品仕様</span></a></h3>
                 </div>
             </nav>
         </aside>
-
 
         <!-- ハンバーガーメニュー -->
         <button class="hamburger-menu" id="hamburgerMenu" aria-label="メニューを開く" aria-expanded="false">
@@ -132,10 +123,8 @@
                 <!-- タブの直前に配置。aria-hidden を外す -->
                 <section class="print-cover only-print">
                     <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png" alt="MelBridge ロゴ" />
-                    <h1>翻訳サイネージ利用マニュアル</h1>
+                    <h1>しゃべり描き翻訳利用マニュアル</h1>
                 </section>
-
-
 
                 <!-- ========== TOP Page ========== -->
                 <section id="top" class="step-section print-cover">
@@ -144,7 +133,7 @@
                     </header>
                     <div class="step-content">
                         <div class="procedure-item">
-                            <h4 id="top-item1">1. 2言語間のコミュニケーション</h4>
+                            <h4 id="top-item1">1. ２言語間のコミュニケーション</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -152,25 +141,14 @@
                                             alt="2言語間コミュニケーション" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>しゃべり描き翻訳は、異なる2言語の会話を文字起こし・翻訳するコミュニケーションアプリです。</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>同一言語を選択して使用することもできます</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-                                        </p>
+                                        <p>しゃべり描き翻訳は、異なる２言語の会話を文字起こし・翻訳するコミュニケーションアプリです。</p>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
-                            <h4 id="top-item2">2. しゃべり描きでお絵描き・画像を組み合わせて翻訳</h4>
+                            <h4 id="top-item2">2. しゃべり描きでお絵描き・画像を組み合わせて翻訳</h4>   
                             <div class="procedure-steps">
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -206,10 +184,6 @@
                     <header class="step-header">
                         <h2><span class="step-number">01</span> アカウントの初期設定を行う</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで達成すること</h3>
-                        <p>アカウントの初期設定を完了し、二段階認証を設定する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
                             <h4 id="section1-item1">1. サインインする</h4>
@@ -220,8 +194,8 @@
                                             alt="サインイン手順1" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>1. ブラウザで[https://swipetalk.melbridge.com]にアクセスします。</p>
-                                    </div>
+                                        <p>1. ブラウザで[https://swipetalk.melbrige.com]にアクセスします。</p>
+                                      </div>
                                 </div>
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -232,8 +206,8 @@
                                         <p>2. [サインイン]画面で アカウント名を入力し[次へ]を押します。</p>
                                         <aside class="note-card" role="note">
                                             <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>アカウント名および仮パスワードは、MelBridge事務局からあなた宛てにメールでお送りしています。</p>
-                                            <p>件名：しゃべり描き翻訳_アカウント発行のご連絡</p>
+                                            <p>アカウント名および仮パスワードは、MelBridge事務局からあなた宛てにメールでお送りしています。<br>
+                                            件名：しゃべり描き翻訳_アカウント発行のご連絡</p>
                                         </aside>
                                     </div>
                                 </div>
@@ -243,7 +217,7 @@
                                             alt="サインイン手順3" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>3. [パスワード]画面で 仮パスワードを入力し[サインイン]を押します</p>
+                                        <p>3. [パスワード]画面で 仮パスワードを入力し[サインイン]を押します。</p>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -253,19 +227,9 @@
                                     </div>
                                     <div class="step-text">
                                         <p>4. [パスワードの更新] 画面が表示されます。現在の仮パスワードと新しいパスワードを入力し、 [サインイン] を押します。</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>アカウント名・仮パスワードはMelBridge事務局からあなた宛てにメールでお送りしています。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>パスワードは8文字以上で、大文字・小文字・数字・記号を含める必要があります。忘れないようにメモしておきましょう。</p>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -277,8 +241,8 @@
                                             alt="Authenticator設定手順1" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>1. Microsoft
-                                            Authenticatorアプリに関する案内が表示されます。<br>[QRコードをスキャンします]の画面が表示されるまで[次へ]を押します。</p>
+                                        <p>1. Microsoft Authenticatorアプリに関する案内が表示されます。<br>
+                                        [QRコードをスキャンします]の画面が表示されるまで[次へ]を押します。</p>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -297,6 +261,11 @@
                                     </div>
                                     <div class="step-text">
                                         <p>3. スマートフォンで【Microsoft Authenticator】アプリを起動します。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>アプリをお持ちでない場合は、お使いのスマートフォンのアプリストアからMicrosoft Authenticatorを入手してください</p>
+                                            <p>スマートフォンのカメラアプリ/コードスキャンアプリからQRコードを読み取っても認証されません。必ず【Microsoft Authenticator】アプリを使用してください。</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -305,7 +274,7 @@
                                             alt="Authenticator設定手順4" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>4. [QRアイコン] または [Verified IDs]を押し、QRをスキャンする画面に移動します</p>
+                                        <p>4. [QRアイコン] または [Verified IDs]を押し、QRをスキャンする画面に移動します。</p>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -315,17 +284,9 @@
                                     </div>
                                     <div class="step-text">
                                         <p>5. PCのブラウザに表示されたQRコードを、スマートフォンで読み取ります。</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>アプリをお持ちでない場合は、お使いのスマートフォンのアプリストアからMicrosoft Authenticatorを入手してください</p>
-                                            <p>スマートフォンのカメラアプリ/コードスキャンアプリからQRコードを読み取っても認証されません。必ず【Microsoft
-                                                Authenticator】アプリを使用してください。</p>
-                                        </aside>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -364,7 +325,11 @@
                                             alt="Authenticator認証手順4" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>4. PCで[通知が承認されました]を確認し[次へ]→[完了]を押します。</p>
+                                        <p>4. PCのブラウザで[通知が承認されました]と表示されたことを確認します。[次へ]を押し、[成功]画面で[完了]を押します。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>今後パスワードを入力せずにアクセスしたい場合、[サインインの状態を維持しますか？]の画面で[今後このメッセージを表示しない]をチェックし[はい]を押します。</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -374,15 +339,9 @@
                                     </div>
                                     <div class="step-text">
                                         <p>5. ログインが完了します。</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>[サインインの状態を維持しますか？] で「今後このメッセージを表示しない」をチェックすると次回以降が楽です。</p>
-                                        </aside>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </section>
@@ -392,10 +351,6 @@
                     <header class="step-header">
                         <h2><span class="step-number">02</span> 画面構成</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで理解すること</h3>
-                        <p>アプリの画面構成と各エリアの機能を理解する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
                             <h4 id="section2-item1">1. シート管理エリア</h4>
@@ -406,11 +361,9 @@
                                             alt="シート管理エリア" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <ul>
-                                            <li>シート選択・シート作成</li>
-                                            <li>シートタイトル</li>
-                                            <li>書き出し</li>
-                                        </ul>
+                                        <p>1. シート選択・シート作成</p>
+                                        <p>2. シートタイトル</p>
+                                        <p>3. 書き出し</p>
                                     </div>
                                 </div>
                             </div>
@@ -425,23 +378,32 @@
                                             alt="キャンバスエリア" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <ul>
-                                            <li>スクロール/拡縮（マウス・指の操作方法）</li>
-                                            <li>しゃべり描きマイクボタン</li>
-                                            <li>言語選択ボタン</li>
-                                            <li>しゃべり描き文字（入力文・翻訳文字・折り返し翻訳）</li>
-                                            <li>パレット（ツール/文字サイズ/ペンサイズ/色）</li>
-                                            <li>Undo/Redo</li>
-                                            <li>ヘルプ</li>
-                                        </ul>
+                                        <p>1. キャンバス</p>
+                                        <p>　○スクロール（マウス・指の操作方法）</p>
+                                        <p>　　マウスの場合　上下：ホイール、左右：[Shift]+ホイール</p>
+                                        <p>　　指　　の場合　２本指でドラッグ</p>
+                                        <p>　○拡大・縮小</p>
+                                        <p>　　マウスの場合　[Ctrl]+ホイール</p>
+                                        <p>　　指　　の場合　２本指でピンチイン・ピンチアウト</p>
+                                        <p>2. しゃべり描きマイクボタン</p>
+                                        <p>3. 言語選択ボタン</p>
+                                        <p>4. しゃべり描き文字（入力文・翻訳文字・折り返し翻訳）</p>
+                                        <p>　パレット</p>
+                                        <p>　ツール（カーソル・ペン・消しゴム）</p>
+                                        <p>　文字サイズ選択</p>
+                                        <p>　ペンサイズ選択</p>
+                                        <p>　色の変更</p>
+                                        <p>5. カメラ</p>
+                                        <p>6. ファイル</p>
+                                        <p>7. アンドゥ・リドゥ</p>
                                         <aside class="note-card" role="note">
                                             <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>（可能回数の制限）</p>
+                                            <p>51回以上のアンドゥ・リドゥはできません。</p>
                                         </aside>
+                                        <p>8. ヘルプ</p>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="procedure-item">
@@ -453,11 +415,9 @@
                                             alt="トランスクリプトエリア" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <ul>
-                                            <li>トランスクリプトマイクボタン</li>
-                                            <li>言語表示バッジ</li>
-                                            <li>トランスクリプト文字（入力文・翻訳文字・折り返し翻訳）</li>
-                                        </ul>
+                                        <p>1. トランスクリプトマイクボタン</p>
+                                        <p>2. 言語表示バッジ</p>
+                                        <p>3. トランスクリプト文字（入力文・翻訳文字・折り返し翻訳）</p>
                                     </div>
                                 </div>
                             </div>
@@ -468,15 +428,11 @@
                 <!-- ========== Section 3 ========== -->
                 <section id="section3" class="step-section is-hidden">
                     <header class="step-header">
-                        <h2><span class="step-number">03</span> 基本の操作を行う</h2>
+                        <h2><span class="step-number">03</span> しゃべり描き翻訳を操作する</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで達成すること</h3>
-                        <p>アプリの基本的な操作方法を習得する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
-                            <h4 id="section3-item1">1. サインイン</h4>
+                            <h4 id="section3-item1">1. サインインする</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -484,8 +440,7 @@
                                             alt="サインイン手順1" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>1. ブラウザで <a href="https://swipetalk.melbridge.com"
-                                                target="_blank">https://swipetalk.melbridge.com</a> にアクセスします。</p>
+                                        <p>1. ブラウザで[https://swipetalk.melbrige.com]にアクセスします。</p>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -497,15 +452,12 @@
                                         <p>2. [サインイン]画面で アカウントを選択すると、アプリ画面が開きます。</p>
                                         <aside class="note-card" role="note">
                                             <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>パスワードを求められたら、あなたが設定したパスワードを入力してください。パスワードを設定した覚えがない場合は、初期設定
-                                                1の3以降の手順を実行したか確認してください。</p>
+                                            <p>パスワードを求められたら、あなたが設定したパスワードを入力してください。パスワードを設定した覚えがない場合は、初期設定 1の3以降の手順を実行したか確認してください。</p>
                                             <p>Microsoft Authenticatorの認証を求められたら、初期設定 3の1~5の手順を行ってください。</p>
                                         </aside>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -517,7 +469,7 @@
                                             alt="シート作成手順1" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>1. [シートボタン]を押します</p>
+                                        <p>1. [シートボタン]を押します。</p>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -526,7 +478,12 @@
                                             alt="シート作成手順2" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>2. [シートの新規作成]で新しいシートが作成されます。過去のシートはリストで保持されます。</p>
+                                        <p>2. [シートの新規作成]を押すと、新しいシートが作成されます。<br>
+                                        あなたが過去に作成したシートはリスト形式で保持されます。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>シートは最大10枚までしか作成できません。作成済みのシートが10枚に達した状態で新しいシートを作成した場合、作成日が古いシートから非表示になり、アクセスできません。</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -535,16 +492,10 @@
                                             alt="シート作成手順3" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>3. シートタイトルを押すと任意の名称に変更できます</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>シートは10枚まで保持可能。</p>
-                                        </aside>
+                                        <p>3. シートタイトルを押すと、任意の名称に変更できます。</p>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -565,7 +516,12 @@
                                             alt="言語選択手順2" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>2. 使用したい言語を選択し[決定]を押します。</p>
+                                        <p>2. 使用可能な言語の一覧が表示されます。使用したい言語を選択し[決定]を押します。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>・使用可能な言語の一覧は製品仕様-翻訳言語 をご覧ください。<br>
+                                            ・同一言語を選択して使用することもできます。その場合、翻訳は行われません。</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -574,16 +530,14 @@
                                             alt="言語選択手順3" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>3. しゃべり描きマイクと言語が連動して設定されます。</p>
+                                        <p>3. しゃべり描きマイクの言語と、対応するトランスクリプトマイクの言語が選択したものに設定されます。</p>
                                         <aside class="note-card" role="note">
                                             <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>利用可能な言語は「製品仕様-翻訳言語」を参照。</p>
+                                            <p>・（しゃべり描きマイクとトランスクリプトマイクの言語は連動している件）</p>
                                         </aside>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -618,15 +572,15 @@
                                     </div>
                                     <div class="step-text">
                                         <p>3. キャンバスの任意の場所をマウス・指でなぞると、文字が表示されます。</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ボタンが青くなってから話し始めてください。途中キャンセルは再押下またはパレット操作で可能。</p>
-                                        </aside>
+                                        <div class="step-advice">
+                                            <h5>ワンポイントアドバイス</h5>
+                                            <p>しゃべり描きマイクボタンを押したあと、すぐにキャンバスをなぞり、その後音声入力しても、文字が表示されます。</p>
+                                            <p>しゃべり描きを途中でキャンセルしたい場合は、しゃべり描きマイクボタンを再度押すか、ツールパレットのいずれかのボタンを押します。</p>
+                                            <p>しゃべり描きの色を選択したい場合はツールパレットの[●]を押します。しゃべり描きのサイズを変更したい場合は[A][A]のいずれかを選択します。</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -647,7 +601,11 @@
                                             alt="トランスクリプト手順2" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>2. ボタンが青色になったら音声入力します。</p>
+                                        <p>2. トランスクリプトマイクボタンが青色になったら、音声を入力します。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>マイクボタンを押してから音声入力できるようになるまで短いラグがあります。必ずボタンが青くなるのを確認してから音声入力してください。</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -656,7 +614,11 @@
                                             alt="トランスクリプト手順3" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>3. 入力は吹き出し単位で区切られ、翻訳/折返し翻訳が表示されます。</p>
+                                        <p>3. 入力した文章が文字起こしされます。文章の吹き出しは一定の間隔で区切られ、翻訳・折り返し翻訳が表示されます。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>・左のマイクボタンを押して入力した文言（左のマイクで入力したら左吹き出し、右のマイクで入力したら右吹き出しになる件）</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -665,7 +627,12 @@
                                             alt="トランスクリプト手順4" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>4. 終了するには有効なボタンを再度押してグレー表示を確認します。</p>
+                                        <p>4. トランスクリプトを終了したい場合は、有効になっているトランスクリプトマイクボタンを再度押し、ボタンがグレーになるのを確認します。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意事項・補足事項</h5>
+                                            <p>・トランスクリプトでは通常、音声の区切りによる自動終了は行われません。<br>
+                                            ・音声認識を連続して10分有効にすると、強制的に終了します</p>
+                                        </aside>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -674,16 +641,10 @@
                                             alt="トランスクリプト手順5" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>5. 片側が有効中にもう一方を押すと認識言語が切り替わります。</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>自動終了はしません。10分連続で有効の場合は強制終了します。</p>
-                                        </aside>
+                                        <p>5. 一方の言語でトランスクリプトが有効のときに、もう一方のトランスクリプトマイクボタンを押すと、認識言語が切り替わり、もう一方の言語での音声認識が開始されます。</p>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
@@ -697,9 +658,29 @@
                                                 alt="画像貼り付け手順1" loading="lazy">
                                         </div>
                                         <div class="step-text">
-                                            <p>A-1. ツールパレット内の[カメラボタン]を押します</p>
-                                            <p>A-2. 撮影画面で[カメラボタン]を押し撮影</p>
-                                            <p>A-3. [これを使用]で中央に配置</p>
+                                            <p>A-1. ツールパレット内の[カメラボタン]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="画像貼り付け手順2" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-2. 撮影画面が出現します。[カメラボタン]を押すと写真を撮影できます。</p>
+                                            <aside class="note-card" role="note">
+                                                <h5>⚠ 注意事項・補足事項</h5>
+                                                <p>アプリを使用している端末に２つ以上のカメラが接続されている場合、自動でいずれかのカメラが選択されます。あなた自身によるカメラの切替はできません。</p>
+                                            </aside>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="画像貼り付け手順3" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-3. 確認画面が表示されます。[これを使用]を押すと、撮影した写真がキャンバスの中央に配置されます。</p>
                                         </div>
                                     </div>
                                 </div>
@@ -708,22 +689,40 @@
                                     <div class="step-with-image">
                                         <div class="step-image">
                                             <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                                alt="画像貼り付け手順2" loading="lazy">
+                                                alt="画像貼り付け手順4" loading="lazy">
                                         </div>
                                         <div class="step-text">
-                                            <p>B-1. [画像ボタン]を押してギャラリーから選択</p>
+                                            <p>B-1. ツールパレット内の[ファイルボタン]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="画像貼り付け手順5" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>B-2. エクスプローラー画面が出現します。貼り付けたい画像を選択して[開く]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="画像貼り付け手順6" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>B-3. 選択した写真がキャンバスの中央に配置されます。</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="step-with-subsection">
-                                    <h5 class="step-subsection-title">C. クリップボードの画像を貼り付ける</h5>
+                                    <h5 class="step-subsection-title">C. クリップボードにコピーされた画像を貼り付ける</h5>
                                     <div class="step-with-image">
                                         <div class="step-image">
                                             <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                                alt="画像貼り付け手順3" loading="lazy">
+                                                alt="画像貼り付け手順7" loading="lazy">
                                         </div>
                                         <div class="step-text">
-                                            <p>C-1. 画像コピー後、[カーソル]選択で Ctrl+V で貼り付け</p>
+                                            <p>C-1. クリップボードに画像をコピーし、アプリ画面のウィンドウを開いた状態で[Ctrl]+[V]を押すと、コピーした画像がキャンバスの中央に配置されます。</p>
                                         </div>
                                     </div>
                                 </div>
@@ -739,137 +738,105 @@
                                             alt="お絵描き手順1" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>1. [ペンボタン]でキャンバスをなぞる</p>
-                                    </div>
-                                </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="お絵描き手順2" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>2. 太さは3種類から選択可能</p>
-                                    </div>
-                                </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="お絵描き手順3" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>3. 色は[●]から選択</p>
+                                        <p>1. ツールパレット内の[ペンボタン]を選択した状態で、キャンバスを押してなぞります。</p>
                                         <aside class="note-card" role="note">
                                             <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>2指タッチ描画は非対応</p>
+                                            <p>タッチ操作の場合、マルチタッチによる描画はできません。必ず1点のみをタッチして描画してください。</p>
                                         </aside>
+                                        <div class="step-advice">
+                                            <h5>ワンポイントアドバイス</h5>
+                                            <p>[ペンボタン]を押すとペンの太さを3種類から選択できます。</p>
+                                            <p>お絵描きの色を選択したい場合はツールパレットの[●]を押します。</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                         <div class="procedure-item">
-                            <h4 id="section3-item8">8. 要素を移動する</h4>
+                            <h4 id="section3-item8">8. 要素を移動・消去・編集する</h4>
                             <div class="procedure-steps">
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="要素移動手順1" loading="lazy">
+                                <div class="step-with-subsection">
+                                    <h5 class="step-subsection-title">A. 要素を移動する</h5>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="要素移動手順1" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-1. ツールパレット内の[カーソル]を選択します。</p>
+                                        </div>
                                     </div>
-                                    <div class="step-text">
-                                        <p>1. [カーソル]を選択</p>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="要素移動手順2" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-2. お絵描き・画像・しゃべり描き文字のいずれかを押すと、バウンディングボックスが表示されます。その状態で、要素を任意の場所にドラッグ・スライドします。</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="要素移動手順2" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>2. 対象を押してドラッグ</p>
-                                    </div>
-                                </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="要素移動手順3" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>3. 空き領域を押して確定</p>
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>重なりは最前要素が選択されます</p>
-                                        </aside>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div class="procedure-item">
-                            <h4 id="section3-item9">9. 要素を消去する</h4>
-                            <div class="procedure-steps">
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="要素消去手順1" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>A. オブジェクト消しゴム</p>
-                                        <p>1. [消しゴム]選択後、なぞって消去</p>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="要素移動手順3" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-3. キャンバスの空いた場所を押すと、バウンディングボックスが非表示になり、移動が完了します。</p>
+                                            <aside class="note-card" role="note">
+                                                <h5>⚠ 注意事項・補足事項</h5>
+                                                <p>要素が重なっている場合、一番手前に配置されている要素が選択されます。</p>
+                                            </aside>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="要素消去手順2" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>B. Delete キー</p>
-                                        <p>1. [カーソル]選択</p>
-                                        <p>2. 対象を選び Delete</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="procedure-item">
-                            <h4 id="section3-item10">10. しゃべり描きの文字を編集する</h4>
-                            <div class="procedure-steps">
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="文字編集手順1" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>1. [カーソル]を選択</p>
+                                <div class="step-with-subsection">
+                                    <h5 class="step-subsection-title">B. 要素を消去する</h5>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="要素消去手順" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>B-1. ツールパレット内の[消しゴムボタン]を選択し、消去したい要素をなぞると、要素が消去されます。</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="文字編集手順2" loading="lazy">
+                                <div class="step-with-subsection">
+                                    <h5 class="step-subsection-title">C. 文字要素を編集する</h5>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="文字編集手順1" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>C-1. ツールパレット内の[カーソル]を選択します。</p>
+                                        </div>
                                     </div>
-                                    <div class="step-text">
-                                        <p>2. 一度押して枠表示→もう一度押して編集</p>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="文字編集手順2" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>C-2. しゃべり描き文字を１回押すと、バウンディングボックスが表示されます。その状態でしゃべり描き文字をもう１回押すと、テキストボックスが表示されます。</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="文字編集手順3" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>3. 編集後[決定]で反映（翻訳/折返しも更新）</p>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
+                                                alt="文字編集手順3" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>C-3. テキストボックス内で入力文を編集し、[決定]を押します。キャンバス上のしゃべり描き文字が更新され、それに合わせて翻訳文・折り返し翻訳文が修正されます。</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="procedure-item">
-                            <h4 id="section3-item11">11. キャンバスエリアを画像として書き出す</h4>
+                            <h4 id="section3-item9">9. キャンバスエリアを画像として書き出す</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -877,7 +844,7 @@
                                             alt="画像書き出し手順1" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>1. [書き出し]を押す</p>
+                                        <p>1. [シート管理]内の[書き出しボタン]を押します。</p>
                                     </div>
                                 </div>
                                 <div class="step-with-image">
@@ -886,16 +853,18 @@
                                             alt="画像書き出し手順2" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>2. ブラウザのダウンロードで保存</p>
+                                        <p>2. キャンバスが画像として書き出され、ブラウザのダウンロード機能により任意の場所に保存されます。</p>
                                         <aside class="note-card" role="note">
                                             <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>保存先はブラウザ設定に依存。書き出し範囲は表示中のズーム/ウィンドウサイズに依存します。</p>
+                                            <p>保存場所はブラウザの設定により異なります。</p>
                                         </aside>
+                                        <div class="step-advice">
+                                            <h5>ワンポイントアドバイス</h5>
+                                            <p>書き出される範囲は、ブラウザであなたが表示しているキャンバスの範囲です。キャンバスのズーム率を変更したり、ブラウザのウィンドウサイズを変更することで、書き出される範囲を広げたり、狭めたりすることが出来ます。</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </section>
@@ -905,10 +874,6 @@
                     <header class="step-header">
                         <h2><span class="step-number">04</span> マイクの使い方のポイント</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで理解すること</h3>
-                        <p>マイクの使用方法と注意点を理解する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
                             <h4 id="section4-item1">マイクボタンを押してから音声入力できるようになるまでのラグ</h4>
@@ -919,7 +884,7 @@
                                             alt="マイクラグ" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <p>マイクボタンを押してから音声入力できるようになるまで短いラグがあります。必ずボタンが青くなるのを確認してから音声入力してください。</p>
+                                        <p>（詳細は後日追記）</p>
                                     </div>
                                 </div>
                             </div>
@@ -949,8 +914,8 @@
                                             alt="二人での使い方" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <h5>トランスクリプト</h5>
-                                        <h5>しゃべり描き</h5>
+                                        <p>トランスクリプト</p>
+                                        <p>しゃべり描き</p>
                                     </div>
                                 </div>
                             </div>
@@ -965,10 +930,7 @@
                                             alt="複数ウィンドウ不可" loading="lazy">
                                     </div>
                                     <div class="step-text">
-                                        <aside class="note-card" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>いくつものウィンドウを同時に開いた場合には、複数同時にトランスクリプトのマイクボタンは有効にできない</p>
-                                        </aside>
+                                        <p>いくつものウィンドウを同時に開いた場合には、複数同時にトランスクリプトのマイクボタンは有効にできない</p>
                                     </div>
                                 </div>
                             </div>
@@ -981,28 +943,12 @@
                     <header class="step-header">
                         <h2><span class="step-number">05</span> 用語</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで理解すること</h3>
-                        <p>アプリで使用される用語の意味を理解する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
-                            <h4 id="section5-item1">用語集の見方</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png" alt="用語集" loading="lazy">
-                                    </div>
                                     <div class="step-text">
-                                        <p>用語の詳細は製品仕様書をご参照ください。</p>
-                                        <aside class="note-card is-empty" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
+                                        <p>（後日追記予定）</p>
                                     </div>
                                 </div>
                             </div>
@@ -1013,100 +959,14 @@
                 <!-- ========== Section 6 ========== -->
                 <section id="section6" class="step-section is-hidden">
                     <header class="step-header">
-                        <h2><span class="step-number">06</span> 製品仕様</h2>
+                        <h2><span class="step-number">06</span> FAQ</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで理解すること</h3>
-                        <p>製品の仕様と推奨環境を理解する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
-                            <h4 id="section6-item1">製品名称</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="製品名称" loading="lazy">
-                                    </div>
                                     <div class="step-text">
-                                        <p>しゃべり描き翻訳</p>
-                                        <aside class="note-card is-empty" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="procedure-item">
-                            <h4 id="section6-item2">翻訳言語</h4>
-                            <div class="procedure-steps">
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="翻訳言語" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>詳細は製品仕様書をご参照ください。</p>
-                                        <aside class="note-card is-empty" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="procedure-item">
-                            <h4 id="section6-item3">推奨端末</h4>
-                            <div class="procedure-steps">
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="推奨端末" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>詳細は製品仕様書をご参照ください。</p>
-                                        <aside class="note-card is-empty" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="procedure-item">
-                            <h4 id="section6-item4">推奨ブラウザ</h4>
-                            <div class="procedure-steps">
-                                <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png"
-                                            alt="推奨ブラウザ" loading="lazy">
-                                    </div>
-                                    <div class="step-text">
-                                        <p>詳細は製品仕様書をご参照ください。</p>
-                                        <aside class="note-card is-empty" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
+                                        <p>よく失敗するところを詳細に書いてあげる（マニュアルを頭から読まない人はFAQを読む）</p>
                                     </div>
                                 </div>
                             </div>
@@ -1117,48 +977,48 @@
                 <!-- ========== Section 7 ========== -->
                 <section id="section7" class="step-section is-hidden">
                     <header class="step-header">
-                        <h2><span class="step-number">07</span> FAQ</h2>
+                        <h2><span class="step-number">07</span> 製品仕様</h2>
                     </header>
-                    <div class="step-objective">
-                        <h3>このセクションで理解すること</h3>
-                        <p>よくある質問と回答を確認する</p>
-                    </div>
                     <div class="step-content">
                         <div class="procedure-item">
-                            <h4 id="section7-item1">Q1. よくある質問（ダミー）</h4>
+                            <h4 id="section7-item1">製品名称</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png" alt="FAQ1" loading="lazy">
-                                    </div>
                                     <div class="step-text">
-                                        <p>A. ダミーの回答です。実際の回答は今後追記します。</p>
-                                        <aside class="note-card is-empty" role="note">
-                                            <h5>⚠ 注意事項・補足事項</h5>
-                                            <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
-                                        </aside>
-                                    </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
+                                        <p>（後日追記予定）</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="procedure-item">
-                            <h4 id="section7-item2">Q2. よくある質問（ダミー）</h4>
+                            <h4 id="section7-item2">翻訳言語</h4>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
-                                    <div class="step-image">
-                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png" alt="FAQ2" loading="lazy">
-                                    </div>
                                     <div class="step-text">
-                                        <p>A. ダミーの回答です。実際の回答は今後追記します。</p>
+                                        <p>（後日追記予定）</p>
                                     </div>
-                                    <div class="step-advice is-empty">
-                                        <h5>ワンポイントアドバイス</h5>
-                                        <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="section7-item3">推奨端末</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-text">
+                                        <p>（後日追記予定）</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="section7-item4">推奨ブラウザ</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-text">
+                                        <p>（後日追記予定）</p>
                                     </div>
                                 </div>
                             </div>
@@ -1174,7 +1034,7 @@
                     <div id="sub-items-top" class="sub-items-group active">
                         <h4>しゃべり描き翻訳でできること</h4>
                         <ul>
-                            <li><a href="#top-item1">1. 2言語間のコミュニケーション</a></li>
+                            <li><a href="#top-item1">1. ２言語間のコミュニケーション</a></li>
                             <li><a href="#top-item2">2. しゃべり描きでお絵描き・画像を組み合わせて翻訳</a></li>
                             <li><a href="#top-item3">3. トランスクリプトで会話を翻訳</a></li>
                         </ul>
@@ -1182,9 +1042,9 @@
                     <div id="sub-items-section1" class="sub-items-group">
                         <h4>1. アカウントの初期設定を行う</h4>
                         <ul>
-                            <li><a href="#section1-item1">1. サインイン</a></li>
-                            <li><a href="#section1-item2">2. Authenticator(二段階認証アプリ)の設定</a></li>
-                            <li><a href="#section1-item3">3. Authenticatorでの認証</a></li>
+                            <li><a href="#section1-item1">1. サインインする</a></li>
+                            <li><a href="#section1-item2">2. Authenticator(二段階認証アプリ)を設定する</a></li>
+                            <li><a href="#section1-item3">3. Authenticatorで認証する</a></li>
                         </ul>
                     </div>
                     <div id="sub-items-section2" class="sub-items-group">
@@ -1196,41 +1056,43 @@
                         </ul>
                     </div>
                     <div id="sub-items-section3" class="sub-items-group">
-                        <h4>3. 基本の操作を行う</h4>
+                        <h4>3. しゃべり描き翻訳を操作する</h4>
                         <ul>
-                            <li><a href="#section3-item1">1. サインイン</a></li>
-                            <li><a href="#section3-item2">2. 新しいシート</a></li>
-                            <li><a href="#section3-item3">3. 言語選択</a></li>
-                            <li><a href="#section3-item4">4. しゃべり描き</a></li>
-                            <li><a href="#section3-item5">5. トランスクリプト</a></li>
-                            <li><a href="#section3-item6">6. 画像を貼り付ける</a></li>
-                            <li><a href="#section3-item7">7. お絵描き</a></li>
-                            <li><a href="#section3-item8">8. 要素を移動</a></li>
-                            <li><a href="#section3-item9">9. 要素を消去</a></li>
-                            <li><a href="#section3-item10">10. 文字を編集</a></li>
-                            <li><a href="#section3-item11">11. 画像として書き出す</a></li>
+                            <li><a href="#section3-item1">1. サインインする</a></li>
+                            <li><a href="#section3-item2">2. 新しいシートを作成し、シートタイトルを付ける</a></li>
+                            <li><a href="#section3-item3">3. 使用したい言語を選択する</a></li>
+                            <li><a href="#section3-item4">4. しゃべり描きを使う</a></li>
+                            <li><a href="#section3-item5">5. トランスクリプトを使う</a></li>
+                            <li><a href="#section3-item6">6. 写真・画像を貼り付ける</a></li>
+                            <li><a href="#section3-item7">7. お絵描きを行う</a></li>
+                            <li><a href="#section3-item8">8. 要素を移動・消去・編集する</a></li>
+                            <li><a href="#section3-item9">9. キャンバスエリアを画像として書き出す</a></li>
                         </ul>
                     </div>
                     <div id="sub-items-section4" class="sub-items-group">
                         <h4>4. マイクの使い方のポイント</h4>
                         <ul>
-                            <li><a href="#section4-item1">ラグ</a></li>
-                            <li><a href="#section4-item2">併用時の注意</a></li>
-                            <li><a href="#section4-item3">二人での使い方</a></li>
-                            <li><a href="#section4-item4">複数ウィンドウ不可</a></li>
+                            <li><a href="#section4-item1">マイクボタンを押してから音声入力できるようになるまでのラグ</a></li>
+                            <li><a href="#section4-item2">しゃべり描き機能とトランスクリプト機能の併用時の注意点</a></li>
+                            <li><a href="#section4-item3">二人で使用するときのマイクボタンの使い方</a></li>
+                            <li><a href="#section4-item4">複数のウィンドウで同時に音声入力はできない</a></li>
                         </ul>
                     </div>
                     <div id="sub-items-section5" class="sub-items-group">
                         <h4>5. 用語</h4>
-                        <p>アプリで使用される用語の説明</p>
+                        <p>（後日追記予定）</p>
                     </div>
                     <div id="sub-items-section6" class="sub-items-group">
-                        <h4>6. 製品仕様</h4>
+                        <h4>6. FAQ</h4>
+                        <p>よくある質問と回答</p>
+                    </div>
+                    <div id="sub-items-section7" class="sub-items-group">
+                        <h4>7. 製品仕様</h4>
                         <ul>
-                            <li><a href="#section6-item1">製品名称</a></li>
-                            <li><a href="#section6-item2">翻訳言語</a></li>
-                            <li><a href="#section6-item3">推奨端末</a></li>
-                            <li><a href="#section6-item4">推奨ブラウザ</a></li>
+                            <li><a href="#section7-item1">製品名称</a></li>
+                            <li><a href="#section7-item2">翻訳言語</a></li>
+                            <li><a href="#section7-item3">推奨端末</a></li>
+                            <li><a href="#section7-item4">推奨ブラウザ</a></li>
                         </ul>
                     </div>
                 </div>
