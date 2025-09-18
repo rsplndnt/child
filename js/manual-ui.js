@@ -428,13 +428,41 @@
       tocLinks.forEach(link => {
         const hash = link.getAttribute('href');
         const groupId = getGroupIdByHash(hash);
-        if (!groupId) return;
+        if (!groupId) {
+          // groupIdがない場合でも、基本的なクリックイベントは必要
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (href) {
+              activateSection(href, { closeMobile: true, scrollToTop: true });
+            }
+          });
+          return;
+        }
         const rightGroup = document.getElementById(groupId);
-        // サブ項目がない章はスキップ
-        if (!rightGroup) return;
+        // サブ項目がない章でも基本的なクリックイベントは必要
+        if (!rightGroup) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (href) {
+              activateSection(href, { closeMobile: true, scrollToTop: true });
+            }
+          });
+          return;
+        }
         const items = Array.from(rightGroup.querySelectorAll('a'));
-        // リンクがない場合はトグル不要なのでスキップ
-        if (!items.length) return;
+        // リンクがない場合でも基本的なクリックイベントは必要
+        if (!items.length) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (href) {
+              activateSection(href, { closeMobile: true, scrollToTop: true });
+            }
+          });
+          return;
+        }
 
         // リンク内にトグルアイコンを追加（テキストの右側）
         const h3 = link.closest('h3');
