@@ -419,8 +419,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 
 /* スマホ時はh1を少し小さくして改行を抑える */
 @media (max-width: 768px){
-  .sidebar-header h1 { font-size: var(--sd-font-size-xl); } /* lg → xl */
-  .sidebar-header h1 span { font-size: var(--sd-font-size-xl); } /* lg → xl */
+  .sidebar-header h1 { font-size: var(--sd-font-size-lg); } /* xl → lg */
+  .sidebar-header h1 span { font-size: var(--sd-font-size-lg); } /* xl → lg */
 }
 
 /* デスクトップ時（1025px以上）はハンバーガーメニューを非表示 */
