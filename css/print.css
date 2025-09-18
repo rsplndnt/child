@@ -288,7 +288,35 @@
 
     /* ====== 印刷用 目次とフッター ====== */
     /* 1ページ目: 既存のイラスト入り表紙（#top セクションを表紙扱い） */
-    .print-cover { display:block !important; page-break-after: always !important; }
+    .print-cover { 
+      display:block !important; 
+      page-break-after: always !important; 
+    }
+    
+    /* 印刷表紙のスタイル */
+    .print-cover.only-print {
+      padding: 30mm 25mm !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important;
+      text-align: center !important;
+    }
+    
+    .print-cover.only-print img {
+      max-width: 80mm !important;
+      height: auto !important;
+      margin-bottom: 20mm !important;
+    }
+    
+    .print-cover.only-print h1 {
+      font-size: 28pt !important;
+      color: #0066cc !important;
+      font-weight: bold !important;
+      line-height: 1.4 !important;
+      margin: 0 !important;
+    }
     
     /* 2ページ目: 印刷用目次 */
     .print-toc-page { 
