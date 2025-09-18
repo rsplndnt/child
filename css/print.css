@@ -170,14 +170,30 @@
   .procedure-text { width: 100% !important; }
   .procedure-text ol,
   .procedure-text ul,
-  .step-text ol,
   .step-text ul {
     margin: 0 0 4mm 6mm !important;
   }
+  .step-text ol {
+    margin: 0 0 4mm 0 !important;
+    padding-left: 0 !important;
+    list-style: none !important;
+  }
   .procedure-text li,
-  .step-text li {
+  .step-text ul li {
     margin: 1.2mm 0 !important;
     line-height: 1.6 !important;
+  }
+  .step-text ol li {
+    margin: 2mm 0 !important;
+    padding-left: 30px !important;
+    position: relative !important;
+    line-height: 1.6 !important;
+  }
+  /* 印刷時も数字アイコンを表示 */
+  .step-text ol li::before {
+    font-size: 20px !important;
+    left: 0 !important;
+    top: 0 !important;
   }
 
   /* note-cardとstep-adviceの印刷用スタイル */

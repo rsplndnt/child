@@ -671,13 +671,48 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 }
 .step-text ol{
   margin: 0;
-  padding-left: 24px;
+  padding-left: 0;
   font-size: var(--sd-font-size-lg); /* md → lg */
   line-height: var(--sd-line-height-normal);
+  list-style: none;
+  counter-reset: step-counter;
 }
 .step-text ol li{
-  margin-bottom: 8px;
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 40px;
+  margin-bottom: 12px;
+  min-height: 32px;
+  display: flex;
+  align-items: flex-start;
 }
+.step-text ol li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-family: 'Material Icons';
+  font-size: 28px;
+  color: var(--color-primary);
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+/* Material Icons の数字アイコン */
+.step-text ol li:nth-child(1)::before { content: '\e885'; } /* looks_one */
+.step-text ol li:nth-child(2)::before { content: '\e886'; } /* looks_two */  
+.step-text ol li:nth-child(3)::before { content: '\e887'; } /* looks_3 */
+.step-text ol li:nth-child(4)::before { content: '\e888'; } /* looks_4 */
+.step-text ol li:nth-child(5)::before { content: '\e889'; } /* looks_5 */
+.step-text ol li:nth-child(6)::before { content: '\e88a'; } /* looks_6 */
 
 /* ★独立した注意事項カード */
 .note-card{
