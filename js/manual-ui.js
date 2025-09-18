@@ -92,6 +92,9 @@
     
     // ボタンラベルの変換を実行
     convertButtonLabels();
+    
+    // 印刷用目次を事前に生成（印刷プレビュー時に確実に表示されるように）
+    generatePrintTOC();
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
     const hamburger = document.getElementById('hamburgerMenu');
@@ -1157,12 +1160,23 @@
   // 印刷用目次を生成する関数
   function generatePrintTOC() {
     const tocContainer = document.querySelector('.print-toc-content');
-    if (!tocContainer) return;
+    if (!tocContainer) {
+      console.log('print-toc-content not found');
+      return;
+    }
     
     tocContainer.innerHTML = ''; // 既存の内容をクリア
     
     // TOCセクションを取得
     const tocSections = document.querySelectorAll('.toc-section');
+    
+    // TOPセクションを追加
+    const topSection = document.createElement('div');
+    topSection.className = 'print-toc-section';
+    const topH3 = document.createElement('h3');
+    topH3.innerHTML = '<span class="toc-icon">●</span> 0. しゃべり描き翻訳でできること';
+    topSection.appendChild(topH3);
+    tocContainer.appendChild(topSection);
     
     tocSections.forEach((section, index) => {
       const tocLink = section.querySelector('.toc-link');
@@ -1207,6 +1221,8 @@
       
       tocContainer.appendChild(printSection);
     });
+    
+    console.log('Print TOC generated with', tocSections.length + 1, 'sections');
   }
   
   // 印刷前に新しい目次を生成
