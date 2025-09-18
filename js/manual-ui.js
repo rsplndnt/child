@@ -1154,7 +1154,65 @@
   // 印刷前にh3を追加
   window.addEventListener('beforeprint', addPrintH3);
   
-  // 印刷前に目次を生成
+  // 印刷用目次を生成する関数
+  function generatePrintTOC() {
+    const tocContainer = document.querySelector('.print-toc-content');
+    if (!tocContainer) return;
+    
+    tocContainer.innerHTML = ''; // 既存の内容をクリア
+    
+    // TOCセクションを取得
+    const tocSections = document.querySelectorAll('.toc-section');
+    
+    tocSections.forEach((section, index) => {
+      const tocLink = section.querySelector('.toc-link');
+      if (!tocLink) return;
+      
+      // セクションのタイトルを取得
+      const titleText = tocLink.querySelector('span')?.textContent || '';
+      const icon = tocLink.querySelector('i')?.className || '';
+      
+      // 印刷用セクションを作成
+      const printSection = document.createElement('div');
+      printSection.className = 'print-toc-section';
+      
+      // タイトルを作成
+      const h3 = document.createElement('h3');
+      if (icon) {
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'toc-icon';
+        iconSpan.innerHTML = '●'; // シンプルな記号に置き換え
+        h3.appendChild(iconSpan);
+      }
+      h3.appendChild(document.createTextNode(titleText));
+      printSection.appendChild(h3);
+      
+      // サブリストがある場合
+      const sublist = section.querySelector('.toc-sublist');
+      if (sublist && sublist.children.length > 0) {
+        const printSublist = document.createElement('ul');
+        printSublist.className = 'print-toc-sublist';
+        
+        Array.from(sublist.children).forEach(li => {
+          const link = li.querySelector('a');
+          if (link) {
+            const printLi = document.createElement('li');
+            printLi.textContent = link.textContent;
+            printSublist.appendChild(printLi);
+          }
+        });
+        
+        printSection.appendChild(printSublist);
+      }
+      
+      tocContainer.appendChild(printSection);
+    });
+  }
+  
+  // 印刷前に新しい目次を生成
+  window.addEventListener('beforeprint', generatePrintTOC);
+  
+  // 既存の印刷前処理も維持
   window.addEventListener('beforeprint', () => {
     try {
       const tocRoot = document.getElementById('print-toc-list');

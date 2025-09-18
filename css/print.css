@@ -223,6 +223,9 @@
     margin: 3mm 0 !important;
     break-inside: avoid !important;
     page-break-inside: avoid !important;
+    /* 印刷時は全幅で表示 */
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
   }
   
   .note-card h5 {
@@ -286,12 +289,42 @@
     /* ====== 印刷用 目次とフッター ====== */
     /* 1ページ目: 既存のイラスト入り表紙（#top セクションを表紙扱い） */
     .print-cover { display:block !important; page-break-after: always !important; }
-    /* 2ページ目: 自動生成した目次（#print-toc を #topのすぐ後にJSで挿入） */
-    #print-toc { display:block !important; page-break-after: always !important; max-width: 120mm !important; margin: 0 auto 0 auto !important; }
-    #print-toc h2 { font-size: 14pt !important; margin: 0 0 6mm !important; color:#111 !important; border-bottom: 1px solid #bbb !important; padding-bottom: 3mm !important; }
-    #print-toc ol { list-style: none !important; counter-reset: toc; padding: 0 !important; margin: 0 !important; }
-    #print-toc li { counter-increment: toc; font-size: 11pt !important; margin: 2mm 0 !important; color:#333 !important; }
-    #print-toc li::before { content: counters(toc, '.') '. '; color:#777 !important; }
+    
+    /* 2ページ目: 印刷用目次 */
+    .print-toc-page { 
+      display:block !important; 
+      page-break-after: always !important; 
+      padding: 20mm 25mm !important;
+    }
+    .print-toc-title { 
+      font-size: 20pt !important; 
+      margin: 0 0 15mm !important; 
+      color: #0066cc !important; 
+      border-bottom: 2pt solid #0066cc !important; 
+      padding-bottom: 4mm !important; 
+    }
+    .print-toc-content { font-size: 11pt !important; }
+    .print-toc-section { margin-bottom: 6mm !important; }
+    .print-toc-section h3 { 
+      font-size: 12pt !important; 
+      font-weight: bold !important; 
+      color: #0066cc !important; 
+      margin: 0 0 2mm 0 !important; 
+    }
+    .print-toc-sublist { 
+      list-style: none !important; 
+      padding-left: 8mm !important; 
+      margin: 0 !important; 
+    }
+    .print-toc-sublist li { 
+      margin: 1.5mm 0 !important; 
+      font-size: 10pt !important; 
+      color: #333 !important; 
+    }
+    /* Section1のサブリストは番号付き */
+    .print-toc-section:first-of-type .print-toc-sublist { counter-reset: toc-item !important; }
+    .print-toc-section:first-of-type .print-toc-sublist li { counter-increment: toc-item !important; }
+    .print-toc-section:first-of-type .print-toc-sublist li::before { content: counter(toc-item) ". " !important; margin-right: 2mm !important; }
 
     /* 今回はページ番号を非表示に戻す */
     .print-page-reset, .print-footer { display:none !important; }
