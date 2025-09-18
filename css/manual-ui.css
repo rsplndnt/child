@@ -146,7 +146,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   position: relative;
 }
 .sidebar-header h1{
-  font-size: var(--sd-font-size-2xl); /* xl → 2xl */
+  font-size: var(--sd-font-size-xl); /* 2xl → xl に戻す */
   font-weight: 700;
   margin: 0;
 }
@@ -165,7 +165,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 }
 .sidebar-header h1 span{
   line-height: var(--sd-line-height-tight);
-  font-size: var(--sd-font-size-2xl); /* xl → 2xl */
+  font-size: var(--sd-font-size-xl); /* 2xl → xl に戻す */
   font-weight: 700;
 }
 
