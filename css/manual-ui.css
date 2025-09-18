@@ -818,12 +818,21 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
 @media (max-width: 768px){
   .step-with-image{
     grid-template-columns: 1fr;  /* スマホでは縦並び */
+    gap: var(--sd-spacing-md); /* 縦並び時のギャップを調整 */
   }
   .step-image{
+    grid-column: 1; /* 画像を1列目に */
+    grid-row: 2; /* 画像を2行目に（テキストの下） */
     max-width: 100%;
+    width: 100%;
+  }
+  .step-text {
+    grid-column: 1;
+    grid-row: 1; /* テキストを1行目に */
   }
   .step-advice{
     grid-column: 1;  /* 縦並びの場合は通常配置 */
+    grid-row: 3; /* アドバイスを3行目に */
   }
 }
 @media (max-width: 768px){
@@ -833,9 +842,14 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
 /* タブレットとモバイル（1024px以下）でサイドバーをドロワー化 */
 @media (max-width: 1024px){
   .hamburger-menu{ 
-    display: block !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     opacity: 1;
     visibility: visible;
+    position: fixed;
+    top: 16px;
+    left: 16px;
   }
   .manual-sidebar{
     position: fixed !important; 
@@ -859,8 +873,13 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   .sidebar-resizer{ display: none; }
   .manual-content{ 
     margin-left: 0 !important; /* サイドバー分のマージンを削除 */
-    padding: 84px 18px 20px; 
-    gap: 18px; 
+    padding: 72px 16px 20px; /* 上部パディングを調整 */
+    gap: 0; 
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .content-panel {
+    padding: 0 16px; /* 左右のパディングを追加 */
   }
 }
 
@@ -883,8 +902,11 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   opacity: 1;
 }
 @media (max-width: 480px){
-  .step-section{ padding: 22px; }
-  .step-header h2{ font-size: 22px; }
+  .step-section{ padding: 16px; }
+  .step-header h2{ font-size: 20px; }
+  .procedure-item h4 { font-size: 16px; }
+  .step-text { font-size: 14px; }
+  .note-card, .step-advice { font-size: 13px; }
 }
 
 
