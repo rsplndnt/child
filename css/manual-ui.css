@@ -28,6 +28,9 @@ body {
   --sidebar-w-max: 520px;
 }
 
+/* Base typography using tokens */
+body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-height: var(--sd-line-height-normal); }
+
 /* ================================
    Design Tokens (System)
    画像のスケールに合わせて定義
@@ -655,8 +658,8 @@ body {
 }
 .step-text p{
   margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: var(--sd-font-size-md);
+  line-height: var(--sd-line-height-normal);
 }
 
 /* ★独立した注意事項カード */
@@ -671,16 +674,16 @@ body {
 }
 .note-card h5{
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--sd-font-size-sm);
   line-height: 1.4;
   color: #A56B00;
   font-weight: 700;
 }
 .note-card p{
   margin: 0;
-  font-size: 13px;
+  font-size: var(--sd-font-size-sm);
   color: var(--on-surface);
-  line-height: 1.5;
+  line-height: var(--sd-line-height-normal);
 }
 
 /* ★ワンポイントアドバイス */
@@ -695,7 +698,7 @@ body {
 }
 .step-advice h5{
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--sd-font-size-sm);
   line-height: 1.4;
   color: #2E7D32;
   font-weight: 700;
@@ -709,10 +712,14 @@ body {
 }
 .step-advice p{
   margin: 0;
-  font-size: 13px;
+  font-size: var(--sd-font-size-sm);
   color: var(--on-surface);
-  line-height: 1.5;
+  line-height: var(--sd-line-height-normal);
 }
+
+/* Empty placeholders for future notes/advice */
+.note-card.is-empty,
+.step-advice.is-empty{ display: none !important; }
 /* レイアウト上、同じ列で縦積み */
 /* procedure-itemの直下に来る想定 - 必要ならここで幅調整 */
 
@@ -908,7 +915,7 @@ body {
   padding: 12px 16px;
   background: #f5f5f5;
   border-bottom: 1px solid #e0e0e0;
-  font-size: 14px;
+  font-size: var(--sd-font-size-sm);
   font-weight: 500;
   color: #666;
 }
@@ -933,7 +940,7 @@ body {
 }
 
 .sr-breadcrumb {
-  font-size: 12px;
+  font-size: var(--sd-font-size-xs);
   color: #666;
   margin-bottom: 4px;
 }
@@ -942,12 +949,13 @@ body {
   font-weight: 500;
   margin-bottom: 4px;
   color: #333;
+  font-size: var(--sd-font-size-sm);
 }
 
 .sr-snippet {
-  font-size: 14px;
+  font-size: var(--sd-font-size-sm);
   color: #666;
-  line-height: 1.4;
+  line-height: var(--sd-line-height-normal);
 }
 
 .search-hit {
@@ -1005,7 +1013,8 @@ body {
   border-radius: 8px;
   color: var(--color-primary);
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-normal);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .toc .toc-sublist a:hover { 
