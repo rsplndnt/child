@@ -512,20 +512,24 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
 }
 
-/* タブレット幅（769–1024px）でもドロワーを有効化 */
+/* タブレット幅（769–1024px）専用の設定 */
 @media (min-width: 769px) and (max-width: 1024px){
-  /* HTML内<style>の display:none !important を強制上書き */
-  .manual-wrapper .manual-sidebar{ display: block !important; }
-  .manual-sidebar.mobile{
-    display: block !important; /* manual_pdf.html内のdisplay:noneを上書き */
-    position: fixed; inset: 0 auto 0 0;
-    transform: translateX(-100%); transition: transform .2s ease;
-    z-index: 1002; width: min(86vw, 320px); max-width: none;
-    box-shadow: 2px 0 10px rgba(0,0,0,.1);
+  /* manual-contentのパディングを適切に設定 */
+  .manual-content{ 
+    padding: 72px 20px 20px !important; 
+    margin-left: 0 !important;
+    gap: 0 !important; 
+    height: 100vh !important;
+    overflow-y: auto !important;
   }
-  .manual-sidebar.mobile.active{ transform: translateX(0); }
-  .sidebar-resizer{ display: none; }
-  .manual-content{ padding: 84px 18px 20px; gap: 18px; }
+  .content-panel {
+    padding: 0 20px !important;
+    max-width: 100% !important;
+  }
+  /* サイドバーの幅調整 */
+  .manual-sidebar {
+    width: 320px !important;
+  }
 }
 
 /* リサイズハンドル */
