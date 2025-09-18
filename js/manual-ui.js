@@ -686,7 +686,9 @@
           const href = link.getAttribute('href');
           if (href) {
             const activateFn = window.activateSection || activateSection;
-            activateFn(href, { closeMobile: true, scrollToTop: true });
+            // サブ項目がない場合のみモバイルメニューを閉じる
+            const shouldCloseMobile = items.length === 0;
+            activateFn(href, { closeMobile: shouldCloseMobile, scrollToTop: true });
           }
           // トグル処理（サブ項目がある場合のみ）
           if (items.length > 0) {
