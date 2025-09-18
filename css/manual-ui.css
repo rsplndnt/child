@@ -264,7 +264,7 @@ body {
 }
 
 .search-btn .material-icons {
-  font-size: 18px;
+  font-size: var(--sd-font-size-lg);
 }
 
 .clear-btn {
@@ -288,7 +288,7 @@ body {
 
 .clear-btn:hover { background: #d0d0d0; }
 
-.clear-btn .material-icons { font-size: 14px; } /* 80% */
+.clear-btn .material-icons { font-size: var(--sd-font-size-sm); } /* 80% */
 
 
 /* 検索ハイライト */
@@ -356,7 +356,7 @@ body {
 }
 
 .arrow-menu-open .material-icons {
-  font-size: 20px;
+  font-size: var(--sd-font-size-lg);
 }
 
 /* サイドバーが隠れている時にArrow Menu Openボタンを表示 */
@@ -379,7 +379,7 @@ body {
 }
 
 .hamburger-menu .material-icons {
-  font-size: 24px;
+  font-size: var(--sd-font-size-xl);
   color: #fff;
   line-height: 1;
   transition: opacity 0.3s ease;
@@ -457,7 +457,7 @@ body {
 }
 
 .sidebar-close-btn .material-icons {
-  font-size: 20px;
+  font-size: var(--sd-font-size-lg);
   color: #fff;
 }
 
