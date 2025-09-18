@@ -12,7 +12,18 @@
     print-color-adjust: exact;
   }
   
+  /* Chrome用の印刷時表示設定 */
+  .only-print { 
+    display: none; 
+  }
+  
   @media print {
+    /* Chrome対応: only-printクラスを確実に表示 */
+    .only-print { 
+      display: block !important; 
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
   
     /* 背景/外枠の除去＆1カラム化 */
     html, body { background: #fff !important; }
@@ -318,16 +329,24 @@
       margin: 0 !important;
     }
     
-    /* 2ページ目: 印刷用目次 */
-    .print-toc-page { 
+    /* 2ページ目: 印刷用目次 - Chrome対応 */
+    .print-toc-page,
+    .only-print.print-toc-page { 
       display: block !important; 
       visibility: visible !important;
       opacity: 1 !important;
-      page-break-before: always !important;
-      page-break-after: always !important; 
+      position: relative !important;
+      break-before: page !important; /* Chrome用 */
+      page-break-before: always !important; /* 旧ブラウザ用 */
+      break-after: page !important; /* Chrome用 */
+      page-break-after: always !important; /* 旧ブラウザ用 */
       padding: 20mm 25mm !important;
       min-height: 100vh !important;
+      height: auto !important;
+      width: 100% !important;
       box-sizing: border-box !important;
+      margin: 0 !important;
+      background: white !important;
     }
     .print-toc-title { 
       font-size: 20pt !important; 

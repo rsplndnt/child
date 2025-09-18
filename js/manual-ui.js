@@ -1165,10 +1165,12 @@
       return;
     }
     
-    tocContainer.innerHTML = ''; // 既存の内容をクリア
+    // 既存の内容をクリア
+    tocContainer.innerHTML = '';
     
-    // TOCセクションを取得
-    const tocSections = document.querySelectorAll('.toc-section');
+    // TOCセクションが生成されるまで待機
+    setTimeout(() => {
+      const tocSections = document.querySelectorAll('.toc-section');
     
     // TOPセクションを追加
     const topSection = document.createElement('div');
@@ -1222,7 +1224,8 @@
       tocContainer.appendChild(printSection);
     });
     
-    console.log('Print TOC generated with', tocSections.length + 1, 'sections');
+      console.log('Print TOC generated with', tocSections.length + 1, 'sections');
+    }, 100); // 100ms待機
   }
   
   // 印刷前に新しい目次を生成
