@@ -692,7 +692,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 /* ★ボタン風の装飾（[ボタン名]のような表記） */
 .button-label {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 2px 6px;
   background: #f0f4f8;
   border: 1px solid #d0d7de;
   border-radius: 6px;

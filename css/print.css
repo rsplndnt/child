@@ -201,10 +201,10 @@
   /* ボタンラベルの印刷スタイル */
   .button-label {
     display: inline-block !important;
-    padding: 1mm 3mm !important;
+    padding: 0.5mm 1.5mm !important;
     background: #f0f4f8 !important;
     border: 0.5pt solid #d0d7de !important;
-    border-radius: 2mm !important;
+    border-radius: 1.5mm !important;
     font-weight: 500 !important;
     color: #1f2328 !important;
     font-size: 0.95em !important;
