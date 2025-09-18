@@ -127,7 +127,24 @@
         e.stopPropagation();
         const href = headerTitleLink.getAttribute('href');
         if (href) {
-          activateSection(href, { closeMobile: true, scrollToTop: true });
+          activateSection(href, { closeMobile: true, scrollToTop: false });
+          // TOPセクションのh2にスクロール
+          setTimeout(() => {
+            const topHeader = document.querySelector('#top .step-header h2');
+            if (topHeader) {
+              const offset = getScrollOffset();
+              const container = document.querySelector('.manual-content');
+              if (container && typeof container.scrollTo === 'function') {
+                const cRect = container.getBoundingClientRect();
+                const eRect = topHeader.getBoundingClientRect();
+                const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+                container.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+              } else {
+                const y = Math.max(0, topHeader.getBoundingClientRect().top + window.scrollY - offset);
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
+            }
+          }, 40);
         }
       });
     }
