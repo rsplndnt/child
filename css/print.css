@@ -320,9 +320,14 @@
     
     /* 2ページ目: 印刷用目次 */
     .print-toc-page { 
-      display:block !important; 
+      display: block !important; 
+      visibility: visible !important;
+      opacity: 1 !important;
+      page-break-before: always !important;
       page-break-after: always !important; 
       padding: 20mm 25mm !important;
+      min-height: 100vh !important;
+      box-sizing: border-box !important;
     }
     .print-toc-title { 
       font-size: 20pt !important; 
