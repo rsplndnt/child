@@ -125,46 +125,129 @@
     flex-shrink: 0 !important;
   }
   
-    /* 手順レイアウトをPC同等の2カラムに（画像50% + テキスト50%） */
-    .step-with-image { 
-      display: grid !important; 
-      grid-template-columns: 1fr 1fr !important; 
-      gap: 6mm !important; 
-      align-items: flex-start !important; 
-      break-inside: avoid !important; 
-      page-break-inside: avoid !important; 
-    }
+  /* 手順レイアウトをPC同等の2カラムに（テキスト左50% + 画像右50%） */
+  .step-with-image { 
+    display: grid !important; 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 6mm !important; 
+    align-items: flex-start !important; 
+    break-inside: avoid !important; 
+    page-break-inside: avoid !important; 
+    grid-auto-flow: dense !important; /* PC表示と同じ */
+  }
+
+  /* テキストを左側（1列目）に配置 */
+  .step-text {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3mm !important;
+  }
+
+  /* 画像を右側（2列目）に配置 */
+  .step-image { 
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    border: 0 !important; 
+    box-shadow: none !important; 
+  }
   
-    /* 画像は最大幅で表示、装飾は除去 */
-    .procedure-image, .step-image { border: 0 !important; box-shadow: none !important; }
-    .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
-    .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
-    img { break-inside: avoid; page-break-inside: avoid; }
-    /* ワンポイントアドバイスは常に全幅 */
-    .step-advice { grid-column: 1 / -1 !important; }
+  /* 画像は最大幅で表示、装飾は除去 */
+  .procedure-image { border: 0 !important; box-shadow: none !important; }
+  .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
+  .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
+  img { break-inside: avoid; page-break-inside: avoid; }
   
-    /* テキスト・リストの読みやすさ */
-    .procedure-text { width: 100% !important; }
-    .procedure-text ol,
-    .procedure-text ul {
-      margin: 0 0 4mm 6mm !important;
-    }
-    .procedure-text li {
-      margin: 1.2mm 0 !important;
-      line-height: 1.6 !important;
-    }
+  /* ワンポイントアドバイスは常に全幅（グリッドの下部） */
+  .step-advice { 
+    grid-column: 1 / -1 !important; 
+    grid-row: 2 !important;
+    margin-top: 3mm !important;
+  }
   
-    /* 注意枠は紙面用に簡素化 */
-    .notes {
-      background: transparent !important;
-      border-left: 3px solid #bbb !important;
-      padding: 3mm 4mm !important;
-      margin-top: 4mm !important;
-      color: #333 !important;
-    }
+  /* テキスト・リストの読みやすさ */
+  .procedure-text { width: 100% !important; }
+  .procedure-text ol,
+  .procedure-text ul,
+  .step-text ol,
+  .step-text ul {
+    margin: 0 0 4mm 6mm !important;
+  }
+  .procedure-text li,
+  .step-text li {
+    margin: 1.2mm 0 !important;
+    line-height: 1.6 !important;
+  }
+
+  /* note-cardとstep-adviceの印刷用スタイル */
+  .note-card {
+    background: #fffbf0 !important;
+    border: 1px solid #f0d080 !important;
+    border-radius: 4px !important;
+    padding: 3mm 4mm !important;
+    margin: 3mm 0 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
   
-    /* 余計な固定配置・アニメの抑止（sticky等の不具合回避） */
-    * { animation: none !important; transition: none !important; }
+  .note-card h5 {
+    font-size: 10pt !important;
+    font-weight: bold !important;
+    margin: 0 0 2mm !important;
+    color: #d4a000 !important;
+  }
+  
+  .step-advice {
+    background: #f0fff4 !important;
+    border: 1px solid #90d4a0 !important;
+    border-radius: 4px !important;
+    padding: 3mm 4mm !important;
+    margin: 3mm 0 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  
+  .step-advice h5 {
+    font-size: 10pt !important;
+    font-weight: bold !important;
+    margin: 0 0 2mm !important;
+    color: #40a050 !important;
+  }
+
+  /* 注意枠は紙面用に簡素化（旧スタイル） */
+  .notes {
+    background: transparent !important;
+    border-left: 3px solid #bbb !important;
+    padding: 3mm 4mm !important;
+    margin-top: 4mm !important;
+    color: #333 !important;
+  }
+  
+  /* サブセクション用のスタイル */
+  .step-with-subsection {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4mm !important;
+    margin-bottom: 6mm !important;
+  }
+  
+  .step-subsection-title {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+    color: #0066cc !important;
+    margin: 0 0 3mm !important;
+    padding: 0 !important;
+  }
+  
+  /* サブセクション間のディバイダー */
+  .procedure-steps .step-with-subsection:not(:last-child) {
+    padding-bottom: 6mm !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  /* 余計な固定配置・アニメの抑止（sticky等の不具合回避） */
+  * { animation: none !important; transition: none !important; }
 
     /* ====== 印刷用 目次とフッター ====== */
     /* 1ページ目: 既存のイラスト入り表紙（#top セクションを表紙扱い） */
