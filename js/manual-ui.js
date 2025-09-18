@@ -233,23 +233,8 @@
     // resizer
     if (resizer && sidebar) setupSidebarResizer(sidebar, resizer);
 
-    // デバッグ: セクションの初期状態を確認
-    console.log('Sections found:', sections.length);
-    sections.forEach(sec => {
-      console.log(`Section ${sec.id}: has is-hidden=${sec.classList.contains('is-hidden')}`);
-    });
-    
     // 初期表示のセクション
     activateSection('#top', { scrollToTop: false });
-    
-    // デバッグ: 初期化後の状態
-    setTimeout(() => {
-      console.log('After initialization:');
-      sections.forEach(sec => {
-        console.log(`Section ${sec.id}: has is-hidden=${sec.classList.contains('is-hidden')}`);
-      });
-    }, 100);
-    
     // 検索モジュール
     const searchModule = createSearchModule({
       sectionsSelector: '.content-panel .step-section',
@@ -446,7 +431,6 @@
         
         // デフォルトのクリックイベントを設定（すべてのリンクに必要）
         const defaultClickHandler = (e) => {
-          console.log('TOC link clicked:', link.getAttribute('href'));
           e.preventDefault();
           const href = link.getAttribute('href');
           if (href) {
@@ -551,7 +535,6 @@
 
         // リンククリック時の処理（トグルも同時に行う）
         link.addEventListener('click', (e) => {
-          console.log('TOC link with subitems clicked:', link.getAttribute('href'));
           e.preventDefault();
           // セクション切り替え
           const href = link.getAttribute('href');
@@ -686,13 +669,15 @@
     function getSectionNum(hash) { return (hash || '').replace('#section', ''); }
 
     function activateSection(targetHash, opts = {}) {
-      console.log('activateSection called with:', targetHash, opts);
       if (!targetHash) return;
       tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-target') === targetHash));
       sections.forEach(sec => {
-        const isHidden = `#${sec.id}` !== targetHash;
-        console.log(`Section ${sec.id}: hidden=${isHidden}`);
-        sec.classList.toggle('is-hidden', isHidden);
+        const shouldBeHidden = `#${sec.id}` !== targetHash;
+        if (shouldBeHidden) {
+          sec.classList.add('is-hidden');
+        } else {
+          sec.classList.remove('is-hidden');
+        }
       });
       document.querySelectorAll('.toc .toc-link').forEach(a => {
         a.classList.remove('active');
