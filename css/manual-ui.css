@@ -669,37 +669,24 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   font-size: var(--sd-font-size-lg); /* md → lg */
   line-height: var(--sd-line-height-normal);
 }
-/* カスタム番号スタイル - Material Design風の円形バッジ */
+/* シンプルな番号付きリストスタイル */
 .step-text ol {
   margin: 0;
-  padding-left: 0;
+  padding-left: 28px;
   font-size: var(--sd-font-size-lg); /* md → lg */
   line-height: var(--sd-line-height-normal);
-  counter-reset: item;
-  list-style: none;
+  list-style-type: decimal;
+  list-style-position: outside;
 }
 .step-text ol > li {
-  counter-increment: item;
-  position: relative;
-  padding-left: 48px;
   margin-bottom: 16px;
+  padding-left: 12px;
 }
-.step-text ol > li::before {
-  content: counter(item);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 32px;
-  height: 32px;
-  background-color: var(--color-primary, #0066cc);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* 番号を青色にする */
+.step-text ol > li::marker {
+  color: var(--color-primary, #0066cc);
   font-weight: bold;
-  font-size: 18px;
-  line-height: 1;
+  font-size: 20px;
 }
 
 /* ★独立した注意事項カード */
