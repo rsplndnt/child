@@ -669,23 +669,14 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   font-size: var(--sd-font-size-lg); /* md → lg */
   line-height: var(--sd-line-height-normal);
 }
-.step-text ol{
-  margin: 0;
-  padding-left: 40px;
-  font-size: var(--sd-font-size-lg); /* md → lg */
-  line-height: var(--sd-line-height-normal);
-  list-style: decimal;
-  list-style-position: outside;
-}
-.step-text ol li{
-  margin-bottom: 12px;
-  padding-left: 8px;
-}
 /* カスタム番号スタイル - Material Design風の円形バッジ */
 .step-text ol {
+  margin: 0;
+  padding-left: 0;
+  font-size: var(--sd-font-size-lg); /* md → lg */
+  line-height: var(--sd-line-height-normal);
   counter-reset: item;
   list-style: none;
-  padding-left: 0;
 }
 .step-text ol > li {
   counter-increment: item;
@@ -708,6 +699,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   justify-content: center;
   font-weight: bold;
   font-size: 18px;
+  line-height: 1;
 }
 
 /* ★独立した注意事項カード */
