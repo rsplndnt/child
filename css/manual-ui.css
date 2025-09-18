@@ -608,7 +608,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
 .procedure-steps{
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px; /* 24px -> 32px に拡大 */
   border-top: 2px solid var(--color-primary) !important;
   padding-top: 16px !important;
   margin-top: 12px !important;
@@ -618,7 +618,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
 .step-with-subsection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px; /* 12px -> 20px に拡大 */
 }
 
 .step-subsection-title {
@@ -661,6 +661,15 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   font-size: var(--sd-font-size-md);
   line-height: var(--sd-line-height-normal);
 }
+.step-text ol{
+  margin: 0;
+  padding-left: 24px;
+  font-size: var(--sd-font-size-md);
+  line-height: var(--sd-line-height-normal);
+}
+.step-text ol li{
+  margin-bottom: 8px;
+}
 
 /* ★独立した注意事項カード */
 .note-card{
@@ -685,6 +694,17 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   color: var(--on-surface);
   line-height: var(--sd-line-height-normal);
 }
+.note-card ul,
+.note-card ol{
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: var(--sd-font-size-sm);
+  color: var(--on-surface);
+  line-height: var(--sd-line-height-normal);
+}
+.note-card li{
+  margin-bottom: 4px;
+}
 
 /* ★ワンポイントアドバイス */
 .step-advice{
@@ -695,6 +715,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   margin-top: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,.04);
   grid-column: 1 / -1;  /* グリッド全体に広がる */
+  width: 100%; /* procedure-itemの全幅に確実に広がる */
 }
 .step-advice h5{
   margin: 0 0 6px;
@@ -715,6 +736,17 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   font-size: var(--sd-font-size-sm);
   color: var(--on-surface);
   line-height: var(--sd-line-height-normal);
+}
+.step-advice ul,
+.step-advice ol{
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: var(--sd-font-size-sm);
+  color: var(--on-surface);
+  line-height: var(--sd-line-height-normal);
+}
+.step-advice li{
+  margin-bottom: 4px;
 }
 
 /* Empty placeholders for future notes/advice */
