@@ -624,9 +624,11 @@ body {
   grid-template-columns: 1fr 1fr;  /* 50% 50% */
   gap: 16px;
   align-items: flex-start;
+  grid-auto-flow: dense; /* 右→左のズレを詰めて同じ行に配置 */
 }
 .step-image{
   grid-column: 2;  /* 画像を右側に */
+  grid-row: 1;     /* 同じ行に固定 */
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--outline-variant);
@@ -639,6 +641,7 @@ body {
 }
 .step-text{
   grid-column: 1;  /* テキストを左側に */
+  grid-row: 1;     /* 同じ行に固定 */
   min-width: 0;
   display: flex;
   flex-direction: column;
