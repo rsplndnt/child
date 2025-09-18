@@ -414,6 +414,12 @@ body {
   }
 }
 
+/* スマホ時はh1を少し小さくして改行を抑える */
+@media (max-width: 768px){
+  .sidebar-header h1 { font-size: var(--sd-font-size-lg); }
+  .sidebar-header h1 span { font-size: var(--sd-font-size-lg); }
+}
+
 /* デスクトップ時（1025px以上）はハンバーガーメニューを非表示 */
 @media (min-width: 1025px) {
   .hamburger-menu {
