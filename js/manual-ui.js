@@ -149,15 +149,15 @@
       });
     }
 
-    // 左TOCクリック（後でsetupLeftTocSubitems内で上書きされる）
-    tocLinks.forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const href = a.getAttribute('href');
-        if (!href) return;
-        activateSection(href, { closeMobile: true, scrollToTop: true });
-      });
-    });
+    // 左TOCクリック - 基本のイベントリスナーは削除（setupLeftTocSubitems内で設定）
+    // tocLinks.forEach(a => {
+    //   a.addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     const href = a.getAttribute('href');
+    //     if (!href) return;
+    //     activateSection(href, { closeMobile: true, scrollToTop: true });
+    //   });
+    // });
 
     // 右中項目クリック（スムーススクロール）
     subLinks.forEach(a => {
@@ -428,39 +428,31 @@
       tocLinks.forEach(link => {
         const hash = link.getAttribute('href');
         const groupId = getGroupIdByHash(hash);
+        
+        // デフォルトのクリックイベントを設定（すべてのリンクに必要）
+        const defaultClickHandler = (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href) {
+            activateSection(href, { closeMobile: true, scrollToTop: true });
+          }
+        };
+        
         if (!groupId) {
-          // groupIdがない場合でも、基本的なクリックイベントは必要
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const href = link.getAttribute('href');
-            if (href) {
-              activateSection(href, { closeMobile: true, scrollToTop: true });
-            }
-          });
+          // groupIdがない場合
+          link.addEventListener('click', defaultClickHandler);
           return;
         }
         const rightGroup = document.getElementById(groupId);
-        // サブ項目がない章でも基本的なクリックイベントは必要
         if (!rightGroup) {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const href = link.getAttribute('href');
-            if (href) {
-              activateSection(href, { closeMobile: true, scrollToTop: true });
-            }
-          });
+          // サブ項目グループがない場合
+          link.addEventListener('click', defaultClickHandler);
           return;
         }
         const items = Array.from(rightGroup.querySelectorAll('a'));
-        // リンクがない場合でも基本的なクリックイベントは必要
         if (!items.length) {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const href = link.getAttribute('href');
-            if (href) {
-              activateSection(href, { closeMobile: true, scrollToTop: true });
-            }
-          });
+          // サブ項目がない場合
+          link.addEventListener('click', defaultClickHandler);
           return;
         }
 
@@ -541,23 +533,18 @@
         // toggleIconは既に上で宣言済み
         applyTocOpenState({ sublist, toggleIcon, open: isOpen });
 
-        // リンククリック時の処理を上書き（トグルも同時に行う）
-        // 既存のイベントリスナーをすべて削除
-        const newLink = link.cloneNode(true);
-        link.parentNode.replaceChild(newLink, link);
-        const newToggleIcon = newLink.querySelector('.toc-toggle-icon');
-        
-        newLink.addEventListener('click', (e) => {
+        // リンククリック時の処理（トグルも同時に行う）
+        link.addEventListener('click', (e) => {
           e.preventDefault();
           // セクション切り替え
-          const href = newLink.getAttribute('href');
+          const href = link.getAttribute('href');
           if (href) {
             activateSection(href, { closeMobile: true, scrollToTop: true });
           }
           // トグル処理（サブ項目がある場合のみ）
           if (items.length > 0) {
             const nowOpen = !sublist.classList.contains('show');
-            applyTocOpenState({ sublist, toggleIcon: newToggleIcon, open: nowOpen });
+            applyTocOpenState({ sublist, toggleIcon, open: nowOpen });
             state[key] = nowOpen;
             saveTocOpenState(state);
           }
