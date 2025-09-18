@@ -140,7 +140,6 @@
   .step-with-image { 
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
-    grid-template-rows: auto auto auto !important; /* 3行構成 */
     gap: 6mm !important; 
     align-items: flex-start !important; 
     break-inside: avoid !important; 
@@ -165,19 +164,19 @@
     box-shadow: none !important; 
   }
   
-  /* step-with-image内のnote-cardは画像の下（2行目）に全幅で配置 */
+  /* 画像は最大幅で表示、装飾は除去 */
+  .procedure-image { border: 0 !important; box-shadow: none !important; }
+  .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
+  .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
+  img { break-inside: avoid; page-break-inside: avoid; }
+  
+  /* 注意事項・補足事項は全幅（印刷時のみ） */
   .step-with-image .note-card {
     grid-column: 1 / -1 !important;
     grid-row: 2 !important;
     width: 100% !important;
     margin-top: 3mm !important;
   }
-  
-  /* 画像は最大幅で表示、装飾は除去 */
-  .procedure-image { border: 0 !important; box-shadow: none !important; }
-  .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
-  .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
-  img { break-inside: avoid; page-break-inside: avoid; }
   
   /* ワンポイントアドバイスは常に全幅（グリッドの下部） */
   .step-advice { 
