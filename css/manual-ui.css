@@ -706,13 +706,13 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
-/* Material Icons の数字アイコン */
-.step-text ol li:nth-child(1)::before { content: '\e885'; } /* looks_one */
-.step-text ol li:nth-child(2)::before { content: '\e886'; } /* looks_two */  
-.step-text ol li:nth-child(3)::before { content: '\e887'; } /* looks_3 */
-.step-text ol li:nth-child(4)::before { content: '\e888'; } /* looks_4 */
-.step-text ol li:nth-child(5)::before { content: '\e889'; } /* looks_5 */
-.step-text ol li:nth-child(6)::before { content: '\e88a'; } /* looks_6 */
+/* Material Icons の数字アイコン - ligature方式を使用 */
+.step-text ol li:nth-child(1)::before { content: 'looks_one'; }
+.step-text ol li:nth-child(2)::before { content: 'looks_two'; }
+.step-text ol li:nth-child(3)::before { content: 'looks_3'; }
+.step-text ol li:nth-child(4)::before { content: 'looks_4'; }
+.step-text ol li:nth-child(5)::before { content: 'looks_5'; }
+.step-text ol li:nth-child(6)::before { content: 'looks_6'; }
 
 /* ★独立した注意事項カード */
 .note-card{
