@@ -689,6 +689,20 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   font-size: 20px;
 }
 
+/* ★ボタン風の装飾（[ボタン名]のような表記） */
+.button-label {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #f0f4f8;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #1f2328;
+  font-size: 0.95em;
+  margin: 0 2px;
+  white-space: nowrap;
+}
+
 /* ★独立した注意事項カード */
 .note-card{
   background: #FFF7E6;              /* 読みやすい淡黄色 */

@@ -30,6 +30,23 @@
     return (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
   }
 
+  /* ---------------- ボタンラベル変換処理 ---------------- */
+  function convertButtonLabels() {
+    // step-text, note-card, step-advice内のテキストを処理
+    const selectors = '.step-text li, .note-card li, .step-advice li, .step-text p, .note-card p, .step-advice p';
+    const elements = document.querySelectorAll(selectors);
+    
+    elements.forEach(element => {
+      // HTMLを取得
+      let html = element.innerHTML;
+      // [ボタン名]のパターンを検出して置換
+      if (html.includes('[') && html.includes(']')) {
+        html = html.replace(/\[([^\]]+)\]/g, '<span class="button-label">$1</span>');
+        element.innerHTML = html;
+      }
+    });
+  }
+
   /* ---------------- boot ---------------- */
   document.addEventListener('DOMContentLoaded', function() {
     // 少し遅延を追加して要素が確実に存在することを保証
@@ -72,6 +89,9 @@
       return; 
     }
     root.setAttribute(INIT_FLAG, '1');
+    
+    // ボタンラベルの変換を実行
+    convertButtonLabels();
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
     const hamburger = document.getElementById('hamburgerMenu');
