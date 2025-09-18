@@ -608,17 +608,17 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
 .procedure-steps{
   display: flex;
   flex-direction: column;
-  gap: 32px; /* 24px -> 32px に拡大 */
-  border-top: 2px solid var(--color-primary) !important;
-  padding-top: 16px !important;
-  margin-top: 12px !important;
+  gap: var(--sd-spacing-3xl); /* 32px - トークン化 */
+  border-top: var(--sd-border-medium) solid var(--color-primary) !important;
+  padding-top: var(--sd-spacing-lg) !important;
+  margin-top: var(--sd-spacing-md) !important;
 }
 
 /* サブセクション付きステップ用のクラス */
 .step-with-subsection {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* 12px -> 20px に拡大 */
+  gap: var(--sd-spacing-xl); /* 20px - トークン化 */
 }
 
 .step-subsection-title {
@@ -631,7 +631,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
 .step-with-image{
   display: grid;
   grid-template-columns: 1fr 1fr;  /* 50% 50% */
-  gap: 16px;
+  gap: var(--sd-spacing-lg); /* 16px - トークン化 */
   align-items: flex-start;
   grid-auto-flow: dense; /* 右→左のズレを詰めて同じ行に配置 */
 }
@@ -654,7 +654,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-md); line-
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--sd-spacing-md); /* 12px - トークン化 */
 }
 .step-text p{
   margin: 0;
