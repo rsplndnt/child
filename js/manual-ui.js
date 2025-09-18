@@ -235,6 +235,10 @@
 
     // 初期表示のセクション
     activateSection('#top', { scrollToTop: false });
+    
+    // スクロール連動機能
+    setupScrollSync();
+    
     // 検索モジュール
     const searchModule = createSearchModule({
       sectionsSelector: '.content-panel .step-section',
@@ -406,6 +410,127 @@
     window.addEventListener('resize', debounce(updateTabsForViewport, 120));
 
     /* ---------- helper functions (inside init scope) ---------- */
+    
+    // スクロール連動機能
+    function setupScrollSync() {
+      const manualContent = document.querySelector('.manual-content');
+      if (!manualContent) return;
+      
+      let isScrolling = false;
+      let scrollTimeout;
+      
+      const updateActiveSection = () => {
+        if (isScrolling) return;
+        
+        // 現在表示されているセクションを特定
+        let activeSection = null;
+        let activeProcedureItem = null;
+        let closestDistance = Infinity;
+        
+        sections.forEach(section => {
+          if (section.classList.contains('is-hidden')) return;
+          
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top;
+          
+          // ビューポートの上部に最も近いセクションを特定
+          if (sectionTop <= 150 && sectionTop > -rect.height) {
+            const distance = Math.abs(sectionTop);
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              activeSection = section;
+            }
+          }
+        });
+        
+        // アクティブセクション内の procedure-item を特定
+        if (activeSection) {
+          const procedureItems = activeSection.querySelectorAll('.procedure-item');
+          let closestItemDistance = Infinity;
+          
+          procedureItems.forEach(item => {
+            const itemRect = item.getBoundingClientRect();
+            const itemTop = itemRect.top;
+            
+            if (itemTop <= 150 && itemTop > -itemRect.height) {
+              const distance = Math.abs(itemTop);
+              if (distance < closestItemDistance) {
+                closestItemDistance = distance;
+                activeProcedureItem = item;
+              }
+            }
+          });
+        }
+        
+        // 左TOCの選択状態を更新
+        if (activeSection) {
+          const sectionId = activeSection.id;
+          const sectionHash = `#${sectionId}`;
+          
+          // メインセクションのハイライト
+          document.querySelectorAll('.toc .toc-link').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === sectionHash) {
+              link.classList.add('active');
+              
+              // サブアイテムがある場合の処理
+              if (activeProcedureItem) {
+                const itemId = activeProcedureItem.querySelector('h4')?.id;
+                if (itemId) {
+                  const itemHash = `#${itemId}`;
+                  const tocSection = link.closest('.toc-section');
+                  if (tocSection) {
+                    const sublist = tocSection.querySelector('.toc-sublist');
+                    if (sublist) {
+                      sublist.querySelectorAll('a').forEach(subLink => {
+                        if (subLink.getAttribute('href') === itemHash) {
+                          subLink.classList.add('active');
+                          link.classList.remove('active');
+                          link.classList.add('has-active-child');
+                        } else {
+                          subLink.classList.remove('active');
+                        }
+                      });
+                    }
+                  }
+                }
+              }
+            } else {
+              link.classList.remove('active');
+              link.classList.remove('has-active-child');
+            }
+          });
+        }
+      };
+      
+      // スクロールイベントのデバウンス処理
+      const handleScroll = debounce(() => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          isScrolling = false;
+          updateActiveSection();
+        }, 100);
+      }, 50);
+      
+      // スクロールイベントリスナー
+      manualContent.addEventListener('scroll', handleScroll);
+      // 初回実行
+      updateActiveSection();
+      
+      // activateSection関数を拡張して、スクロール連動を一時的に無効化
+      const originalActivateSection = window.activateSection || activateSection;
+      const enhancedActivateSection = function(targetHash, opts = {}) {
+        isScrolling = true;
+        originalActivateSection.call(this, targetHash, opts);
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          isScrolling = false;
+        }, 1000);
+      };
+      
+      // グローバルに公開（デバッグ用）
+      window.activateSection = enhancedActivateSection;
+    }
 
     // 左TOC: サブ項目生成とトグル（localStorageに永続化）
     const TOC_OPEN_STATE_KEY = 'mb-manual-lefttoc-open';
@@ -434,7 +559,8 @@
           e.preventDefault();
           const href = link.getAttribute('href');
           if (href) {
-            activateSection(href, { closeMobile: true, scrollToTop: true });
+            const activateFn = window.activateSection || activateSection;
+            activateFn(href, { closeMobile: true, scrollToTop: true });
           }
         };
         
@@ -539,7 +665,8 @@
           // セクション切り替え
           const href = link.getAttribute('href');
           if (href) {
-            activateSection(href, { closeMobile: true, scrollToTop: true });
+            const activateFn = window.activateSection || activateSection;
+            activateFn(href, { closeMobile: true, scrollToTop: true });
           }
           // トグル処理（サブ項目がある場合のみ）
           if (items.length > 0) {
