@@ -83,27 +83,11 @@
 
   /* ---------------- ページトップに戻るボタン ---------------- */
   function setupBackToTop() {
+    // HTMLのonclickで処理するため、JavaScriptでの設定は最小限に
     const button = document.getElementById('back-to-top');
-    if (!button) {
-      console.error('Back to top button not found');
-      return;
+    if (button) {
+      console.log('Back to top button found and ready');
     }
-    
-    // クリック時の動作
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      // スムーズスクロール
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-      // フォールバック（古いブラウザ用）
-      if (!('scrollBehavior' in document.documentElement.style)) {
-        window.scrollTo(0, 0);
-      }
-    });
-    
-    console.log('Back to top button setup complete');
   }
 
   function init() {
