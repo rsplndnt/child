@@ -91,33 +91,34 @@
       e.preventDefault();
       
       // 現在表示中のセクションを探す
-      const allSections = document.querySelectorAll('.step-section');
-      let currentSection = null;
+      const visibleSection = document.querySelector('.step-section:not(.is-hidden)');
       
-      for (let section of allSections) {
-        if (!section.classList.contains('is-hidden')) {
-          currentSection = section;
-          break;
-        }
-      }
-      
-      if (currentSection) {
-        const h2 = currentSection.querySelector('h2');
+      if (visibleSection) {
+        const h2 = visibleSection.querySelector('h2');
         
         if (h2) {
-          // h2要素の位置までスクロール
-          const headerHeight = 80; // ヘッダーの高さを考慮
-          const rect = h2.getBoundingClientRect();
-          const absoluteTop = rect.top + window.pageYOffset;
-          const targetPosition = Math.max(0, absoluteTop - headerHeight); // 0以下にならないように
+          // h2要素に直接スクロール
+          h2.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
           
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
+          // scrollIntoViewの後、ヘッダー分の調整
+          setTimeout(() => {
+            window.scrollBy({
+              top: -80, // ヘッダーの高さ分上にスクロール
+              behavior: 'smooth'
+            });
+          }, 100);
+        } else {
+          // h2が見つからない場合はセクションの先頭へ
+          visibleSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
           });
         }
       } else {
-        // フォールバック: ページトップに戻る
+        // セクションが見つからない場合はページトップへ
         window.scrollTo({
           top: 0,
           behavior: 'smooth'
