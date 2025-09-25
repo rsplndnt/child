@@ -675,16 +675,10 @@
             const li = document.createElement('li');
             const na = document.createElement('a');
             na.href = a.getAttribute('href');
-            // section1の場合は通し番号形式に変更、それ以外は数字を削除
+            // section1の場合は数字を残す、それ以外は数字を削除
             const text = a.textContent || '';
             if (groupId === 'account-setup-items') {
-              // 元の番号を取得して、1-1, 1-2, 1-3形式に変更
-              const match = text.match(/^(\d+)\.\s*(.+)$/);
-              if (match) {
-                na.textContent = `1-${match[1]}. ${match[2]}`;
-              } else {
-                na.textContent = text; // 番号がない場合はそのまま
-              }
+              na.textContent = text; // 数字を残す
             } else {
               na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
             }
