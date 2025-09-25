@@ -441,9 +441,15 @@
       
       let isScrolling = false;
       let scrollTimeout;
+      let lastScrollTop = 0;
       
       const updateActiveSection = () => {
         if (isScrolling) return;
+        
+        // スクロール方向を検出
+        const currentScrollTop = manualContent.scrollTop;
+        const isScrollingDown = currentScrollTop > lastScrollTop;
+        lastScrollTop = currentScrollTop;
         
         // 現在表示されているセクションを特定
         let activeSection = null;
@@ -456,8 +462,13 @@
           const rect = section.getBoundingClientRect();
           const sectionTop = rect.top;
           
+          // スクロール方向に応じて判定基準を変更
+          // 下スクロール時: 150px以内に入ったら切り替え
+          // 上スクロール時: タイトル（h2）が見えたら切り替え
+          const threshold = isScrollingDown ? 150 : 50;
+          
           // ビューポートの上部に最も近いセクションを特定
-          if (sectionTop <= 150 && sectionTop > -rect.height) {
+          if (sectionTop <= threshold && sectionTop > -rect.height) {
             const distance = Math.abs(sectionTop);
             if (distance < closestDistance) {
               closestDistance = distance;
@@ -471,11 +482,14 @@
           const procedureItems = activeSection.querySelectorAll('.procedure-item');
           let closestItemDistance = Infinity;
           
+          // スクロール方向に応じて判定基準を変更
+          const itemThreshold = isScrollingDown ? 150 : 50;
+          
           procedureItems.forEach(item => {
             const itemRect = item.getBoundingClientRect();
             const itemTop = itemRect.top;
             
-            if (itemTop <= 150 && itemTop > -itemRect.height) {
+            if (itemTop <= itemThreshold && itemTop > -itemRect.height) {
               const distance = Math.abs(itemTop);
               if (distance < closestItemDistance) {
                 closestItemDistance = distance;
