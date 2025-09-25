@@ -84,25 +84,15 @@
   /* ---------------- ページトップに戻るボタン ---------------- */
   function setupBackToTop() {
     const button = document.getElementById('back-to-top');
-    console.log('Back to top button:', button); // デバッグ用
-    if (!button) {
-      console.error('Back to top button not found');
-      return;
-    }
+    if (!button) return;
     
     // スクロール時の表示/非表示制御
-    let scrollTimeout;
     function handleScroll() {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        const scrollY = window.scrollY || window.pageYOffset;
-        console.log('Scroll position:', scrollY); // デバッグ用
-        if (scrollY > 300) {
-          button.classList.add('show');
-        } else {
-          button.classList.remove('show');
-        }
-      }, 10);
+      if (window.scrollY > 300) {
+        button.classList.add('show');
+      } else {
+        button.classList.remove('show');
+      }
     }
     
     // クリック時の動作
@@ -118,7 +108,6 @@
     
     // 初期状態をチェック
     handleScroll();
-    console.log('Back to top button initialized'); // デバッグ用
   }
 
   function init() {
