@@ -803,6 +803,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   color: var(--color-primary);
   margin: 0;
   padding: 8px 0;
+  position: absolute;
+  left: 0;
 }
 
 /* A-1, B-2, C-3用のリストスタイル */
@@ -815,6 +817,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .step-text .step-number-list li {
   margin-bottom: 12px;
   line-height: 1.6;
+  position: relative;
+  padding-left: 2.5em; /* 数字の幅分のインデント */
 }
 
 #screen-layout .note-card {
