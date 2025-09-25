@@ -81,6 +81,46 @@
     }
   });
 
+  /* ---------------- ページトップに戻るボタン ---------------- */
+  function setupBackToTop() {
+    const button = document.getElementById('back-to-top');
+    console.log('Back to top button:', button); // デバッグ用
+    if (!button) {
+      console.error('Back to top button not found');
+      return;
+    }
+    
+    // スクロール時の表示/非表示制御
+    let scrollTimeout;
+    function handleScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        console.log('Scroll position:', scrollY); // デバッグ用
+        if (scrollY > 300) {
+          button.classList.add('show');
+        } else {
+          button.classList.remove('show');
+        }
+      }, 10);
+    }
+    
+    // クリック時の動作
+    button.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // スクロールイベントの監視
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // 初期状態をチェック
+    handleScroll();
+    console.log('Back to top button initialized'); // デバッグ用
+  }
+
   function init() {
     // 二重初期化ガード（重複読み込み/多重バインド防止）
     const INIT_FLAG = 'data-mb-manual-ui-init';
@@ -966,39 +1006,6 @@
     // ページトップに戻るボタンの初期化
     setupBackToTop();
   } // end init
-
-  /* ---------------- ページトップに戻るボタン ---------------- */
-  function setupBackToTop() {
-    const button = document.getElementById('back-to-top');
-    if (!button) return;
-    
-    // スクロール時の表示/非表示制御
-    let scrollTimeout;
-    function handleScroll() {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        if (window.scrollY > 300) {
-          button.classList.add('show');
-        } else {
-          button.classList.remove('show');
-        }
-      }, 10);
-    }
-    
-    // クリック時の動作
-    button.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-    
-    // スクロールイベントの監視
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // 初期状態をチェック
-    handleScroll();
-  }
 
   /* ---------------- sidebar resizer ---------------- */
   function setupSidebarResizer(sidebar, resizer) {
