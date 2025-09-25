@@ -454,28 +454,57 @@
         // 現在表示されているセクションを特定
         let activeSection = null;
         let activeProcedureItem = null;
-        let closestDistance = Infinity;
         
-        sections.forEach(section => {
-          if (section.classList.contains('is-hidden')) return;
-          
-          const rect = section.getBoundingClientRect();
-          const sectionTop = rect.top;
-          
-          // スクロール方向に応じて判定基準を変更
+        if (isScrollingDown) {
           // 下スクロール時: 150px以内に入ったら切り替え
-          // 上スクロール時: タイトル（h2）が見えたら切り替え
-          const threshold = isScrollingDown ? 150 : 50;
+          let closestDistance = Infinity;
           
-          // ビューポートの上部に最も近いセクションを特定
-          if (sectionTop <= threshold && sectionTop > -rect.height) {
-            const distance = Math.abs(sectionTop);
-            if (distance < closestDistance) {
-              closestDistance = distance;
+          sections.forEach(section => {
+            if (section.classList.contains('is-hidden')) return;
+            
+            const rect = section.getBoundingClientRect();
+            const sectionTop = rect.top;
+            
+            if (sectionTop <= 150 && sectionTop > -rect.height) {
+              const distance = Math.abs(sectionTop);
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                activeSection = section;
+              }
+            }
+          });
+        } else {
+          // 上スクロール時: ビューポート内で最も多く見えているセクション
+          // またはタイトル（h2）が見えているセクションを選択
+          let maxVisibleHeight = 0;
+          
+          sections.forEach(section => {
+            if (section.classList.contains('is-hidden')) return;
+            
+            const rect = section.getBoundingClientRect();
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            
+            // セクションのタイトル（h2）を取得
+            const title = section.querySelector('h2');
+            const titleRect = title ? title.getBoundingClientRect() : null;
+            
+            // タイトルが画面内に見えている場合
+            if (titleRect && titleRect.top >= 0 && titleRect.top <= 100) {
+              activeSection = section;
+              return; // このセクションを優先
+            }
+            
+            // ビューポート内での可視領域の高さを計算
+            const visibleTop = Math.max(0, rect.top);
+            const visibleBottom = Math.min(viewportHeight, rect.bottom);
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+            
+            if (visibleHeight > maxVisibleHeight) {
+              maxVisibleHeight = visibleHeight;
               activeSection = section;
             }
-          }
-        });
+          });
+        }
         
         // アクティブセクション内の procedure-item を特定
         if (activeSection) {
