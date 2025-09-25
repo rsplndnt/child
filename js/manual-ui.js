@@ -1025,7 +1025,7 @@
     // 手順項目の数字削除（section1以外）
     document.querySelectorAll('.content-panel .procedure-item h4').forEach(el => {
       // section1のh4は数字を残す
-      if (el.id && el.id.startsWith('section1-item')) {
+      if (el.id && (el.id === 'signin-process' || el.id === 'setup-authenticator' || el.id === 'authenticate-with-app')) {
         return; // スキップ
       }
       el.textContent = strip(el.textContent);

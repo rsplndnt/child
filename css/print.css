@@ -160,16 +160,16 @@
   }
   
   /* section2は印刷時も縦並びレイアウト */
-  #section2 .step-with-image {
+  #screen-layout .step-with-image {
     grid-template-columns: 1fr !important;
   }
   
-  #section2 .step-image {
+  #screen-layout .step-image {
     grid-column: 1 !important;
     grid-row: 1 !important;
   }
   
-  #section2 .step-text {
+  #screen-layout .step-text {
     grid-column: 1 !important;
     grid-row: 2 !important;
   }
