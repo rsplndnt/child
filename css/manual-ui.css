@@ -512,6 +512,13 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
 }
 
+/* section2のレスポンシブ対応 */
+@media (max-width: 1024px) {
+  #section2 .step-with-image {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* タブレット幅（769–1024px）専用の設定 */
 @media (min-width: 769px) and (max-width: 1024px){
   /* manual-contentのパディングを適切に設定 */
@@ -693,6 +700,35 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* 画面構成セクション（section2）専用のレイアウト */
+#section2 .step-with-image {
+  grid-template-columns: 1fr; /* 1カラムレイアウト */
+  gap: var(--sd-spacing-xl);
+}
+
+#section2 .step-image {
+  grid-column: 1;
+  grid-row: 1; /* 画像を1行目に */
+  width: 100%;
+  max-width: 100%;
+}
+
+#section2 .step-text {
+  grid-column: 1;
+  grid-row: 2; /* テキストを2行目に */
+  width: 100%;
+}
+
+#section2 .note-card {
+  grid-column: 1;
+  grid-row: 3; /* 注意事項を3行目に */
+}
+
+#section2 .step-advice {
+  grid-column: 1;
+  grid-row: 4; /* アドバイスを4行目に */
 }
 .step-text{
   grid-column: 1;  /* テキストを左側に */

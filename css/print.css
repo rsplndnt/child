@@ -159,6 +159,21 @@
     box-shadow: none !important;  /* 印刷時はシャドウのみ削除 */
   }
   
+  /* section2は印刷時も縦並びレイアウト */
+  #section2 .step-with-image {
+    grid-template-columns: 1fr !important;
+  }
+  
+  #section2 .step-image {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+  
+  #section2 .step-text {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+  
   /* 画像は最大幅で表示、シャドウのみ削除 */
   .procedure-image { 
     box-shadow: none !important;  /* 印刷時はシャドウのみ削除 */
