@@ -42,10 +42,26 @@
       if (match) {
         const fullMatch = match[1]; // A-1. など
         const numberOnly = match[2]; // 1 など（数字のみ）
-        const remainingText = text.replace(fullMatch, '');
+        const remainingText = text.replace(fullMatch, '').trim();
         
-        // HTMLを再構築（数字のみを装飾）
-        p.innerHTML = `<span class="step-number-label">${numberOnly}.</span> ${remainingText}`;
+        // 親のstep-textを取得
+        const stepTextContainer = p.parentElement;
+        
+        // 既存のolがあるかチェック
+        let ol = stepTextContainer.querySelector('ol');
+        if (!ol) {
+          // olがなければ作成
+          ol = document.createElement('ol');
+          stepTextContainer.appendChild(ol);
+        }
+        
+        // li要素を作成
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="step-number-label">${numberOnly}.</span> ${remainingText}`;
+        ol.appendChild(li);
+        
+        // 元のp要素を削除
+        p.remove();
       }
     });
   }
