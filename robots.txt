@@ -1,0 +1,45 @@
+# Robots.txt for しゃべり描き翻訳マニュアル
+# https://rsplndnt.github.io/child/
+
+User-agent: *
+Allow: /
+Disallow: /js/
+Disallow: /css/manual-base.css
+Disallow: /css/manual-print.css
+Disallow: /*.pdf$
+
+# Sitemap location
+Sitemap: https://rsplndnt.github.io/child/sitemap.xml
+
+# Crawl-delay for responsible crawling
+Crawl-delay: 1
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
