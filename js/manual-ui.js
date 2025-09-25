@@ -474,30 +474,35 @@
             }
           });
         } else {
-          // 上スクロール時: ビューポート内で最も多く見えているセクションを選択
-          let maxVisibleHeight = 0;
+          // 上スクロール時: ビューポートの中心に最も近いセクションのタイトルを基準に選択
+          let closestToCenter = Infinity;
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const viewportCenter = viewportHeight / 2;
           
           sections.forEach(section => {
             if (section.classList.contains('is-hidden')) return;
             
             const rect = section.getBoundingClientRect();
-            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
             
-            // ビューポート内での可視領域の高さを計算
-            // rect.topが負の場合は0、rect.bottomがviewportHeightを超える場合はviewportHeight
-            const visibleTop = Math.max(0, rect.top);
-            const visibleBottom = Math.min(viewportHeight, rect.bottom);
-            const visibleHeight = visibleBottom - visibleTop;
+            // セクションが画面外の場合はスキップ
+            if (rect.bottom < 0 || rect.top > viewportHeight) return;
             
-            // 可視高さが0以下の場合はスキップ
-            if (visibleHeight <= 0) return;
+            // セクションのタイトル（h2）の位置を取得
+            const title = section.querySelector('h2');
+            if (!title) return;
+            
+            const titleRect = title.getBoundingClientRect();
+            
+            // タイトルの中心とビューポート中心の距離を計算
+            const titleCenter = titleRect.top + (titleRect.height / 2);
+            const distanceToCenter = Math.abs(titleCenter - viewportCenter);
             
             // デバッグ用（必要に応じてコメントアウト）
-            console.log(`Section ${section.id}: visible height = ${visibleHeight}, rect.top = ${rect.top}, rect.bottom = ${rect.bottom}`);
+            // console.log(`Section ${section.id}: title distance to center = ${distanceToCenter}, title.top = ${titleRect.top}`);
             
-            // 最も多く表示されているセクションを選択
-            if (visibleHeight > maxVisibleHeight) {
-              maxVisibleHeight = visibleHeight;
+            // ビューポート中心に最も近いタイトルを持つセクションを選択
+            if (distanceToCenter < closestToCenter) {
+              closestToCenter = distanceToCenter;
               activeSection = section;
             }
           });
