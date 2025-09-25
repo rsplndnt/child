@@ -1262,10 +1262,13 @@
     
     // 既存の内容をクリア
     tocContainer.innerHTML = '';
+    console.log('Cleared container, current HTML:', tocContainer.innerHTML); // デバッグ用
     
     // TOCセクションが生成されるまで待機
     setTimeout(() => {
       const tocSections = document.querySelectorAll('.toc-section');
+      console.log('Found toc-sections:', tocSections.length); // デバッグ用
+      console.log('Container before adding:', tocContainer.children.length, 'children'); // デバッグ用
     
     // TOPセクションを追加
     const topSection = document.createElement('div');
@@ -1333,6 +1336,9 @@
       
       tocContainer.appendChild(printSection);
     });
+    
+    console.log('Final container children:', tocContainer.children.length); // デバッグ用
+    console.log('Final container HTML length:', tocContainer.innerHTML.length); // デバッグ用
     
     // フラグをリセット（次回の印刷に備えて）
     setTimeout(() => {
