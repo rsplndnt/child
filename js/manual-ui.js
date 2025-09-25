@@ -253,17 +253,13 @@
     });
 
     // ハンバーガー（Material Symbolsを使った文字列切替）
-    console.log('Hamburger element found:', hamburger);
     if (hamburger) {
       setupHamburger(hamburger, sidebar, overlay);
     } else {
       // フォールバック: 直接イベントリスナーを設定
       const hamburgerFallback = document.getElementById('hamburgerMenu');
-      console.log('Hamburger fallback found:', hamburgerFallback);
       if (hamburgerFallback) {
-        console.log('Setting up fallback hamburger click handler');
         hamburgerFallback.addEventListener('click', function(e) {
-          console.log('Fallback hamburger clicked!');
           e.preventDefault();
           e.stopPropagation();
           
@@ -522,9 +518,6 @@
           // タイトルの中心とビューポート中心の距離を計算
           const titleCenter = titleRect.top + (titleRect.height / 2);
           const distanceToCenter = Math.abs(titleCenter - viewportCenter);
-          
-          // デバッグ用（必要に応じてコメントアウト）
-          // console.log(`Section ${section.id}: title distance to center = ${distanceToCenter}, title.top = ${titleRect.top}`);
           
           // ビューポート中心に最も近いタイトルを持つセクションを選択
           if (distanceToCenter < closestToCenter) {
@@ -814,23 +807,19 @@
     }
 
     function setupHamburger(hamburgerEl, sidebarEl, overlayEl) {
-      console.log('setupHamburger called with:', hamburgerEl, sidebarEl, overlayEl);
       if (!hamburgerEl) {
-        console.log('No hamburger element provided');
         return;
       }
       
       // ensure icon child
       let mi = hamburgerEl.querySelector('.mi, .material-icons');
       if (!mi) {
-        console.log('Creating icon element');
         mi = document.createElement('i');
         mi.className = 'material-icons mi';
         mi.setAttribute('aria-hidden', 'true');
         mi.textContent = 'menu';
         hamburgerEl.appendChild(mi);
       } else {
-        console.log('Icon element found:', mi);
       }
       // initialize aria-expanded according to classes
       const isActive = hamburgerEl.classList.contains('active');
@@ -1264,7 +1253,6 @@
   function generatePrintTOC() {
     const tocContainer = document.querySelector('.print-toc-content');
     if (!tocContainer) {
-      console.log('print-toc-content not found');
       return;
     }
     
@@ -1342,7 +1330,6 @@
       tocContainer.appendChild(printSection);
     });
     
-      console.log('Print TOC generated with', tocSections.length + 1, 'sections');
     }, 100); // 100ms待機
   }
   
