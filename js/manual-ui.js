@@ -682,23 +682,23 @@
         // toggleIconは既に上で宣言済み
         applyTocOpenState({ sublist, toggleIcon, open: isOpen });
 
-        // リンククリック時の処理（トグルも同時に行う）
+        // リンククリック時の処理
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          // セクション切り替え
-          const href = link.getAttribute('href');
-          if (href) {
-            const activateFn = window.activateSection || activateSection;
-            // サブ項目がない場合のみモバイルメニューを閉じる
-            const shouldCloseMobile = items.length === 0;
-            activateFn(href, { closeMobile: shouldCloseMobile, scrollToTop: true });
-          }
-          // トグル処理（サブ項目がある場合のみ）
+          
+          // サブ項目がある場合はトグルのみ（画面遷移なし）
           if (items.length > 0) {
             const nowOpen = !sublist.classList.contains('show');
             applyTocOpenState({ sublist, toggleIcon, open: nowOpen });
             state[key] = nowOpen;
             saveTocOpenState(state);
+          } else {
+            // サブ項目がない場合のみ画面遷移
+            const href = link.getAttribute('href');
+            if (href) {
+              const activateFn = window.activateSection || activateSection;
+              activateFn(href, { closeMobile: true, scrollToTop: true });
+            }
           }
         });
       });
