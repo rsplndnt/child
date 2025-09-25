@@ -354,8 +354,11 @@
     /* ====== 印刷用 目次とフッター ====== */
     /* 1ページ目: 既存のイラスト入り表紙（#top セクションを表紙扱い） */
     .print-cover { 
-      display:block !important; 
-      page-break-after: always !important; 
+      display: block !important; 
+      break-after: page !important; /* 新しい仕様 */
+      page-break-after: always !important; /* 旧ブラウザ対応 */
+      break-before: auto !important; /* 前のページ区切りをリセット */
+      page-break-before: auto !important; /* 旧ブラウザ対応 */
     }
     
     /* 印刷表紙のスタイル */
@@ -364,21 +367,25 @@
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
-      justify-content: space-between !important;
-      min-height: 100vh !important;
+      justify-content: center !important;
+      height: 100vh !important; /* min-heightではなくheightに変更 */
+      max-height: 100vh !important; /* 最大高さを制限 */
       text-align: center !important;
       position: relative !important;
+      overflow: hidden !important; /* オーバーフローを隠す */
+      break-inside: avoid !important; /* ページ内での分割を防ぐ */
+      page-break-inside: avoid !important; /* 旧ブラウザ対応 */
     }
     
     /* ロゴコンテナ */
     .print-cover-logo {
-      padding-top: 60mm !important;
-      margin-bottom: 30mm !important; /* 画像と文字の間のマージンを追加 */
+      margin-top: 50mm !important;
+      margin-bottom: 25mm !important; /* 画像と文字の間のマージンを調整 */
     }
     
     /* ロゴ画像 */
     .print-cover.only-print img {
-      max-width: 120mm !important;
+      max-width: 100mm !important; /* サイズを少し小さく */
       height: auto !important;
       margin: 0 auto !important;
       display: block !important;
@@ -386,29 +393,25 @@
     
     /* タイトルコンテナ */
     .print-cover-title {
-      flex: 1 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding-bottom: 60mm !important;
+      margin-bottom: 50mm !important; /* paddingではなくmarginに変更 */
     }
     
     /* タイトルテキスト */
     .print-cover.only-print h1 {
-      font-size: 36pt !important;
+      font-size: 32pt !important; /* サイズを少し小さく */
       color: #4299E1 !important; /* メインカラー（青）に変更 */
       font-weight: bold !important;
-      line-height: 1.6 !important;
+      line-height: 1.4 !important; /* 行間を調整 */
       margin: 0 !important;
-      padding: 0 30mm !important;
-      letter-spacing: 0.1em !important;
+      padding: 0 20mm !important;
+      letter-spacing: 0.08em !important;
     }
     
     /* サブタイトル */
     .print-cover.only-print h1 span {
       display: block !important;
-      margin-top: 10mm !important;
-      font-size: 24pt !important;
+      margin-top: 8mm !important; /* マージンを調整 */
+      font-size: 22pt !important; /* サイズを少し小さく */
       font-weight: normal !important;
       color: #4299E1 !important; /* メインカラー（青）に変更 */
     }
