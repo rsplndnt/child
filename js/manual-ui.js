@@ -81,13 +81,35 @@
     }
   });
 
-  /* ---------------- ページトップに戻るボタン ---------------- */
+  /* ---------------- セクショントップに戻るボタン ---------------- */
   function setupBackToTop() {
-    // HTMLのonclickで処理するため、JavaScriptでの設定は最小限に
     const button = document.getElementById('back-to-top');
-    if (button) {
-      console.log('Back to top button found and ready');
-    }
+    if (!button) return;
+    
+    // クリック時に現在表示中のセクションのh2に戻る
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // 現在表示中のセクションを探す
+      const sections = document.querySelectorAll('.step-section:not(.is-hidden)');
+      if (sections.length > 0) {
+        const currentSection = sections[0];
+        const h2 = currentSection.querySelector('h2');
+        
+        if (h2) {
+          // h2要素の位置までスクロール
+          const headerHeight = 80; // ヘッダーの高さを考慮
+          const targetPosition = h2.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+    
+    console.log('Back to section top button initialized');
   }
 
   function init() {
