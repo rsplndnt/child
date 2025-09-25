@@ -1221,8 +1221,23 @@
     const topSection = document.createElement('div');
     topSection.className = 'print-toc-section';
     const topH3 = document.createElement('h3');
-    topH3.innerHTML = '<span class="toc-icon">●</span> 0. しゃべり描き翻訳でできること';
+    topH3.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳でできること';
     topSection.appendChild(topH3);
+    
+    // TOPのサブ項目を追加
+    const topSubList = document.createElement('ul');
+    topSubList.className = 'print-toc-sublist';
+    const topItems = [
+      '２言語間のコミュニケーション',
+      'しゃべり描き（音声＋お絵描き）で翻訳',
+      'トランスクリプト（会話）の翻訳'
+    ];
+    topItems.forEach((item) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${item}</span>`;
+      topSubList.appendChild(li);
+    });
+    topSection.appendChild(topSubList);
     tocContainer.appendChild(topSection);
     
     tocSections.forEach((section, index) => {

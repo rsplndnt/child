@@ -403,29 +403,62 @@
       background: white !important;
     }
     .print-toc-title { 
-      font-size: 20pt !important; 
-      margin: 0 0 15mm !important; 
-      color: #0066cc !important; 
-      border-bottom: 2pt solid #0066cc !important; 
-      padding-bottom: 4mm !important; 
+      font-size: 24pt !important; 
+      margin: 0 0 20mm !important; 
+      color: #2C5282 !important; 
+      text-align: center !important;
+      font-weight: bold !important;
     }
-    .print-toc-content { font-size: 11pt !important; }
-    .print-toc-section { margin-bottom: 6mm !important; }
+    .print-toc-content { 
+      font-size: 11pt !important;
+      max-width: 180mm !important;
+      margin: 0 auto !important;
+    }
+    .print-toc-section { 
+      margin-bottom: 10mm !important;
+      border-left: 3pt solid #4299E1 !important;
+      padding-left: 5mm !important;
+    }
     .print-toc-section h3 { 
-      font-size: 12pt !important; 
+      font-size: 13pt !important; 
       font-weight: bold !important; 
-      color: #0066cc !important; 
-      margin: 0 0 2mm 0 !important; 
+      color: #2C5282 !important; 
+      margin: 0 0 4mm 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 3mm !important;
+    }
+    .print-toc-section h3 .toc-icon {
+      color: #4299E1 !important;
+      font-size: 10pt !important;
     }
     .print-toc-sublist { 
       list-style: none !important; 
-      padding-left: 8mm !important; 
+      padding-left: 5mm !important; 
       margin: 0 !important; 
     }
     .print-toc-sublist li { 
-      margin: 1.5mm 0 !important; 
+      margin: 2mm 0 !important; 
       font-size: 10pt !important; 
-      color: #333 !important; 
+      color: #2D3748 !important;
+      padding-left: 3mm !important;
+      border-left: 1pt solid #E2E8F0 !important;
+      line-height: 1.6 !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: baseline !important;
+    }
+    .print-toc-sublist li::after {
+      content: "" !important;
+      flex-grow: 1 !important;
+      border-bottom: 1pt dotted #CBD5E0 !important;
+      margin: 0 2mm !important;
+      min-width: 10mm !important;
+    }
+    .print-toc-page-number {
+      color: #718096 !important;
+      font-size: 9pt !important;
+      white-space: nowrap !important;
     }
     /* Section1のサブリストは番号付き */
     .print-toc-section:first-of-type .print-toc-sublist { counter-reset: toc-item !important; }
