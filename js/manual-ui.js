@@ -452,80 +452,66 @@
         lastScrollTop = currentScrollTop;
         
         // 現在表示されているセクションを特定
+        // スクロール方向に関わらず、ビューポート中心に最も近いタイトルを基準に選択
         let activeSection = null;
         let activeProcedureItem = null;
+        let closestToCenter = Infinity;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const viewportCenter = viewportHeight / 2;
         
-        if (isScrollingDown) {
-          // 下スクロール時: 150px以内に入ったら切り替え
-          let closestDistance = Infinity;
+        sections.forEach(section => {
+          if (section.classList.contains('is-hidden')) return;
           
-          sections.forEach(section => {
-            if (section.classList.contains('is-hidden')) return;
-            
-            const rect = section.getBoundingClientRect();
-            const sectionTop = rect.top;
-            
-            if (sectionTop <= 150 && sectionTop > -rect.height) {
-              const distance = Math.abs(sectionTop);
-              if (distance < closestDistance) {
-                closestDistance = distance;
-                activeSection = section;
-              }
-            }
-          });
-        } else {
-          // 上スクロール時: ビューポートの中心に最も近いセクションのタイトルを基準に選択
-          let closestToCenter = Infinity;
-          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-          const viewportCenter = viewportHeight / 2;
+          const rect = section.getBoundingClientRect();
           
-          sections.forEach(section => {
-            if (section.classList.contains('is-hidden')) return;
-            
-            const rect = section.getBoundingClientRect();
-            
-            // セクションが画面外の場合はスキップ
-            if (rect.bottom < 0 || rect.top > viewportHeight) return;
-            
-            // セクションのタイトル（h2）の位置を取得
-            const title = section.querySelector('h2');
-            if (!title) return;
-            
-            const titleRect = title.getBoundingClientRect();
-            
-            // タイトルの中心とビューポート中心の距離を計算
-            const titleCenter = titleRect.top + (titleRect.height / 2);
-            const distanceToCenter = Math.abs(titleCenter - viewportCenter);
-            
-            // デバッグ用（必要に応じてコメントアウト）
-            // console.log(`Section ${section.id}: title distance to center = ${distanceToCenter}, title.top = ${titleRect.top}`);
-            
-            // ビューポート中心に最も近いタイトルを持つセクションを選択
-            if (distanceToCenter < closestToCenter) {
-              closestToCenter = distanceToCenter;
-              activeSection = section;
-            }
-          });
-        }
+          // セクションが画面外の場合はスキップ
+          if (rect.bottom < 0 || rect.top > viewportHeight) return;
+          
+          // セクションのタイトル（h2）の位置を取得
+          const title = section.querySelector('h2');
+          if (!title) return;
+          
+          const titleRect = title.getBoundingClientRect();
+          
+          // タイトルの中心とビューポート中心の距離を計算
+          const titleCenter = titleRect.top + (titleRect.height / 2);
+          const distanceToCenter = Math.abs(titleCenter - viewportCenter);
+          
+          // デバッグ用（必要に応じてコメントアウト）
+          // console.log(`Section ${section.id}: title distance to center = ${distanceToCenter}, title.top = ${titleRect.top}`);
+          
+          // ビューポート中心に最も近いタイトルを持つセクションを選択
+          if (distanceToCenter < closestToCenter) {
+            closestToCenter = distanceToCenter;
+            activeSection = section;
+          }
+        });
         
         // アクティブセクション内の procedure-item を特定
         if (activeSection) {
           const procedureItems = activeSection.querySelectorAll('.procedure-item');
-          let closestItemDistance = Infinity;
-          
-          // スクロール方向に応じて判定基準を変更
-          const itemThreshold = isScrollingDown ? 150 : 50;
+          let closestItemToCenter = Infinity;
           
           procedureItems.forEach(item => {
             const itemRect = item.getBoundingClientRect();
-            const itemTop = itemRect.top;
             
-            if (itemTop <= itemThreshold && itemTop > -itemRect.height) {
-              const distance = Math.abs(itemTop);
-              if (distance < closestItemDistance) {
-                closestItemDistance = distance;
-                activeProcedureItem = item;
-              }
+            // 画面外のアイテムはスキップ
+            if (itemRect.bottom < 0 || itemRect.top > viewportHeight) return;
+            
+            // アイテムのタイトル（h4）の位置を取得
+            const itemTitle = item.querySelector('h4');
+            if (!itemTitle) return;
+            
+            const itemTitleRect = itemTitle.getBoundingClientRect();
+            
+            // タイトルの中心とビューポート中心の距離を計算
+            const itemTitleCenter = itemTitleRect.top + (itemTitleRect.height / 2);
+            const itemDistanceToCenter = Math.abs(itemTitleCenter - viewportCenter);
+            
+            // ビューポート中心に最も近いタイトルを持つアイテムを選択
+            if (itemDistanceToCenter < closestItemToCenter) {
+              closestItemToCenter = itemDistanceToCenter;
+              activeProcedureItem = item;
             }
           });
         }
