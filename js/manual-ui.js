@@ -968,13 +968,20 @@
   function setupSidebarResizer(sidebar, resizer) {
     const MIN = 240, MAX = 520;
     let dragging = false, startX = 0, startW = sidebar.getBoundingClientRect().width;
+    
+    // 既存のlocalStorageデータをクリア
     try {
-      const saved = Number(localStorage.getItem(SIDEBAR_WIDTH_KEY) || 0);
-      if (saved && saved >= MIN && saved <= MAX) {
-        sidebar.style.flexBasis = saved + 'px';
-        sidebar.style.maxWidth = saved + 'px';
-      }
+      localStorage.removeItem(SIDEBAR_WIDTH_KEY);
     } catch (e) {}
+    
+    // localStorage からの読み込みを無効化（常に初期値334pxを使用）
+    // try {
+    //   const saved = Number(localStorage.getItem(SIDEBAR_WIDTH_KEY) || 0);
+    //   if (saved && saved >= MIN && saved <= MAX) {
+    //     sidebar.style.flexBasis = saved + 'px';
+    //     sidebar.style.maxWidth = saved + 'px';
+    //   }
+    // } catch (e) {}
     resizer.addEventListener('mousedown', (e) => {
       if (window.innerWidth <= MOBILE_BREAKPOINT) return;
       dragging = true; startX = e.clientX; startW = sidebar.getBoundingClientRect().width;
@@ -988,7 +995,8 @@
     window.addEventListener('mouseup', () => {
       if (!dragging) return;
       dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = '';
-      try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
+      // localStorage への保存を無効化
+      // try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
     });
 
     // touch support
@@ -1005,7 +1013,8 @@
     window.addEventListener('touchend', () => {
       if (!dragging) return;
       dragging = false; document.body.style.userSelect = '';
-      try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
+      // localStorage への保存を無効化
+      // try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
     });
   }
 
