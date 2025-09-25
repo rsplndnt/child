@@ -84,28 +84,59 @@
   /* ---------------- セクショントップに戻るボタン ---------------- */
   function setupBackToTop() {
     const button = document.getElementById('back-to-top');
-    if (!button) return;
+    if (!button) {
+      console.error('Button not found');
+      return;
+    }
     
     // クリック時に現在表示中のセクションのh2に戻る
     button.addEventListener('click', function(e) {
       e.preventDefault();
+      console.log('Button clicked');
       
       // 現在表示中のセクションを探す
-      const sections = document.querySelectorAll('.step-section:not(.is-hidden)');
-      if (sections.length > 0) {
-        const currentSection = sections[0];
+      const allSections = document.querySelectorAll('.step-section');
+      console.log('All sections:', allSections.length);
+      
+      const visibleSections = document.querySelectorAll('.step-section:not(.is-hidden)');
+      console.log('Visible sections:', visibleSections.length);
+      
+      // is-hiddenクラスがない、または表示されているセクションを探す
+      let currentSection = null;
+      for (let section of allSections) {
+        if (!section.classList.contains('is-hidden')) {
+          currentSection = section;
+          console.log('Found visible section:', section.id);
+          break;
+        }
+      }
+      
+      if (currentSection) {
         const h2 = currentSection.querySelector('h2');
+        console.log('Found h2:', h2);
         
         if (h2) {
           // h2要素の位置までスクロール
           const headerHeight = 80; // ヘッダーの高さを考慮
-          const targetPosition = h2.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          const rect = h2.getBoundingClientRect();
+          const targetPosition = rect.top + window.pageYOffset - headerHeight;
+          
+          console.log('Scrolling to:', targetPosition);
           
           window.scrollTo({
             top: targetPosition,
             behavior: 'smooth'
           });
+        } else {
+          console.error('h2 not found in section');
         }
+      } else {
+        console.error('No visible section found');
+        // フォールバック: ページトップに戻る
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
     });
     
