@@ -47,11 +47,18 @@
         // 親のstep-textを取得
         const stepTextContainer = p.parentElement;
         
-        // 既存のolがあるかチェック
-        let ol = stepTextContainer.querySelector('ol');
+        // 既存のolがあるかチェック（新しく作成したもの以外）
+        let ol = stepTextContainer.querySelector('ol:not(.existing-ol)');
         if (!ol) {
-          // olがなければ作成
+          // 既存のolがあれば削除
+          const existingOl = stepTextContainer.querySelector('ol');
+          if (existingOl) {
+            existingOl.remove();
+          }
+          
+          // 新しいolを作成
           ol = document.createElement('ol');
+          ol.className = 'step-number-list';
           stepTextContainer.appendChild(ol);
         }
         
