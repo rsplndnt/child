@@ -1248,11 +1248,17 @@
   window.addEventListener('beforeprint', addPrintH3);
   
   // 印刷用目次を生成する関数
+  let isPrintTOCGenerating = false;
   function generatePrintTOC() {
+    // 重複実行を防ぐ
+    if (isPrintTOCGenerating) return;
+    
     const tocContainer = document.querySelector('.print-toc-content');
     if (!tocContainer) {
       return;
     }
+    
+    isPrintTOCGenerating = true;
     
     // 既存の内容をクリア
     tocContainer.innerHTML = '';
@@ -1327,6 +1333,11 @@
       
       tocContainer.appendChild(printSection);
     });
+    
+    // フラグをリセット（次回の印刷に備えて）
+    setTimeout(() => {
+      isPrintTOCGenerating = false;
+    }, 500);
     
     }, 100); // 100ms待機
   }
