@@ -603,8 +603,17 @@
       const getGroupIdByHash = (hash) => {
         if (!hash) return null;
         if (hash === '#top') return 'sub-items-top';
-        const m = String(hash).match(/^#section(\d+)/i);
-        return m ? `sub-items-section${m[1]}` : null;
+        // 新しいID形式に対応
+        const idMap = {
+          '#account-setup': 'account-setup-items',
+          '#screen-layout': 'screen-layout-items',
+          '#operation-guide': 'operation-guide-items',
+          '#mic-usage-tips': 'mic-usage-tips-items',
+          '#terminology': 'terminology-items',
+          '#faq': 'faq-items',
+          '#product-specs': 'product-specs-items'
+        };
+        return idMap[hash] || null;
       };
 
       tocLinks.forEach(link => {
@@ -668,7 +677,7 @@
             na.href = a.getAttribute('href');
             // section1の場合は数字を残す、それ以外は数字を削除
             const text = a.textContent || '';
-            if (groupId === 'sub-items-section1') {
+            if (groupId === 'account-setup-items') {
               na.textContent = text; // 数字を残す
             } else {
               na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
