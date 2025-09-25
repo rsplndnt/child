@@ -84,30 +84,26 @@
   /* ---------------- ページトップに戻るボタン ---------------- */
   function setupBackToTop() {
     const button = document.getElementById('back-to-top');
-    if (!button) return;
-    
-    // スクロール時の表示/非表示制御
-    function handleScroll() {
-      if (window.scrollY > 300) {
-        button.classList.add('show');
-      } else {
-        button.classList.remove('show');
-      }
+    if (!button) {
+      console.error('Back to top button not found');
+      return;
     }
     
     // クリック時の動作
-    button.addEventListener('click', () => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      // スムーズスクロール
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
+      // フォールバック（古いブラウザ用）
+      if (!('scrollBehavior' in document.documentElement.style)) {
+        window.scrollTo(0, 0);
+      }
     });
     
-    // スクロールイベントの監視
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // 初期状態をチェック
-    handleScroll();
+    console.log('Back to top button setup complete');
   }
 
   function init() {
