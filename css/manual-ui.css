@@ -1277,7 +1277,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 @media (max-width: 768px){
   .step-with-image{
     grid-template-columns: 1fr;  /* スマホでは縦並び */
-    grid-template-rows: auto auto auto auto auto; /* 5行構成 */
+    grid-template-rows: auto auto auto auto; /* 4行構成 */
     gap: var(--sd-spacing-md); /* 縦並び時のギャップを調整 */
   }
   .step-image{
@@ -1308,13 +1308,9 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   /* advice-sectionも適切に配置 */
   .step-text.advice-section {
     grid-column: 1 !important;
-    grid-row: 5 !important; /* ワンポイントアドバイスを5行目に配置 */
+    grid-row: 4 !important; /* ワンポイントアドバイスを4行目に配置 */
     display: block !important; /* contentsを上書き */
     width: 100% !important;
-  }
-  .step-advice{
-    grid-column: 1 !important;  /* 縦並びの場合は通常配置 */
-    grid-row: 4 !important; /* アドバイスを4行目に */
   }
   
   /* モバイル時はadvice-itemを縦並びに */
