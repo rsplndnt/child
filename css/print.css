@@ -360,27 +360,66 @@
     
     /* 印刷表紙のスタイル */
     .print-cover.only-print {
-      padding: 30mm 25mm !important;
+      padding: 0 !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
-      justify-content: center !important;
+      justify-content: space-between !important;
       min-height: 100vh !important;
       text-align: center !important;
+      position: relative !important;
     }
     
+    /* ロゴコンテナ */
+    .print-cover-logo {
+      padding-top: 60mm !important;
+    }
+    
+    /* ロゴ画像 */
     .print-cover.only-print img {
-      max-width: 80mm !important;
+      max-width: 120mm !important;
       height: auto !important;
-      margin-bottom: 20mm !important;
+      margin: 0 auto !important;
+      display: block !important;
     }
     
+    /* タイトルコンテナ */
+    .print-cover-title {
+      flex: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding-bottom: 60mm !important;
+    }
+    
+    /* タイトルテキスト */
     .print-cover.only-print h1 {
-      font-size: 28pt !important;
-      color: #0066cc !important;
+      font-size: 36pt !important;
+      color: #2C5282 !important;
       font-weight: bold !important;
-      line-height: 1.4 !important;
+      line-height: 1.6 !important;
       margin: 0 !important;
+      padding: 0 30mm !important;
+      letter-spacing: 0.1em !important;
+    }
+    
+    /* サブタイトル */
+    .print-cover.only-print h1 span {
+      display: block !important;
+      margin-top: 10mm !important;
+      font-size: 24pt !important;
+      font-weight: normal !important;
+      color: #4A5568 !important;
+    }
+    
+    /* 日付とバージョンを右下に追加 */
+    .print-cover.only-print::after {
+      content: "Version 1.0 | " attr(data-date) !important;
+      position: absolute !important;
+      bottom: 20mm !important;
+      right: 25mm !important;
+      font-size: 10pt !important;
+      color: #718096 !important;
     }
     
     /* 2ページ目: 印刷用目次 - Chrome対応 */
