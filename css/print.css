@@ -390,9 +390,9 @@
       visibility: visible !important;
       opacity: 1 !important;
       position: relative !important;
-      break-before: page !important; /* Chrome用 */
+      break-before: always !important; /* 必ず改ページ */
       page-break-before: always !important; /* 旧ブラウザ用 */
-      break-after: page !important; /* Chrome用 */
+      break-after: always !important; /* 次のコンテンツも改ページ */
       page-break-after: always !important; /* 旧ブラウザ用 */
       padding: 20mm 25mm !important;
       min-height: 100vh !important;
@@ -401,6 +401,7 @@
       box-sizing: border-box !important;
       margin: 0 !important;
       background: white !important;
+      page: toc !important; /* 独立したページとして扱う */
     }
     .print-toc-title { 
       font-size: 24pt !important; 
