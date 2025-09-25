@@ -484,9 +484,16 @@
             const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
             
             // ビューポート内での可視領域の高さを計算
+            // rect.topが負の場合は0、rect.bottomがviewportHeightを超える場合はviewportHeight
             const visibleTop = Math.max(0, rect.top);
             const visibleBottom = Math.min(viewportHeight, rect.bottom);
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+            const visibleHeight = visibleBottom - visibleTop;
+            
+            // 可視高さが0以下の場合はスキップ
+            if (visibleHeight <= 0) return;
+            
+            // デバッグ用（必要に応じてコメントアウト）
+            console.log(`Section ${section.id}: visible height = ${visibleHeight}, rect.top = ${rect.top}, rect.bottom = ${rect.bottom}`);
             
             // 最も多く表示されているセクションを選択
             if (visibleHeight > maxVisibleHeight) {
