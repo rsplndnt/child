@@ -23,7 +23,7 @@ body {
   --hovered-variant: rgba(0,0,0,0.051);
   --caution: #FFD76B;
 
-  --sidebar-w: 320px;     /* 初期幅（JSで保存/復元） */
+  --sidebar-w: 334px;     /* 初期幅（JSで保存/復元） */
   --sidebar-w-min: 240px;
   --sidebar-w-max: 520px;
 }
@@ -508,7 +508,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   /* モバイル時のサイドバー幅調整 */
   .manual-sidebar.mobile {
     width: 100vw;
-    max-width: 320px;
+    max-width: 334px;
   }
 }
 
@@ -538,7 +538,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
   /* サイドバーの幅調整 */
   .manual-sidebar {
-    width: 320px !important;
+    width: 334px !important;
   }
   /* ハンバーガーメニューの位置を確実に固定 */
   .hamburger-menu {
