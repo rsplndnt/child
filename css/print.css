@@ -156,16 +156,12 @@
   .step-image { 
     grid-column: 2 !important;
     grid-row: 1 !important;
-    border: 1px solid #ddd !important;  /* アウトラインを追加 */
-    box-shadow: none !important;  /* シャドウを削除 */
-    padding: 2mm !important;  /* 画像とボーダーの間に少し余白 */
+    box-shadow: none !important;  /* 印刷時はシャドウのみ削除 */
   }
   
-  /* 画像は最大幅で表示、装飾は除去 */
+  /* 画像は最大幅で表示、シャドウのみ削除 */
   .procedure-image { 
-    border: 1px solid #ddd !important;  /* アウトラインを追加 */
-    box-shadow: none !important;  /* シャドウを削除 */
-    padding: 2mm !important;  /* 画像とボーダーの間に少し余白 */
+    box-shadow: none !important;  /* 印刷時はシャドウのみ削除 */
   }
   .procedure-image img, .step-image img { width: 100% !important; max-width: 100% !important; height: auto !important; }
   .procedure-image { margin: 0 0 4mm !important; break-inside: avoid; page-break-inside: avoid; }
