@@ -905,7 +905,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 6px; /* 微調整 */
+  padding-top: 5px; /* 微調整 */
 }
 .toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
 .toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
