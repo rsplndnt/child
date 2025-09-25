@@ -445,21 +445,7 @@
       padding-left: 3mm !important;
       border-left: 1pt solid #E2E8F0 !important;
       line-height: 1.6 !important;
-      display: flex !important;
-      justify-content: space-between !important;
-      align-items: baseline !important;
-    }
-    .print-toc-sublist li::after {
-      content: "" !important;
-      flex-grow: 1 !important;
-      border-bottom: 1pt dotted #CBD5E0 !important;
-      margin: 0 2mm !important;
-      min-width: 10mm !important;
-    }
-    .print-toc-page-number {
-      color: #718096 !important;
-      font-size: 9pt !important;
-      white-space: nowrap !important;
+      display: block !important;
     }
     /* Section1のサブリストは番号付き */
     .print-toc-section:first-of-type .print-toc-sublist { counter-reset: toc-item !important; }
