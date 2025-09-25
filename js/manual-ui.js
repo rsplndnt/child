@@ -30,6 +30,25 @@
     return (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
   }
 
+  /* ---------------- A-1, B-2, C-3の文字装飾 ---------------- */
+  function decorateStepNumbers() {
+    const stepTexts = document.querySelectorAll('.step-text p');
+    
+    stepTexts.forEach(p => {
+      const text = p.textContent;
+      // A-1, B-2, C-3などのパターンを検出
+      const match = text.match(/^([A-C]-[0-9]+\.\s*)/);
+      
+      if (match) {
+        const stepNumber = match[1];
+        const remainingText = text.replace(match[0], '');
+        
+        // HTMLを再構築
+        p.innerHTML = `<span class="step-number-label">${stepNumber}</span>${remainingText}`;
+      }
+    });
+  }
+
   /* ---------------- ボタンラベル変換処理 ---------------- */
   function convertButtonLabels() {
     // step-text, note-card, step-advice内のテキストを処理
@@ -136,8 +155,11 @@
     }
     root.setAttribute(INIT_FLAG, '1');
     
-    // ボタンラベルの変換を実行
-    convertButtonLabels();
+  // ボタンラベルの変換を実行
+  convertButtonLabels();
+  
+  // A-1, B-2, C-3などの文字装飾を実行
+  decorateStepNumbers();
     
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
