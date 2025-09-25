@@ -879,22 +879,45 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     gap: 12px;
 }
 
+/* ワンポイントアドバイスのリスト */
+.advice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.advice-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.advice-item:last-child {
+    margin-bottom: 0;
+}
+
+.advice-item > span {
+    flex: 1;
+    line-height: 1.6;
+}
+
 /* 準備中の画像プレースホルダー */
 .advice-image-placeholder {
-    width: 100%;
-    max-width: 600px;
-    height: 300px;
+    width: 200px;
+    min-width: 200px;
+    height: 120px;
     background-color: #EEEEEE;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 12px;
+    flex-shrink: 0;
 }
 
 .advice-image-placeholder span {
     color: #999999;
-    font-size: var(--sd-font-size-lg);
+    font-size: var(--sd-font-size-md);
     font-weight: 500;
 }
 
@@ -1035,10 +1058,16 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     margin-left: 0;
   }
   
-  /* モバイル時は画像プレースホルダーも調整 */
+  /* モバイル時はadvice-itemを縦並びに */
+  .advice-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
   .advice-image-placeholder {
-    height: 200px;
+    width: 100%;
     max-width: 100%;
+    height: 150px;
   }
 }
 @media (max-width: 768px){
