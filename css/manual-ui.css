@@ -863,17 +863,10 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .note-card.is-empty,
 .step-advice.is-empty{ display: none !important; }
 
-/* ワンポイントアドバイス - 新レイアウト（左文字・右画像） */
+/* ワンポイントアドバイス - 新レイアウト */
 .advice-section {
     margin-top: 24px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
     grid-column: 1 / -1;
-}
-
-.advice-section.has-image {
-    grid-template-columns: 1fr 320px;
 }
 
 .advice-section .step-text {
@@ -881,6 +874,28 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     border: 1px solid #C8E6C9;
     border-radius: 10px;
     padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 準備中の画像プレースホルダー */
+.advice-image-placeholder {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    background-color: #EEEEEE;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.advice-image-placeholder span {
+    color: #999999;
+    font-size: var(--sd-font-size-lg);
+    font-weight: 500;
 }
 
 .advice-section .step-text h5 {
@@ -912,18 +927,6 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     margin-bottom: 4px;
 }
 
-.advice-section .step-image {
-    border: none;
-    box-shadow: var(--sd-shadow-default);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.advice-section .step-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
 /* レイアウト上、同じ列で縦積み */
 /* procedure-itemの直下に来る想定 - 必要ならここで幅調整 */
 
@@ -1032,12 +1035,9 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     margin-left: 0;
   }
   
-  /* モバイル時はadvice-sectionも縦並び */
-  .advice-section.has-image {
-    grid-template-columns: 1fr;
-  }
-  
-  .advice-section .step-image {
+  /* モバイル時は画像プレースホルダーも調整 */
+  .advice-image-placeholder {
+    height: 200px;
     max-width: 100%;
   }
 }

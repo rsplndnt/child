@@ -313,8 +313,8 @@
     color: #40a050 !important;
   }
   
-  .advice-section .step-image {
-    display: none !important; /* 印刷時は画像を非表示 */
+  .advice-image-placeholder {
+    display: none !important; /* 印刷時は画像プレースホルダーを非表示 */
   }
 
   /* 注意枠は紙面用に簡素化（旧スタイル） */
