@@ -750,7 +750,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   /* border-left: 4px solid var(--caution); */
   border-radius: 10px;
   padding: 14px 16px;
-  margin: 0 0 0 40px;  /* step-text内のgapで制御 */
+  margin: 0 0 0 40px;  /* PC表示時のみ左マージン */
   box-shadow: 0 2px 6px rgba(0,0,0,.04);
 }
 .note-card h5{
@@ -928,6 +928,11 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     grid-column: 1;  /* 縦並びの場合は通常配置 */
     grid-row: 3; /* アドバイスを3行目に */
   }
+  
+  /* モバイル時はnote-cardの左マージンを0に */
+  .note-card {
+    margin-left: 0;
+  }
 }
 @media (max-width: 768px){
   .sub-items-panel{ display: none; } /* モバイルで右カラムを非表示 */
@@ -952,7 +957,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     transform: translateX(-100%) !important; 
     transition: transform .3s ease;
     z-index: 1002 !important; 
-    width: 280px !important; 
+    width: 290px !important; 
     height: 100vh !important;
     max-width: none;
     box-shadow: 2px 0 10px rgba(0,0,0,.1);
