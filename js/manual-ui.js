@@ -490,7 +490,8 @@
         // アクティブセクション内の procedure-item を特定
         if (activeSection) {
           const procedureItems = activeSection.querySelectorAll('.procedure-item');
-          let closestItemToCenter = Infinity;
+          let closestItemDistance = Infinity;
+          const targetPosition = 150; // 画面上部から150pxの位置を基準
           
           procedureItems.forEach(item => {
             const itemRect = item.getBoundingClientRect();
@@ -504,14 +505,16 @@
             
             const itemTitleRect = itemTitle.getBoundingClientRect();
             
-            // タイトルの中心とビューポート中心の距離を計算
-            const itemTitleCenter = itemTitleRect.top + (itemTitleRect.height / 2);
-            const itemDistanceToCenter = Math.abs(itemTitleCenter - viewportCenter);
-            
-            // ビューポート中心に最も近いタイトルを持つアイテムを選択
-            if (itemDistanceToCenter < closestItemToCenter) {
-              closestItemToCenter = itemDistanceToCenter;
-              activeProcedureItem = item;
+            // タイトルが画面内に見えている場合
+            if (itemTitleRect.top <= viewportHeight && itemTitleRect.bottom >= 0) {
+              // タイトルの上端と目標位置（上部150px）との距離を計算
+              const distance = Math.abs(itemTitleRect.top - targetPosition);
+              
+              // 上部150pxに最も近いタイトルを選択
+              if (distance < closestItemDistance) {
+                closestItemDistance = distance;
+                activeProcedureItem = item;
+              }
             }
           });
         }
