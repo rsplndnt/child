@@ -1250,11 +1250,14 @@
   // 印刷用目次を生成する関数
   let isPrintTOCGenerating = false;
   function generatePrintTOC() {
-    // 重複実行を防ぐ
-    if (isPrintTOCGenerating) return;
-    
     const tocContainer = document.querySelector('.print-toc-content');
     if (!tocContainer) {
+      return;
+    }
+    
+    // 重複実行を防ぐ（既に内容がある場合はスキップ）
+    if (isPrintTOCGenerating || tocContainer.children.length > 0) {
+      console.log('Skipping TOC generation: already generating or has content'); // デバッグ用
       return;
     }
     
@@ -1266,6 +1269,13 @@
     
     // TOCセクションが生成されるまで待機
     setTimeout(() => {
+      // 再度チェック（タイミングの問題を回避）
+      if (tocContainer.children.length > 0) {
+        console.log('Content already added, skipping'); // デバッグ用
+        isPrintTOCGenerating = false;
+        return;
+      }
+      
       const tocSections = document.querySelectorAll('.toc-section');
       console.log('Found toc-sections:', tocSections.length); // デバッグ用
       console.log('Container before adding:', tocContainer.children.length, 'children'); // デバッグ用
@@ -1354,6 +1364,14 @@
   // 印刷後にh3を削除（画面表示を元に戻す）
   window.addEventListener('afterprint', () => {
     document.querySelectorAll('.print-h3').forEach(el => el.remove());
+    
+    // 印刷用目次をクリア（次回の印刷に備えて）
+    const tocContainer = document.querySelector('.print-toc-content');
+    if (tocContainer) {
+      tocContainer.innerHTML = '';
+      console.log('Cleared TOC after print'); // デバッグ用
+    }
+    isPrintTOCGenerating = false;
   });
 
   /* ---------------- Search module factory ---------------- */
