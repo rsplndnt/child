@@ -526,14 +526,14 @@
         }
       };
       
-      // スクロールイベントのデバウンス処理
+      // スクロールイベントのデバウンス処理（高速化）
       const handleScroll = debounce(() => {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           isScrolling = false;
           updateActiveSection();
-        }, 100);
-      }, 50);
+        }, 20);  // 100ms → 20msに短縮
+      }, 10);  // 50ms → 10msに短縮
       
       // スクロールイベントリスナー
       manualContent.addEventListener('scroll', handleScroll);
@@ -548,7 +548,7 @@
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           isScrolling = false;
-        }, 1000);
+        }, 500);  // 1000ms → 500msに短縮（クリック後の復帰を高速化）
       };
       
       // グローバルに公開（デバッグ用）
