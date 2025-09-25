@@ -962,7 +962,43 @@
         });
       }
     }
+    
+    // ページトップに戻るボタンの初期化
+    setupBackToTop();
   } // end init
+
+  /* ---------------- ページトップに戻るボタン ---------------- */
+  function setupBackToTop() {
+    const button = document.getElementById('back-to-top');
+    if (!button) return;
+    
+    // スクロール時の表示/非表示制御
+    let scrollTimeout;
+    function handleScroll() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (window.scrollY > 300) {
+          button.classList.add('show');
+        } else {
+          button.classList.remove('show');
+        }
+      }, 10);
+    }
+    
+    // クリック時の動作
+    button.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // スクロールイベントの監視
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // 初期状態をチェック
+    handleScroll();
+  }
 
   /* ---------------- sidebar resizer ---------------- */
   function setupSidebarResizer(sidebar, resizer) {
