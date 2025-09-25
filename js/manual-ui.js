@@ -139,8 +139,6 @@
     // ボタンラベルの変換を実行
     convertButtonLabels();
     
-    // 印刷用目次を事前に生成（印刷プレビュー時に確実に表示されるように）
-    generatePrintTOC();
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
     const hamburger = document.getElementById('hamburgerMenu');
@@ -1335,41 +1333,6 @@
   
   // 印刷前に新しい目次を生成
   window.addEventListener('beforeprint', generatePrintTOC);
-  
-  // 既存の印刷前処理も維持
-  window.addEventListener('beforeprint', () => {
-    try {
-      const tocRoot = document.getElementById('print-toc-list');
-      if (!tocRoot) return;
-      tocRoot.innerHTML = '';
-      const sections = Array.from(document.querySelectorAll('.content-panel .step-section'));
-      sections.forEach((sec, idx) => {
-        const h2 = sec.querySelector('.step-header h2');
-        if (!h2) return;
-        let txt = (h2.textContent || '').trim().replace(/^\s*\d+\s*[\.|\)\-]?\s*/, '');
-        if (sec.id === 'top') { txt = '0. ' + txt.replace(/^TOP\s*/i, ''); }
-        const li = document.createElement('li');
-        li.textContent = txt;
-        tocRoot.appendChild(li);
-      });
-      // 目次ブロックが未配置なら生成して表紙(#top)の直後に挿入
-      let tocBlock = document.getElementById('print-toc');
-      if (!tocBlock) {
-        tocBlock = document.createElement('div');
-        tocBlock.id = 'print-toc';
-        const h2 = document.createElement('h2'); h2.textContent = '目次';
-        const ol = document.createElement('ol'); ol.id = 'print-toc-list';
-        tocBlock.appendChild(h2); tocBlock.appendChild(ol);
-        const top = document.getElementById('top');
-        if (top && top.parentNode) {
-          top.parentNode.insertBefore(tocBlock, top.nextElementSibling);
-        } else {
-          document.body.insertBefore(tocBlock, document.body.firstChild);
-        }
-      }
-      tocBlock.style.display = 'block';
-    } catch (_) {}
-  });
   
   // 印刷後にh3を削除（画面表示を元に戻す）
   window.addEventListener('afterprint', () => {
