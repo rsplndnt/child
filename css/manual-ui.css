@@ -969,28 +969,11 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   border-left: 4px solid var(--color-primary, #4299E1);
 }
 
-.faq-question {
+.faq-item h4 {
   font-size: var(--sd-font-size-xl);
   font-weight: 700;
   color: #2C5282;
   margin: 0 0 16px 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.faq-q {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--color-primary, #4299E1);
-  color: white;
-  border-radius: 50%;
-  font-weight: bold;
-  font-size: 18px;
-  flex-shrink: 0;
 }
 
 .faq-answer {
