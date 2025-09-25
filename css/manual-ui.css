@@ -536,6 +536,26 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     max-width: 100% !important;
     margin: 0 auto !important;
   }
+  
+  /* 画面構成セクションのワンポイントアドバイスを調整 */
+  #screen-layout .advice-section {
+    margin-top: 20px;
+  }
+  
+  #screen-layout .advice-item {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  #screen-layout .advice-image-with-src {
+    width: 100%;
+    min-width: unset;
+    max-width: 100%;
+  }
+  
+  #screen-layout .advice-content {
+    width: 100%;
+  }
   /* サイドバーの幅調整 */
   .manual-sidebar {
     width: 334px !important;
@@ -729,6 +749,20 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 #screen-layout .step-advice {
   grid-column: 1;
   grid-row: 4; /* アドバイスを4行目に */
+}
+
+/* 769-1024px用の追加調整 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  #screen-layout .step-with-image {
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  #screen-layout .step-image img {
+    border-radius: 4px;
+  }
 }
 .step-text{
   grid-column: 1;  /* テキストを左側に */
