@@ -399,7 +399,7 @@
     /* タイトルテキスト */
     .print-cover.only-print h1 {
       font-size: 32pt !important; /* サイズを少し小さく */
-      color: #4299E1 !important; /* メインカラー（青）に変更 */
+      color: var(--color-primary) !important; /* メインカラー（青）に変更 */
       font-weight: bold !important;
       line-height: 1.4 !important; /* 行間を調整 */
       margin: 0 !important;
