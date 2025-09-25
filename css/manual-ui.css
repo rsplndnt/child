@@ -746,12 +746,14 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 
 /* 画面構成セクションの番号リストを左揃えに */
 #screen-layout .step-text ol {
-  list-style-position: inside; /* 番号を内側に配置 */
-  padding-left: 0; /* 左のパディングを削除 */
+  list-style-position: outside; /* 番号を外側に配置してテキストを揃える */
+  padding-left: 32px; /* 番号の幅分のパディング */
+  margin-left: 0; /* 左マージンを0に */
 }
 
 #screen-layout .step-text ol > li {
-  padding-left: 0; /* リストアイテムの左パディングも削除 */
+  padding-left: 8px; /* テキストと番号の間に少し余白 */
+  text-indent: 0; /* インデントをリセット */
 }
 
 #screen-layout .note-card {
