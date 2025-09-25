@@ -515,7 +515,9 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 /* section2のレスポンシブ対応 */
 @media (max-width: 1024px) {
   #screen-layout .step-with-image {
-    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
   }
 }
 
@@ -758,10 +760,33 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     background: #f9f9f9;
     border-radius: 8px;
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  #screen-layout .step-image {
+    position: relative;
+    z-index: 1;
   }
   
   #screen-layout .step-image img {
     border-radius: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  #screen-layout .step-text {
+    position: relative;
+    z-index: 2;
+    background: white;
+    padding: 15px;
+    border-radius: 4px;
+  }
+  
+  #screen-layout .step-text ol {
+    position: relative;
+    z-index: 2;
   }
 }
 .step-text{
