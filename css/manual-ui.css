@@ -897,6 +897,52 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     line-height: 1.6;
 }
 
+/* 構造化されたアドバイスコンテンツ */
+.advice-content {
+    flex: 1;
+}
+
+.advice-content h6 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.operation-list {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+}
+
+.operation-list dt {
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+    position: relative;
+    padding-right: 8px;
+}
+
+.operation-list dt::after {
+    content: ":";
+    position: absolute;
+    right: 0;
+}
+
+.operation-list dd {
+    margin: 0;
+    color: #333;
+    font-size: 14px;
+    background: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
 /* 準備中の画像プレースホルダー */
 .advice-image-placeholder {
     width: 50%;
@@ -1061,6 +1107,19 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .advice-item {
     flex-direction: column;
     gap: 12px;
+  }
+  
+  .operation-list {
+    font-size: 13px;
+  }
+  
+  .operation-list dt,
+  .operation-list dd {
+    font-size: 13px;
+  }
+  
+  .advice-content h6 {
+    font-size: 15px;
   }
   
   .advice-image-placeholder {
