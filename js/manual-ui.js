@@ -474,8 +474,7 @@
             }
           });
         } else {
-          // 上スクロール時: ビューポート内で最も多く見えているセクション
-          // またはタイトル（h2）が見えているセクションを選択
+          // 上スクロール時: ビューポート内で最も多く見えているセクションを選択
           let maxVisibleHeight = 0;
           
           sections.forEach(section => {
@@ -484,21 +483,12 @@
             const rect = section.getBoundingClientRect();
             const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
             
-            // セクションのタイトル（h2）を取得
-            const title = section.querySelector('h2');
-            const titleRect = title ? title.getBoundingClientRect() : null;
-            
-            // タイトルが画面内に見えている場合
-            if (titleRect && titleRect.top >= 0 && titleRect.top <= 100) {
-              activeSection = section;
-              return; // このセクションを優先
-            }
-            
             // ビューポート内での可視領域の高さを計算
             const visibleTop = Math.max(0, rect.top);
             const visibleBottom = Math.min(viewportHeight, rect.bottom);
             const visibleHeight = Math.max(0, visibleBottom - visibleTop);
             
+            // 最も多く表示されているセクションを選択
             if (visibleHeight > maxVisibleHeight) {
               maxVisibleHeight = visibleHeight;
               activeSection = section;
