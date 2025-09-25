@@ -787,13 +787,13 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 #screen-layout .step-text ol > li::before {
   content: counter(screen-list) "."; /* 番号を表示 */
   color: var(--color-primary, #0066cc);
-  font-weight: bold;
-  font-size: 20px;
-  min-width: 20px; /* 左揃えのため最小幅を調整 */
-  display: inline-block;
-  flex-shrink: 0;
-  text-align: left; /* 明示的に左揃えを指定 */
-}
+    font-weight: bold;
+    font-size: 20px;
+    min-width: 30px; /* 2桁の番号用の固定幅 */
+    display: inline-block;
+    flex-shrink: 0;
+    text-align: right; /* 二桁番号でも右揃え */
+  }
 
 #screen-layout .note-card {
   grid-column: 1;
