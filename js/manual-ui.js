@@ -678,8 +678,10 @@
             // section1の場合は数字を残す、それ以外は数字を削除
             const text = a.textContent || '';
             if (groupId === 'account-setup-items') {
-              na.textContent = text; // 数字を残す
+              // アカウント設定セクションは番号をそのまま残す
+              na.textContent = text.trim(); // 数字を残す
             } else {
+              // その他のセクションは数字を削除
               na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
             }
             na.addEventListener('click', (e) => {
