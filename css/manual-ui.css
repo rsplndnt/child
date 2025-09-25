@@ -862,6 +862,68 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 /* Empty placeholders for future notes/advice */
 .note-card.is-empty,
 .step-advice.is-empty{ display: none !important; }
+
+/* ワンポイントアドバイス - 新レイアウト（左文字・右画像） */
+.advice-section {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    grid-column: 1 / -1;
+}
+
+.advice-section.has-image {
+    grid-template-columns: 1fr 320px;
+}
+
+.advice-section .step-text {
+    background: #E8F5E9;
+    border: 1px solid #C8E6C9;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.advice-section .step-text h5 {
+    margin: 0 0 6px;
+    font-size: var(--sd-font-size-md);
+    line-height: 1.4;
+    color: #2E7D32;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.advice-section .step-text h5::before {
+    content: "💡";
+    font-size: 16px;
+}
+
+.advice-section .step-text ul,
+.advice-section .step-text ol {
+    margin: 8px 0 0;
+    padding-left: 20px;
+    font-size: var(--sd-font-size-md);
+    color: var(--on-surface);
+    line-height: var(--sd-line-height-normal);
+}
+
+.advice-section .step-text li {
+    margin-bottom: 4px;
+}
+
+.advice-section .step-image {
+    border: none;
+    box-shadow: var(--sd-shadow-default);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.advice-section .step-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
 /* レイアウト上、同じ列で縦積み */
 /* procedure-itemの直下に来る想定 - 必要ならここで幅調整 */
 
@@ -968,6 +1030,15 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   /* モバイル時はnote-cardの左マージンを0に */
   .note-card {
     margin-left: 0;
+  }
+  
+  /* モバイル時はadvice-sectionも縦並び */
+  .advice-section.has-image {
+    grid-template-columns: 1fr;
+  }
+  
+  .advice-section .step-image {
+    max-width: 100%;
   }
 }
 @media (max-width: 768px){

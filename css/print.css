@@ -291,6 +291,31 @@
     margin: 0 0 2mm !important;
     color: #40a050 !important;
   }
+  
+  /* ワンポイントアドバイス新レイアウト */
+  .advice-section {
+    display: block !important;
+    margin-top: 3mm !important;
+    grid-column: 1 / -1 !important;
+  }
+  
+  .advice-section .step-text {
+    background: #f0fff4 !important;
+    border: 1px solid #90d4a0 !important;
+    border-radius: 4px !important;
+    padding: 3mm 4mm !important;
+  }
+  
+  .advice-section .step-text h5 {
+    font-size: 10pt !important;
+    font-weight: bold !important;
+    margin: 0 0 2mm !important;
+    color: #40a050 !important;
+  }
+  
+  .advice-section .step-image {
+    display: none !important; /* 印刷時は画像を非表示 */
+  }
 
   /* 注意枠は紙面用に簡素化（旧スタイル） */
   .notes {
