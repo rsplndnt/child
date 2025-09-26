@@ -848,20 +848,10 @@
                 const m2 = anchor.match(/^#(section\d+)/i);
                 if (m2) sectionHash = `#${m2[1]}`;
               }
-              activateSection(sectionHash, { scrollToTop: false });
+              activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true });
               // サブリスト内のアクティブ状態を更新
               document.querySelectorAll('.toc-sublist a').forEach(x => x.classList.remove('active'));
               na.classList.add('active');
-              
-              // 大項目のアクティブクラスを削除して、has-active-childクラスを追加
-              document.querySelectorAll('.toc .toc-link').forEach(link => {
-                link.classList.remove('has-active-child');
-              });
-              const parentLink = section.querySelector('.toc-link');
-              if (parentLink) {
-                parentLink.classList.remove('active');
-                parentLink.classList.add('has-active-child');
-              }
               
               setTimeout(() => scrollToElement(anchor), 40);
               if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
@@ -1028,7 +1018,13 @@
         a.classList.remove('has-active-child');
       });
       const left = document.querySelector(`.toc .toc-link[href="${targetHash}"]`);
-      left && left.classList.add('active');
+      if (left) {
+        if (opts.parentHasActiveChild) {
+          left.classList.add('has-active-child');
+        } else {
+          left.classList.add('active');
+        }
+      }
       
       // 左TOCのサブリスト内のアクティブ状態もクリア
       document.querySelectorAll('.toc-sublist a.active').forEach(a => a.classList.remove('active'));
