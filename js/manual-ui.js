@@ -357,7 +357,7 @@
         const newUrl = currentUrl + href;
         const newWindow = window.open(newUrl, '_blank');
         
-        // 新しいウィンドウが読み込まれた後にスクロール処理を実行
+        // 新しいウィンドウが読み込まれた後に表示処理を実行（スクロールなしで瞬時表示）
         if (newWindow) {
           newWindow.addEventListener('load', function() {
             setTimeout(() => {
@@ -365,26 +365,15 @@
               if (targetElement) {
                 const sectionElement = targetElement.closest('.step-section');
                 if (sectionElement) {
-                  const sectionId = sectionElement.id;
-                  if (sectionId) {
-                    // セクションを表示（直接DOM操作）
-                    const allSections = newWindow.document.querySelectorAll('.step-section');
-                    allSections.forEach(section => {
-                      section.classList.add('is-hidden');
-                    });
-                    sectionElement.classList.remove('is-hidden');
-                    
-                    // 対象要素にスクロール
-                    setTimeout(() => {
-                      targetElement.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                      });
-                    }, 100);
-                  }
+                  // セクションを表示（直接DOM操作）
+                  const allSections = newWindow.document.querySelectorAll('.step-section');
+                  allSections.forEach(section => { section.classList.add('is-hidden'); });
+                  sectionElement.classList.remove('is-hidden');
+                  // 目的位置へ瞬時に移動
+                  scrollToElementNoAnim(href, newWindow.document);
                 }
               }
-            }, 500); // ページ読み込み完了を待つ
+            }, 300);
           });
         }
         return;
@@ -405,13 +394,10 @@
             // まずセクションを表示
             activateSection(`#${sectionId}`, { scrollToTop: false });
             
-            // 少し遅延してから対象要素にスクロール
+            // 瞬時に該当要素へ
             setTimeout(() => {
-              targetElement.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-              });
-            }, 100);
+              scrollToElementNoAnim(href);
+            }, 0);
           }
         }
       }
@@ -1087,6 +1073,28 @@
       } else {
         const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
         window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    // スクロールアニメーションなしで瞬時に目的位置へ移動
+    function scrollToElementNoAnim(hash, docRef) {
+      const doc = docRef || document;
+      if (!hash) return;
+      const el = doc.querySelector(hash);
+      if (!el) return;
+      // オフセット（ヘッダ等）
+      const tabs = doc.querySelector('.content-tabs');
+      const offset = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
+      const container = doc.querySelector('.manual-content');
+      if (container) {
+        const cRect = container.getBoundingClientRect();
+        const eRect = el.getBoundingClientRect();
+        const currentTop = container.scrollTop || 0;
+        const target = currentTop + (eRect.top - cRect.top) - offset;
+        container.scrollTop = Math.max(0, target);
+      } else {
+        const y = Math.max(0, el.getBoundingClientRect().top + (doc.defaultView?.scrollY || window.scrollY) - offset);
+        (doc.defaultView || window).scrollTo({ top: y, behavior: 'auto' });
       }
     }
 
