@@ -342,6 +342,41 @@
     // resizer
     if (resizer && sidebar) setupSidebarResizer(sidebar, resizer);
 
+    // 内部リンクの処理
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      
+      const href = link.getAttribute('href');
+      if (!href || href === '#') return;
+      
+      // 内部リンクの場合
+      if (href.startsWith('#') && href !== '#top') {
+        e.preventDefault();
+        
+        const targetElement = document.querySelector(href);
+        if (!targetElement) return;
+        
+        // 対象要素が属するセクションを特定
+        const sectionElement = targetElement.closest('.step-section');
+        if (sectionElement) {
+          const sectionId = sectionElement.id;
+          if (sectionId) {
+            // まずセクションを表示
+            activateSection(`#${sectionId}`, { scrollToTop: false });
+            
+            // 少し遅延してから対象要素にスクロール
+            setTimeout(() => {
+              targetElement.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+              });
+            }, 100);
+          }
+        }
+      }
+    });
+
     // 初期表示のセクション
     activateSection('#top', { scrollToTop: false });
     
