@@ -350,6 +350,15 @@
       const href = link.getAttribute('href');
       if (!href || href === '#') return;
       
+      // target="_blank"の場合は新しいタブで開く
+      if (link.getAttribute('target') === '_blank') {
+        e.preventDefault();
+        const currentUrl = window.location.href;
+        const newUrl = currentUrl + href;
+        window.open(newUrl, '_blank');
+        return;
+      }
+      
       // 内部リンクの場合
       if (href.startsWith('#') && href !== '#top') {
         e.preventDefault();
