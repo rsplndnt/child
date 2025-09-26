@@ -680,36 +680,37 @@
           }
           
           // メイン/サブのハイライトを更新
-          document.querySelectorAll('.toc .toc-link').forEach(link => {
-            const href = link.getAttribute('href');
-            if (href === sectionHash) {
-              // サブリストのアクティブを更新
-              const tocSection = link.closest('.toc-section');
-              if (tocSection) {
-                const sublist = tocSection.querySelector('.toc-sublist');
-                if (sublist) {
-                  sublist.querySelectorAll('a').forEach(subLink => {
-                    if (itemHash && subLink.getAttribute('href') === itemHash) {
-                      subLink.classList.add('active');
-                    } else {
-                      subLink.classList.remove('active');
-                    }
-                  });
+          requestAnimationFrame(() => {
+            document.querySelectorAll('.toc .toc-link').forEach(link => {
+              const href = link.getAttribute('href');
+              if (href === sectionHash) {
+                // サブリストのアクティブを更新
+                const tocSection = link.closest('.toc-section');
+                if (tocSection) {
+                  const sublist = tocSection.querySelector('.toc-sublist');
+                  if (sublist) {
+                    sublist.querySelectorAll('a').forEach(subLink => {
+                      if (itemHash && subLink.getAttribute('href') === itemHash) {
+                        subLink.classList.add('active');
+                      } else {
+                        subLink.classList.remove('active');
+                      }
+                    });
+                  }
                 }
-              }
-              
-              // サブ項目がアクティブなら大項目は has-active-child のみにする
-              if (itemHash) {
-                link.classList.remove('active');
-                link.classList.add('has-active-child');
+                // サブ項目がアクティブなら大項目は has-active-child のみにする
+                if (itemHash) {
+                  link.classList.remove('active');
+                  link.classList.add('has-active-child');
+                } else {
+                  link.classList.add('active');
+                  link.classList.remove('has-active-child');
+                }
               } else {
-                link.classList.add('active');
+                link.classList.remove('active');
                 link.classList.remove('has-active-child');
               }
-            } else {
-              link.classList.remove('active');
-              link.classList.remove('has-active-child');
-            }
+            });
           });
         }
       };
@@ -853,11 +854,11 @@
                 if (m2) sectionHash = `#${m2[1]}`;
               }
 
-              // 強制状態をセット（800ms程度維持）
+              // 強制状態をセット（1200ms程度維持）
               if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
               forcedTocState.sectionHash = sectionHash;
               forcedTocState.subHash = anchor;
-              forcedTocState.timer = setTimeout(() => { forcedTocState.sectionHash = null; forcedTocState.subHash = null; }, 800);
+              forcedTocState.timer = setTimeout(() => { forcedTocState.sectionHash = null; forcedTocState.subHash = null; }, 1200);
 
               activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true });
               // サブリスト内のアクティブ状態を更新
