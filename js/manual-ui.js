@@ -355,7 +355,38 @@
         e.preventDefault();
         const currentUrl = window.location.href;
         const newUrl = currentUrl + href;
-        window.open(newUrl, '_blank');
+        const newWindow = window.open(newUrl, '_blank');
+        
+        // 新しいウィンドウが読み込まれた後にスクロール処理を実行
+        if (newWindow) {
+          newWindow.addEventListener('load', function() {
+            setTimeout(() => {
+              const targetElement = newWindow.document.querySelector(href);
+              if (targetElement) {
+                const sectionElement = targetElement.closest('.step-section');
+                if (sectionElement) {
+                  const sectionId = sectionElement.id;
+                  if (sectionId) {
+                    // セクションを表示（直接DOM操作）
+                    const allSections = newWindow.document.querySelectorAll('.step-section');
+                    allSections.forEach(section => {
+                      section.classList.add('is-hidden');
+                    });
+                    sectionElement.classList.remove('is-hidden');
+                    
+                    // 対象要素にスクロール
+                    setTimeout(() => {
+                      targetElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                      });
+                    }, 100);
+                  }
+                }
+              }
+            }, 500); // ページ読み込み完了を待つ
+          });
+        }
         return;
       }
       
