@@ -204,7 +204,8 @@
     let searchCycleIndex = -1; // 検索ボタンサイクル用
     let lastQueryValue = '';
 
-
+    // 左TOCの一時的な強制状態（サブ項目クリック直後のチラつき抑止）
+    const forcedTocState = { sectionHash: null, subHash: null, timer: null };
 
     // remove duplicate/外部クリア要素（安全に）
     removeExternalClearButtons();
@@ -670,7 +671,10 @@
           
           // 事前にアクティブなサブアイテムのハッシュを算出
           let itemHash = null;
-          if (activeProcedureItem) {
+          if (forcedTocState.sectionHash === sectionHash) {
+            // クリック直後は強制状態を優先してチラつきを抑止
+            itemHash = forcedTocState.subHash;
+          } else if (activeProcedureItem) {
             const itemId = activeProcedureItem.querySelector('h4')?.id;
             if (itemId) itemHash = `#${itemId}`;
           }
@@ -848,6 +852,13 @@
                 const m2 = anchor.match(/^#(section\d+)/i);
                 if (m2) sectionHash = `#${m2[1]}`;
               }
+
+              // 強制状態をセット（800ms程度維持）
+              if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+              forcedTocState.sectionHash = sectionHash;
+              forcedTocState.subHash = anchor;
+              forcedTocState.timer = setTimeout(() => { forcedTocState.sectionHash = null; forcedTocState.subHash = null; }, 800);
+
               activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true });
               // サブリスト内のアクティブ状態を更新
               document.querySelectorAll('.toc-sublist a').forEach(x => x.classList.remove('active'));
