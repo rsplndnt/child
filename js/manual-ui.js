@@ -1056,7 +1056,7 @@
       localStorage.removeItem(SIDEBAR_WIDTH_KEY);
     } catch (e) {}
     
-    // localStorage からの読み込みを無効化（常に初期値340pxを使用）
+    // localStorage からの読み込みを無効化（常に初期値350pxを使用）
     // try {
     //   const saved = Number(localStorage.getItem(SIDEBAR_WIDTH_KEY) || 0);
     //   if (saved && saved >= MIN && saved <= MAX) {

@@ -23,7 +23,7 @@ body {
   --hovered-variant: rgba(0,0,0,0.051);
   --caution: #FFD76B;
 
-  --sidebar-w: 340px;     /* 初期幅（JSで保存/復元） */
+  --sidebar-w: 350px;     /* 初期幅（JSで保存/復元） */
   --sidebar-w-min: 240px;
   --sidebar-w-max: 520px;
 }
