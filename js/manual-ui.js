@@ -668,33 +668,39 @@
           const sectionId = activeSection.id;
           const sectionHash = `#${sectionId}`;
           
-          // メインセクションのハイライト
+          // 事前にアクティブなサブアイテムのハッシュを算出
+          let itemHash = null;
+          if (activeProcedureItem) {
+            const itemId = activeProcedureItem.querySelector('h4')?.id;
+            if (itemId) itemHash = `#${itemId}`;
+          }
+          
+          // メイン/サブのハイライトを更新
           document.querySelectorAll('.toc .toc-link').forEach(link => {
             const href = link.getAttribute('href');
             if (href === sectionHash) {
-              link.classList.add('active');
-              
-              // サブアイテムがある場合の処理
-              if (activeProcedureItem) {
-                const itemId = activeProcedureItem.querySelector('h4')?.id;
-                if (itemId) {
-                  const itemHash = `#${itemId}`;
-                  const tocSection = link.closest('.toc-section');
-                  if (tocSection) {
-                    const sublist = tocSection.querySelector('.toc-sublist');
-                    if (sublist) {
-                      sublist.querySelectorAll('a').forEach(subLink => {
-                        if (subLink.getAttribute('href') === itemHash) {
-                          subLink.classList.add('active');
-                          link.classList.remove('active');
-                          link.classList.add('has-active-child');
-                        } else {
-                          subLink.classList.remove('active');
-                        }
-                      });
+              // サブリストのアクティブを更新
+              const tocSection = link.closest('.toc-section');
+              if (tocSection) {
+                const sublist = tocSection.querySelector('.toc-sublist');
+                if (sublist) {
+                  sublist.querySelectorAll('a').forEach(subLink => {
+                    if (itemHash && subLink.getAttribute('href') === itemHash) {
+                      subLink.classList.add('active');
+                    } else {
+                      subLink.classList.remove('active');
                     }
-                  }
+                  });
                 }
+              }
+              
+              // サブ項目がアクティブなら大項目は has-active-child のみにする
+              if (itemHash) {
+                link.classList.remove('active');
+                link.classList.add('has-active-child');
+              } else {
+                link.classList.add('active');
+                link.classList.remove('has-active-child');
               }
             } else {
               link.classList.remove('active');
