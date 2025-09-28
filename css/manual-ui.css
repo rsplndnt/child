@@ -701,6 +701,116 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .step-header h2{ margin: 0 0 18px; font-size: var(--sd-font-size-2xl); color: var(--color-primary); } /* 2xlはそのまま（最大なので） */
 .step-number{ display: none !important; } /* 数字は不要 */
 
+.step-section--top{
+  background: linear-gradient(135deg, rgba(0,113,184,0.92) 0%, rgba(0,90,145,0.95) 100%);
+  border-radius: 24px;
+  padding: 40px 44px 48px;
+  color: #fff;
+  box-shadow: 0 18px 40px rgba(0, 38, 71, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+.step-section--top::after{
+  content: "";
+  position: absolute;
+  inset: -120px -140px auto auto;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%);
+  opacity: .7;
+  pointer-events: none;
+}
+.step-section--top .top-hero{
+  text-align: center;
+  color: #fff;
+  margin-bottom: 36px;
+  position: relative;
+}
+.top-hero__badge{
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.22);
+  border: 1px solid rgba(255,255,255,0.38);
+  margin-bottom: 14px;
+}
+.step-section--top .step-header h2{
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: clamp(28px, 3vw, 32px);
+}
+.top-hero__lead{
+  margin: 0 auto;
+  max-width: 720px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.86);
+}
+
+.top-feature-grid{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.top-feature-card{
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 28px 26px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform .2s ease, box-shadow .2s ease;
+  min-height: 260px;
+}
+.top-feature-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.16);
+}
+.top-feature-icon{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0,113,184,0.12);
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px !important;
+}
+.top-feature-card h3{
+  margin: 0;
+  font-size: 20px;
+  color: var(--on-surface);
+}
+.top-feature-card p{
+  margin: 0;
+  color: var(--on-surface-variant);
+  line-height: 1.7;
+}
+.top-feature-link{
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary-700);
+  font-weight: 600;
+  text-decoration: none;
+}
+.top-feature-link .material-icons{ font-size: 20px; }
+.top-feature-link:hover{ color: var(--color-primary); }
+.top-feature-link:focus-visible{ outline: 2px solid rgba(255,255,255,0.8); outline-offset: 4px; border-radius: 999px; padding: 2px 6px; }
+
 .step-objective{
   /* やや濃い塗り + 細い枠線でカード化 */
   background: rgba(177, 225, 255, 0.32); /* var(--color-secondary)を薄く */
