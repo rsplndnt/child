@@ -1275,9 +1275,85 @@
                     </header>
                     <div class="step-content">
                         <div class="procedure-item">
+                            <h4 id="term-swipetalk">しゃべり描き翻訳（SwipeTalk）</h4>
                             <div class="procedure-steps">
                                 <div class="step-text">
-                                    <p>本マニュアルで使用される用語の定義と説明です。</p>
+                                    <p>このマニュアル全体で扱うウェブアプリ。左右の言語ペアで音声入力を行い、翻訳結果や折り返し翻訳をキャンバスとトランスクリプトに表示します。</p>
+                                    <ul>
+                                        <li>しゃべり描きで描画と音声入力を組み合わせて情報を伝えられます（<a href="#use-swipe-talk">操作手順</a>）。</li>
+                                        <li>トランスクリプトでは会話を吹き出し形式で記録し、翻訳できます（<a href="#use-transcript">操作手順</a>）。</li>
+                                        <li>マイクの左右がそれぞれ別言語に割り当てられており、会話者ごとの入力を切り替えできます。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-sheet">シート</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>翻訳作業の単位となるワークスペース。キャンバス・画像・しゃべり描き文字・トランスクリプトをまとめて保存します。</p>
+                                    <ul>
+                                        <li>シート管理エリアから新規作成やタイトル変更、書き出しができます（<a href="#sheet-management-area">画面構成</a>）。</li>
+                                        <li>同時に保持できるのは最大10枚。11枚目を作成すると最終更新日時の古いシートから非表示になります（<a href="#create-new-sheet">操作する</a>）。</li>
+                                        <li>「書き出し」ボタンで現在のキャンバスを画像として保存できます。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-canvas">キャンバスエリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>画面中央の作業スペース。しゃべり描きで生成されたテキストや図、貼り付けた画像を配置しながら翻訳の流れを視覚化します。</p>
+                                    <ul>
+                                        <li>ツールパレットのボタンからしゃべり描き・お絵描き・画像貼り付けなどを操作します。</li>
+                                        <li>バウンディングボックスを使って要素の移動・削除・テキスト更新が可能です（<a href="#edit-elements">編集方法</a>）。</li>
+                                        <li>キャンバスの表示倍率やブラウザのサイズを変更すると、書き出し範囲も変わります（<a href="#export-canvas">書き出し</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-transcript">トランスクリプト</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>会話の音声を連続的に文字起こしして翻訳する機能。吹き出し単位で記録され、しゃべり描きとは独立した表示領域に蓄積されます。</p>
+                                    <ul>
+                                        <li>トランスクリプトボタンでエリアを開き、左右どちらかのマイクを有効にして音声入力します。</li>
+                                        <li>10分連続で利用すると自動停止するため、長時間利用時は途中で一旦停止→再開してください。</li>
+                                        <li>認識言語はしゃべり描きと共通で、言語メニューから切り替えます（<a href="#select-language">言語を選ぶ</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-back-translation">折り返し翻訳</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>入力した文章を翻訳したあと、元の言語に再翻訳した結果。誤訳やニュアンスのずれをチェックするためのフィードバックとして表示されます。</p>
+                                    <ul>
+                                        <li>しゃべり描きでは翻訳文の下に折り返し翻訳が順次表示されます。</li>
+                                        <li>トランスクリプトでは吹き出しごとに翻訳・折り返し翻訳がセットで表示されます。</li>
+                                        <li>折り返し翻訳が大きく変わる場合は、入力文の表現を言い換えて再入力すると改善することがあります。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-tool-palette">ツールパレット</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバス左側に並ぶ操作ボタン群。しゃべり描き・お絵描き・画像貼り付け・カメラ撮影・取り消しなど、キャンバス操作の入口になります。</p>
+                                    <ul>
+                                        <li>しゃべり描きの色や文字サイズ、ペンの太さなどはそれぞれのボタンから切り替えます。</li>
+                                        <li>画像貼り付けは「カメラ」「画像を選択」「貼り付け用クリップボード」の3経路を用意しています（<a href="#add-images">写真・画像を貼り付ける</a>）。</li>
+                                        <li>操作をやり直したい場合はキャンバス上の要素を選択して削除するか、シート管理エリアから別のシートに切り替えます。</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -1291,10 +1367,82 @@
                 </header>
                 <div class="step-content">
                     <div class="procedure-item">
-                        <h4 id="change-transcript-language">Q. トランスクリプトの言語を変えたい</h4>
+                        <h4 id="change-transcript-language">Q. トランスクリプトの言語だけを切り替えたい</h4>
                         <div class="procedure-steps">
                             <div class="step-text">
-                                <p><strong>A.</strong> しゃべり描きの言語を変えてください。トランスクリプトの言語は、しゃべり描きマイクボタンの上にある言語選択ボタンで設定した言語と連動しています。言語を変更すると、両方のマイクの言語が同時に変更されます。</p>
+                                <p><strong>A.</strong> トランスクリプトとしゃべり描きは同じ言語設定を共有します。画面上部の言語選択メニューで翻訳元／翻訳先を変更すると、両方のマイクに反映されます。</p>
+                                <ul>
+                                    <li>片方の言語だけ瞬時に切り替えたいときは、トランスクリプト側で別のマイクを有効にしてから発話すると認識言語が切り替わります。</li>
+                                    <li>設定を戻したい場合は同じメニューで元の言語を選び直してください。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="faq-mic-not-green">Q. マイクボタンが青くならず録音が始まらない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p><strong>A.</strong> 次のポイントを順番に確認してください。</p>
+                                <ul>
+                                    <li>ボタンを押してから青くなるまで短い待ち時間があります。光るまで発話を待ってください（<a href="#mic-input-lag">詳細</a>）。</li>
+                                    <li>ブラウザのマイク権限が拒否されていないか確認し、必要に応じてページを再読み込みしてください。</li>
+                                    <li>同じアカウントで別ウィンドウを開いている場合は、音声入力できるのは1つのウィンドウのみです（<a href="#multiple-window-restriction">複数ウィンドウの制限</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-sheet-limit">Q. 新しいシートが作成できない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p><strong>A.</strong> シートは同時に10枚まで保持できます。11枚目を作成しようとすると、最終更新日が古いシートから非表示になります。</p>
+                                <ul>
+                                    <li>不要なシートを削除するか、既存シートを再利用して内容を書き換えてください。</li>
+                                    <li>書き出しボタンでキャンバス内容を画像保存しておくと、以前のシート内容を手元に残せます。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-export-location">Q. 書き出した画像ファイルが見つからない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p><strong>A.</strong> 書き出した画像はブラウザのダウンロードフォルダに保存されます。保存場所はブラウザの設定で決まるため、Chrome や Edge のダウンロード履歴を確認してください。</p>
+                                <ul>
+                                    <li>ブラウザがダウンロードをブロックした場合は、ポップアップの許可を与えてから再度書き出しを実行してください。</li>
+                                    <li>書き出し範囲は表示中のキャンバス領域です。必要に応じてズーム率やウィンドウサイズを調整してから実行します。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-add-image">Q. カメラや画像の貼り付けがうまくいかない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p><strong>A.</strong> 貼り付け方法ごとに次の点を確認してください。</p>
+                                <ul>
+                                    <li><strong>カメラ撮影:</strong> ブラウザにカメラの使用を許可し、必要に応じて使用するカメラをブラウザの設定から切り替えてください（<a href="#add-images">A-1〜A-3</a>）。</li>
+                                    <li><strong>ファイル選択:</strong> JPG/PNGなど一般的な画像形式に対応しています。アップロード完了まで画面を切り替えないでください。</li>
+                                    <li><strong>クリップボード貼り付け:</strong> 画像をコピーした直後にキャンバスをクリックし、貼り付け用ボタンを押してからCtrl+V（または⌘+V）を実行します。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-authenticator-reset">Q. Microsoft Authenticatorを再設定したい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p><strong>A.</strong> 端末の買い替えやアプリの再インストール後は、再度QRコードを読み取って登録し直す必要があります。</p>
+                                <ul>
+                                    <li>ブラウザでログイン後、Authenticator の設定画面に進み直し、QRコードを表示します（<a href="#setup-authenticator">設定手順</a>）。</li>
+                                    <li>スマートフォンのアプリで <strong>アカウントの追加</strong> &gt; <strong>職場または学校アカウント</strong> を選び、表示されたQRコードをスキャンしてください。</li>
+                                    <li>最後に2桁コードを入力し、PC側で「通知が承認されました」と表示されれば再設定が完了します（<a href="#authenticate-with-app">認証手順</a>）。</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -1399,11 +1547,25 @@
             </div>
             <div id="terminology-items" class="sub-items-group">
                 <h4>5. 用語</h4>
-                <p>（後日追記予定）</p>
+                <ul>
+                    <li><a href="#term-swipetalk" title="アプリ全体の概要と特徴">しゃべり描き翻訳（SwipeTalk）</a></li>
+                    <li><a href="#term-sheet" title="シートの役割と管理方法">シート</a></li>
+                    <li><a href="#term-canvas" title="キャンバスエリアに関する用語解説">キャンバスエリア</a></li>
+                    <li><a href="#term-transcript" title="トランスクリプト機能の特徴">トランスクリプト</a></li>
+                    <li><a href="#term-back-translation" title="折り返し翻訳の意味と利用ポイント">折り返し翻訳</a></li>
+                    <li><a href="#term-tool-palette" title="ツールパレットのボタン構成">ツールパレット</a></li>
+                </ul>
             </div>
             <div id="faq-items" class="sub-items-group">
                 <h4>6. FAQ</h4>
-                <p>よくある質問と回答</p>
+                <ul>
+                    <li><a href="#change-transcript-language" title="トランスクリプトの言語設定に関する質問">トランスクリプトの言語を切り替えたい</a></li>
+                    <li><a href="#faq-mic-not-green" title="マイクが反応しないときの対処方法">マイクボタンが青くならない</a></li>
+                    <li><a href="#faq-sheet-limit" title="シート上限に達したときの対応">新しいシートが作成できない</a></li>
+                    <li><a href="#faq-export-location" title="書き出し画像の保存先について">書き出した画像が見つからない</a></li>
+                    <li><a href="#faq-add-image" title="画像貼り付けトラブルへの対処">画像を貼り付けられない</a></li>
+                    <li><a href="#faq-authenticator-reset" title="Authenticatorの再登録手順">Authenticatorを再設定したい</a></li>
+                </ul>
             </div>
             <div id="product-specs-items" class="sub-items-group">
                 <h4>7. 製品仕様</h4>
