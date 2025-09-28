@@ -717,7 +717,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   color: #fff;
   box-shadow: 0 18px 40px rgba(0, 38, 71, 0.18);
   position: relative;
-  overflow: visible; /* hiddenからvisibleに変更 */
+  overflow: hidden; /* visibleからhiddenに戻す */
   box-sizing: border-box;
   height: auto; /* 明示的に高さを自動に */
 }
@@ -760,7 +760,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 0;
   padding-top: 12px;
-  padding-bottom: clamp(64px, 14vh, 160px);
+  padding-bottom: 40px; /* 余白を小さく調整 */
   max-width: 100%;
   /* スクロールは親/ページで行う（グリッドはスクロールしない） */
   max-height: none;
@@ -835,7 +835,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .top-feature-grid{
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
-    padding-bottom: clamp(80px, 18vh, 200px); /* モバイルでも大きめの末尾余白 */
+    padding-bottom: 40px; /* 余白を小さく調整 */
   }
   .top-feature-card{
     min-height: 0;
@@ -1942,7 +1942,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 0;
   padding-top: 12px;
-  padding-bottom: clamp(64px, 14vh, 160px);
+  padding-bottom: 40px; /* 余白を小さく調整 */
   max-width: 100%;
   /* スクロールは親/ページで行う（グリッドはスクロールしない） */
   max-height: none;

@@ -224,18 +224,21 @@
 
       // 現在表示中のセクションを探す
       const visibleSection = document.querySelector('.step-section:not(.is-hidden)');
+      console.log('戻るボタン: 表示中のセクション =', visibleSection?.id);
 
       if (visibleSection) {
         const h2 = visibleSection.querySelector('h2');
         if (h2) {
+          console.log('戻るボタン: h2要素が見つかりました');
           const targetY = Math.max(0, h2.getBoundingClientRect().top + getWindowScrollY() - 80);
           fastSmoothScrollTo({ target: targetY });
         } else {
+          console.log('戻るボタン: h2要素が見つからない、セクション先頭へ');
           const y = Math.max(0, visibleSection.getBoundingClientRect().top + getWindowScrollY());
           fastSmoothScrollTo({ target: y });
         }
       } else {
-        // セクションが見つからない場合はページトップへ
+        console.log('戻るボタン: 表示中のセクションが見つからない、ページトップへ');
         fastSmoothScrollTo({ target: 0 });
       }
     });
