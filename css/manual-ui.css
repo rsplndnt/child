@@ -554,7 +554,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 @media (min-width: 769px) and (max-width: 1024px){
   /* manual-contentのパディングを適切に設定 */
   .manual-content{ 
-    padding: 80px 30px 30px !important;
+    padding: 0 30px 30px 30px !important; /* 上部パディングを削除 */
     margin-left: 0 !important;
     gap: 0 !important; 
     width: 100% !important;
@@ -630,7 +630,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .manual-content{
   flex: 1 1 auto;
   display: flex; gap: 30px;
-  padding: 28px 32px;
+  padding: 0 32px 28px 32px; /* 上部パディングを削除 */
   min-width: 0;
   min-height: 0;
   transition: margin-left 0.3s ease;
@@ -1633,7 +1633,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .sidebar-resizer{ display: none; }
   .manual-content{ 
     margin-left: 0 !important; /* サイドバー分のマージンを削除 */
-    padding: 72px 16px 20px; /* 上部パディングを調整 */
+    padding: 0 16px 20px; /* 上部パディングを削除 */
     gap: 0; 
     height: 100vh; /* 復活 */
     overflow-y: auto; /* 復活 */
