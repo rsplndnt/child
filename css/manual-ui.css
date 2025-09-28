@@ -757,17 +757,16 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 24px;
+  gap: clamp(18px, 2.4vw, 26px);
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 0;
   padding-top: 12px;
-  padding-bottom: clamp(64px, 14vh, 160px); /* 末尾の余白を拡大 */
+  padding-bottom: clamp(64px, 14vh, 160px);
   max-width: 100%;
-  /* ここをスクロール対象に統一 */
-  max-height: calc(100svh - 220px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 12px;
+  /* スクロールは親/ページで行う（グリッドはスクロールしない） */
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
 }
 
 .top-feature-grid::-webkit-scrollbar { width: 8px; }
@@ -1971,7 +1970,19 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 
 /* grid tuning */
 .top-feature-grid{
+  position: relative;
+  z-index: 1;
+  display: grid;
   gap: clamp(18px, 2.4vw, 26px);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-bottom: 0;
+  padding-top: 12px;
+  padding-bottom: clamp(64px, 14vh, 160px);
+  max-width: 100%;
+  /* スクロールは親/ページで行う（グリッドはスクロールしない） */
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
 }
 
 @media (max-width: 1024px){
