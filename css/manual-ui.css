@@ -1555,40 +1555,34 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 }
 @media (max-width: 768px){
   .step-with-image{
-    grid-template-columns: 1fr;  /* スマホでは縦並び */
-    grid-template-rows: auto auto auto auto; /* 4行構成 */
+    display: flex !important;  /* グリッドではなくflexboxを使用 */
+    flex-direction: column !important;
     gap: var(--sd-spacing-md); /* 縦並び時のギャップを調整 */
   }
+  
+  /* テキストを1番目に（note-cardも含む） */
+  .step-text {
+    order: 1 !important;
+    display: block !important; /* contentsではなくblockに */
+  }
+  
+  /* 画像を2番目に */
   .step-image{
-    grid-column: 1 !important; /* 画像を1列目に */
-    grid-row: 2 !important; /* 画像を2行目に（テキストの下） */
+    order: 2 !important;
     max-width: 100%;
     width: 100%;
   }
-  .step-text {
-    grid-column: 1 !important;
-    grid-row: 1 !important; /* テキストを1行目に */
-    display: contents; /* 子要素を直接gridアイテムに */
-  }
-  /* step-text内の子要素を適切に配置 */
-  .step-text ol,
-  .step-text p {
-    grid-column: 1 !important;
-    grid-row: 1 !important; /* テキスト内容を1行目に */
-  }
+  
+  /* note-cardはstep-text内に残すが、余白を調整 */
   .step-text .note-card {
-    grid-column: 1 !important;
-    grid-row: 3 !important; /* 注意事項を3行目に（画像の下） */
     margin-left: 0 !important;
-    /* step-textから独立して配置 */
-    position: relative;
-    z-index: 10;
+    margin-top: var(--sd-spacing-md) !important;
   }
-  /* advice-sectionも適切に配置 */
+  
+  /* advice-sectionは最後に */
   .step-text.advice-section {
-    grid-column: 1 !important;
-    grid-row: 4 !important; /* ワンポイントアドバイスを4行目に配置 */
-    display: block !important; /* contentsを上書き */
+    order: 3 !important;
+    display: block !important;
     width: 100% !important;
   }
   
