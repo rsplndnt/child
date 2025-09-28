@@ -2038,3 +2038,10 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   background: rgba(255,255,255,0.22);
 }
 .top-hero-actions .material-icons{ font-size: 20px; }
+
+@media (min-width: 481px) and (max-width: 768px) {
+  /* ハンバーガーメニューとH2が被らないように上部マージンを追加（中間モバイル幅） */
+  .step-section:not(.is-hidden) {
+    margin-top: 36px !important;
+  }
+}
