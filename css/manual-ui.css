@@ -726,21 +726,6 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   margin-bottom: 36px;
   position: relative;
 }
-.top-hero__badge{
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(255,255,255,0.22);
-  border: 1px solid rgba(255,255,255,0.38);
-  margin-bottom: 14px;
-}
 .step-section--top .step-header h2{
   color: #fff;
   margin-bottom: 12px;
