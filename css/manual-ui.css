@@ -568,6 +568,11 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     margin: 0 auto !important;
   }
   
+  /* ハンバーガーメニューとH2が被らないように上部マージンを追加 */
+  .step-section:not(.is-hidden) {
+    margin-top: 24px !important;
+  }
+  
   /* 画面構成セクションのワンポイントアドバイスを調整 */
   #screen-layout .advice-section {
     margin-top: 20px;
@@ -738,7 +743,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   height: 0 !important;
   overflow: hidden !important;
 }
-.step-header h2{ margin: 0 0 18px; font-size: var(--sd-font-size-2xl); color: var(--color-primary); } /* 2xlはそのまま（最大なので） */
+.step-header h2{ margin: -64px 0 18px; font-size: var(--sd-font-size-2xl); color: var(--color-primary); } /* 2xlはそのまま（最大なので） */
 .step-header { margin-top: 0; padding-top: 0; } /* ヘッダー上部の余白を削除 */
 .step-number{ display: none !important; } /* 数字は不要 */
 
@@ -775,6 +780,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 }
 .step-section--top .step-header h2{
   color: #fff;
+  margin-top: 36px;
   margin-bottom: 12px;
   font-size: clamp(28px, 3vw, 32px);
 }
@@ -1685,8 +1691,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   opacity: 1;
 }
 @media (max-width: 480px){
-  .step-section{ padding: 16px; }
-  .step-header h2{ font-size: 20px; }
+  .step-section{ padding: 16px;}
+  .step-header h2{ font-size: 20px; margin-top: 24px; }
   .procedure-item h4 { font-size: 18px; }
   .step-text { font-size: 14px; }
   .note-card, .step-advice { font-size: 13px; }
