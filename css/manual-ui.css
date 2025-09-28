@@ -1554,10 +1554,18 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
 }
 @media (max-width: 768px){
+  /* procedure-item内の要素がはみ出ないように制御 */
+  .procedure-item {
+    overflow: hidden !important;
+    padding: 16px !important;
+  }
+  
   .step-with-image{
     display: flex !important;  /* グリッドではなくflexboxを使用 */
     flex-direction: column !important;
     gap: var(--sd-spacing-md); /* 縦並び時のギャップを調整 */
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   
   /* テキストを1番目に（note-cardも含む） */
@@ -1579,6 +1587,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
     margin-left: 0 !important;
     margin-top: var(--sd-spacing-md) !important;
     order: 3 !important; /* 画像の後に配置 */
+    width: 100% !important; /* 幅を制限 */
+    box-sizing: border-box !important;
   }
   
   /* advice-sectionは最後に */
