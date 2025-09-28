@@ -296,6 +296,32 @@
     color: inherit !important;
     text-decoration: none !important;
   }
+  
+  /* 画面構成セクションの印刷時レイアウト - 画像を先に表示 */
+  #screen-layout .step-with-image {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  #screen-layout .step-image {
+    order: 1 !important; /* 画像を最初に */
+    margin-bottom: 4mm !important;
+    width: 100% !important;
+  }
+  
+  #screen-layout .step-text {
+    order: 2 !important; /* テキストを後に */
+    width: 100% !important;
+  }
+  
+  #screen-layout .note-card {
+    order: 3 !important; /* 注意事項を最後に */
+    margin-top: 4mm !important;
+  }
+  
+  #screen-layout .step-advice {
+    order: 4 !important; /* アドバイスを最後に */
+  }
   /* 印刷用目次のリンクスタイル */
   .print-toc-content a {
     color: var(--color-primary) !important;
