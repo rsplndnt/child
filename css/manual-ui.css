@@ -828,32 +828,6 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
 }
 
-@media (max-height: 820px){
-  .step-section--top{
-    padding-bottom: 36px;
-  }
-  .step-section--top .top-feature-grid{
-    max-height: calc(100vh - 240px);
-    overflow-y: auto;
-    padding-right: 8px;
-  }
-  .step-section--top .top-feature-grid::-webkit-scrollbar{
-    width: 6px;
-  }
-  .step-section--top .top-feature-grid::-webkit-scrollbar-thumb{
-    background: rgba(255,255,255,0.35);
-    border-radius: 999px;
-  }
-  .step-section--top .top-feature-grid::-webkit-scrollbar-track{
-    background: rgba(255,255,255,0.12);
-    border-radius: 999px;
-  }
-  .step-section--top .top-feature-grid{
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.35) rgba(255,255,255,0.12);
-  }
-}
-
 .step-objective{
   /* やや濃い塗り + 細い枠線でカード化 */
   background: rgba(177, 225, 255, 0.32); /* var(--color-secondary)を薄く */
