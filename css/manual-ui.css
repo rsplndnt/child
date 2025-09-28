@@ -831,12 +831,14 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 #top.step-section--top .top-scrollable{
   flex: 1 1 auto;
   min-height: 0;
-  /* ここではスクロールさせない。子の.gridでスクロール */
-  overflow: visible;
+  /* スクロール対象はここ */
+  overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable both-edges;
   overscroll-behavior: contain;
-  padding-right: 0;
+  padding-right: 12px; /* スクロールバー分の余白を確保して被りを防止 */
+  padding-bottom: clamp(32px, 8vh, 96px); /* 最下部までスクロールできるよう余白を確保 */
   box-sizing: border-box;
 }
 
@@ -865,8 +867,6 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .top-feature-grid{
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
-    max-height: calc(100svh - 200px);
-    padding-bottom: 20px; /* モバイルでも最下部まで届くよう余白 */
   }
   .top-feature-card{
     min-height: 0;
