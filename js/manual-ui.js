@@ -1457,6 +1457,10 @@
 
   /* ---------------- ダミーのワンポイントアドバイスと注意事項を追加 ---------------- */
   function addDummyContent() {
+    // この関数は無効化（ダミーコンテンツは不要）
+    return;
+    
+    // 以下は実行されない（将来的に必要になった場合のために残す）
     const steps = document.querySelectorAll('.content-panel .step-with-image');
     steps.forEach((step, index) => {
       const stepText = step.querySelector('.step-text');
@@ -1468,8 +1472,8 @@
         noteCard.className = 'note-card is-empty';
         noteCard.setAttribute('role', 'note');
         noteCard.innerHTML = `
-          <h5>⚠ 注意事項・補足事項</h5>
-          <p>ダミーの注意事項です。ここに注意事項や補足事項が入ります。</p>
+          <h5>⚠ 注意</h5>
+          <p>ダミーの注意事項です。ここに注意事項が入ります。</p>
         `;
         stepText.appendChild(noteCard);
       }
