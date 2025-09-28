@@ -217,7 +217,21 @@
   function setupBackToTop() {
     const button = document.getElementById('back-to-top');
     if (!button) return;
-    
+
+    function getScrollContainer(){
+      const c = document.querySelector('.manual-content');
+      if (c && c.scrollHeight > c.clientHeight) return c;
+      return null;
+    }
+    function getOffsetTopWithin(container, el){
+      let y = 0; let node = el;
+      while (node && node !== container){
+        y += node.offsetTop || 0;
+        node = node.offsetParent;
+      }
+      return y - (container.offsetTop || 0);
+    }
+
     // クリック時に現在表示中のセクションのh2に戻る
     button.addEventListener('click', function(e) {
       e.preventDefault();
@@ -225,34 +239,28 @@
       // 現在表示中のセクションを探す
       const visibleSection = document.querySelector('.step-section:not(.is-hidden)');
 
+      const container = getScrollContainer();
+
       if (visibleSection) {
         const h2 = visibleSection.querySelector('h2');
         if (h2) {
-          // .manual-contentコンテナ内でのスクロール位置を計算
-          const container = document.querySelector('.manual-content');
           if (container) {
-            const containerRect = container.getBoundingClientRect();
-            const h2Rect = h2.getBoundingClientRect();
-            const targetY = Math.max(0, container.scrollTop + (h2Rect.top - containerRect.top) - 80);
+            const targetY = Math.max(0, getOffsetTopWithin(container, h2) - 80);
             container.scrollTo({ top: targetY, behavior: 'smooth' });
           } else {
-            // フォールバック: ページ全体でのスクロール
             const targetY = Math.max(0, h2.getBoundingClientRect().top + getWindowScrollY() - 80);
             fastSmoothScrollTo({ target: targetY });
           }
         } else {
-          // h2がない場合はセクション先頭へ
-          const container = document.querySelector('.manual-content');
           if (container) {
-            const containerRect = container.getBoundingClientRect();
-            const sectionRect = visibleSection.getBoundingClientRect();
-            const targetY = Math.max(0, container.scrollTop + (sectionRect.top - containerRect.top));
+            const targetY = Math.max(0, getOffsetTopWithin(container, visibleSection));
             container.scrollTo({ top: targetY, behavior: 'smooth' });
+          } else {
+            const y = Math.max(0, visibleSection.getBoundingClientRect().top + getWindowScrollY());
+            fastSmoothScrollTo({ target: y });
           }
         }
       } else {
-        // セクションが見つからない場合はページトップへ
-        const container = document.querySelector('.manual-content');
         if (container) {
           container.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
