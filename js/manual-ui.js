@@ -1632,20 +1632,26 @@
     const topSection = document.createElement('div');
     topSection.className = 'print-toc-section';
     const topH3 = document.createElement('h3');
-    topH3.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳でできること';
+    const topLink = document.createElement('a');
+    topLink.href = '#top';
+    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳でできること';
+    topH3.appendChild(topLink);
     topSection.appendChild(topH3);
     
-    // TOPのサブ項目を追加
+    // TOPのサブ項目を追加（リンク付き）
     const topSubList = document.createElement('ul');
     topSubList.className = 'print-toc-sublist';
     const topItems = [
-      '２言語間のコミュニケーション',
-      'しゃべり描き（音声＋お絵描き）で翻訳',
-      'トランスクリプト（会話）の翻訳'
+      { text: '２言語間のコミュニケーション', href: '#top' },
+      { text: 'しゃべり描き（音声＋お絵描き）で翻訳', href: '#top' },
+      { text: 'トランスクリプト（会話）の翻訳', href: '#top' }
     ];
     topItems.forEach((item) => {
       const li = document.createElement('li');
-      li.innerHTML = `<span>${item}</span>`;
+      const link = document.createElement('a');
+      link.href = item.href;
+      link.textContent = item.text;
+      li.appendChild(link);
       topSubList.appendChild(li);
     });
     topSection.appendChild(topSubList);
@@ -1655,23 +1661,28 @@
       const tocLink = section.querySelector('.toc-link');
       if (!tocLink) return;
       
-      // セクションのタイトルを取得
+      // セクションのタイトルとhrefを取得
       const titleText = tocLink.querySelector('span')?.textContent || '';
       const icon = tocLink.querySelector('i')?.className || '';
+      const sectionHref = tocLink.getAttribute('href') || '#';
       
       // 印刷用セクションを作成
       const printSection = document.createElement('div');
       printSection.className = 'print-toc-section';
       
-      // タイトルを作成
+      // タイトルを作成（リンク付き）
       const h3 = document.createElement('h3');
+      const h3Link = document.createElement('a');
+      h3Link.href = sectionHref;
+      
       if (icon) {
         const iconSpan = document.createElement('span');
         iconSpan.className = 'toc-icon';
         iconSpan.innerHTML = '●'; // シンプルな記号に置き換え
-        h3.appendChild(iconSpan);
+        h3Link.appendChild(iconSpan);
       }
-      h3.appendChild(document.createTextNode(titleText));
+      h3Link.appendChild(document.createTextNode(' ' + titleText));
+      h3.appendChild(h3Link);
       printSection.appendChild(h3);
       
       // サブリストがある場合
@@ -1684,7 +1695,10 @@
           const link = li.querySelector('a');
           if (link) {
             const printLi = document.createElement('li');
-            printLi.textContent = link.textContent;
+            const printLink = document.createElement('a');
+            printLink.href = link.getAttribute('href') || '#';
+            printLink.textContent = link.textContent;
+            printLi.appendChild(printLink);
             printSublist.appendChild(printLi);
           }
         });

@@ -296,6 +296,26 @@
     color: inherit !important;
     text-decoration: none !important;
   }
+  /* 印刷用目次のリンクスタイル */
+  .print-toc-content a {
+    color: var(--color-primary) !important;
+    text-decoration: none !important;
+  }
+  
+  @media screen {
+    .print-toc-content a:hover {
+      text-decoration: underline !important;
+    }
+  }
+  
+  .print-toc-section h3 a {
+    color: #0b0b0b !important;
+    font-weight: 600 !important;
+  }
+  
+  .print-toc-sublist a {
+    color: #333 !important;
+  }
 }
 
 /* 画面側との干渉回避：
