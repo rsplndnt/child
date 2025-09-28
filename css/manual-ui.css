@@ -707,6 +707,11 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .step-section{
   margin-bottom: 28px;
   margin-top: 0; /* 上部余白を削除 */
+  padding-top: 0; /* 上部パディングも削除 */
+}
+.step-section:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 /* セクション表示制御を強化 */
 .step-section.is-hidden{ 
@@ -717,11 +722,12 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   overflow: hidden !important;
 }
 .step-header h2{ margin: 0 0 18px; font-size: var(--sd-font-size-2xl); color: var(--color-primary); } /* 2xlはそのまま（最大なので） */
+.step-header { margin-top: 0; padding-top: 0; } /* ヘッダー上部の余白を削除 */
 .step-number{ display: none !important; } /* 数字は不要 */
 
 .step-section--top{
   background: linear-gradient(135deg, rgba(0,113,184,0.92) 0%, rgba(0,90,145,0.95) 100%);
-  border-radius: 24px;
+  border-radius: 0px;
   padding: 40px 44px 48px;
   color: #fff;
   box-shadow: 0 18px 40px rgba(0, 38, 71, 0.18);
