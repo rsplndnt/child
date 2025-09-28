@@ -660,7 +660,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .faq-answer-label {
   position: absolute;
   left: 0;
-  top: 3px;
+  top: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
