@@ -75,7 +75,17 @@
 
   /* ===== 本文全章を印刷 ===== */
   /* 画面では隠しているセクションも印刷時は全部表示 */
-  .step-section,
+  .step-section { 
+    display: block !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    margin: 0 0 10mm !important;
+    padding: 10mm !important;  /* 適切なパディングを確保 */
+    break-inside: avoid;          /* 章の途中で改ページをできるだけ避ける */
+  }
+  
+  /* TOPページは別途設定 */
   .step-section--top,
   #top.step-section--top { 
     display: block !important;
@@ -83,8 +93,8 @@
     border: 0 !important;
     box-shadow: none !important;
     margin: 0 0 10mm !important;
-    padding: 0 !important;
-    break-inside: avoid;          /* 章の途中で改ページをできるだけ避ける */
+    padding: 10mm !important;
+    break-inside: avoid;
   }
 
   /* 章ごとに改ページ（表紙の直後は除く） */
@@ -194,6 +204,19 @@
   .step-section.is-hidden {
     display: block !important;
     visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 10mm !important;
+  }
+  
+  /* セクション内のコンテンツも確実に表示 */
+  .step-content,
+  .procedure-item,
+  .procedure-steps {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   /* h2見出しを確実に表示 */
