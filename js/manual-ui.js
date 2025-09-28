@@ -345,8 +345,13 @@
 
     // 内部リンクの処理
     document.addEventListener('click', function(e) {
-      const link = e.target.closest('a[href^="#"]');
+      const link = e.target.closest('a[href="#"], a[href^="#"]');
       if (!link) return;
+      
+      // 左TOC（大項目/サブ項目）は個別ハンドラで処理するため除外
+      if (link.closest('.toc-sublist') || link.closest('.toc-section')) {
+        return;
+      }
       
       const href = link.getAttribute('href');
       if (!href || href === '#') return;
@@ -718,6 +723,10 @@
       // スクロールイベントのデバウンス処理（高速化）
       const handleScroll = debounce(() => {
         clearTimeout(scrollTimeout);
+        // サブ項目クリック直後はアップデートを停止
+        if (forcedTocState.sectionHash) {
+          return;
+        }
         scrollTimeout = setTimeout(() => {
           isScrolling = false;
           updateActiveSection();
@@ -841,6 +850,7 @@
             }
             na.addEventListener('click', (e) => {
               e.preventDefault();
+              e.stopPropagation();
               const anchor = na.getAttribute('href');
               if (!anchor) return;
               // 対象セクションを特定して切替（右カラムと同様の挙動）
@@ -854,11 +864,12 @@
                 if (m2) sectionHash = `#${m2[1]}`;
               }
 
-              // 強制状態をセット（1200ms程度維持）
+              // 強制状態をセット（1500ms程度維持）
               if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
               forcedTocState.sectionHash = sectionHash;
               forcedTocState.subHash = anchor;
-              forcedTocState.timer = setTimeout(() => { forcedTocState.sectionHash = null; forcedTocState.subHash = null; }, 1200);
+              isScrolling = true; // スクロール連動を停止
+              forcedTocState.timer = setTimeout(() => { forcedTocState.sectionHash = null; forcedTocState.subHash = null; isScrolling = false; updateActiveSection(); }, 1500);
 
               activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true });
               // サブリスト内のアクティブ状態を更新
