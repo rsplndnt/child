@@ -753,7 +753,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 16px;
   max-width: 100%;
-  padding-top: 6px;
+  padding-top: 12px;
 }
 
 .top-feature-card{
@@ -825,6 +825,32 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
   .top-feature-card{
     padding: 22px 18px;
+  }
+}
+
+@media (max-height: 820px){
+  .step-section--top{
+    padding-bottom: 36px;
+  }
+  .step-section--top .top-feature-grid{
+    max-height: calc(100vh - 240px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  .step-section--top .top-feature-grid::-webkit-scrollbar{
+    width: 6px;
+  }
+  .step-section--top .top-feature-grid::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,0.35);
+    border-radius: 999px;
+  }
+  .step-section--top .top-feature-grid::-webkit-scrollbar-track{
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+  }
+  .step-section--top .top-feature-grid{
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.35) rgba(255,255,255,0.12);
   }
 }
 
