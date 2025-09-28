@@ -630,6 +630,25 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   height: 100dvh;           /* 独立スクロール領域 */
   overflow-y: auto;         /* メインカラムだけスクロール */
 }
+
+.note-card a[target="_blank"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.note-card a[target="_blank"] .link-label {
+  text-decoration: underline;
+  text-decoration-skip-ink: auto;
+}
+
+.note-card a[target="_blank"] .material-icons {
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
 .content-panel{
   flex: 1 1 auto;
   min-width: 0;
@@ -1641,4 +1660,3 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 @media screen {
   .print-toc-page { display: none !important; }
 }
-
