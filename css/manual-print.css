@@ -75,7 +75,9 @@
 
   /* ===== 本文全章を印刷 ===== */
   /* 画面では隠しているセクションも印刷時は全部表示 */
-  .step-section { 
+  .step-section,
+  .step-section--top,
+  #top.step-section--top { 
     display: block !important;
     background: transparent !important;
     border: 0 !important;
@@ -104,6 +106,82 @@
     break-inside: avoid !important; 
     page-break-inside: avoid !important;
     display: block !important;            /* 確実に表示 */
+  }
+  
+  /* TOPページの印刷時スタイル */
+  .step-section--top,
+  #top.step-section--top {
+    background: none !important;
+    color: #000 !important;
+    padding: 10mm !important;
+    overflow: visible !important;
+    display: block !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+  
+  .step-section--top::after {
+    display: none !important; /* 背景装飾を非表示 */
+  }
+  
+  .step-section--top .top-hero {
+    color: #000 !important;
+    margin-bottom: 20px !important;
+    text-align: left !important;
+  }
+  
+  .step-section--top .step-header h2 {
+    color: var(--color-primary) !important;
+    margin-top: 0 !important;
+  }
+  
+  .top-hero__lead {
+    color: #333 !important;
+    font-size: 11pt !important;
+  }
+  
+  .top-feature-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8mm !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    max-height: none !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .top-feature-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    background: #f9f9f9 !important;
+    border: 1px solid #ddd !important;
+    padding: 8mm !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+  }
+  
+  .top-feature-card h3 {
+    font-size: 12pt !important;
+    margin: 0 0 4mm !important;
+  }
+  
+  .top-feature-card p {
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+  }
+  
+  .top-feature-icon {
+    display: none !important; /* アイコンは印刷時は非表示 */
+  }
+  
+  .top-feature-link {
+    color: var(--color-primary) !important;
+    text-decoration: underline !important;
+    font-size: 10pt !important;
+  }
+  
+  .top-feature-link .material-icons {
+    display: none !important; /* アイコンは印刷時は非表示 */
   }
 
   /* 各セクションの見出しを強制表示 */
