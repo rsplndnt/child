@@ -735,10 +735,10 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .step-section--top .top-hero{
   text-align: center;
   color: #fff;
-  margin-bottom: 36px;
-  position: sticky; /* スクロールしても固定 */
-  top: 0;
-  z-index: 3; /* カードより前面に */
+  margin-bottom: 24px;
+  position: relative; /* sticky解除 */
+  top: auto;
+  z-index: auto;
 }
 .step-section--top .step-header h2{
   color: #fff;
@@ -1982,3 +1982,38 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .top-feature-card{ padding: 18px 18px 16px; border-radius: 14px; }
 }
 /* === /TOP UI Refresh === */
+
+/* ヒーローCTA */
+.top-hero-actions{
+  margin: 16px auto 0;
+  display: inline-flex;
+  gap: 12px;
+}
+.top-hero-actions .hero-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+.top-hero-actions .hero-btn.primary{
+  background: #fff;
+  color: var(--color-primary);
+}
+.top-hero-actions .hero-btn.primary:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+}
+.top-hero-actions .hero-btn.ghost{
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28);
+}
+.top-hero-actions .hero-btn.ghost:hover{
+  background: rgba(255,255,255,0.22);
+}
+.top-hero-actions .material-icons{ font-size: 20px; }
