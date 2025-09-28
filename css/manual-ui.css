@@ -761,7 +761,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 0;
   padding-top: 12px;
-  padding-bottom: clamp(24px, 6vh, 72px);
+  padding-bottom: clamp(64px, 14vh, 160px); /* 末尾の余白を拡大 */
   max-width: 100%;
   /* ここをスクロール対象に統一 */
   max-height: calc(100svh - 220px);
@@ -870,6 +870,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .top-feature-grid{
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
+    padding-bottom: clamp(80px, 18vh, 200px); /* モバイルでも大きめの末尾余白 */
+    max-height: calc(100svh - 240px); /* ヒーロー分の見込みを増やす */
   }
   .top-feature-card{
     min-height: 0;
