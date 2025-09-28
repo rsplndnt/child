@@ -713,6 +713,23 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
+
+/* 全てのセクションと子要素の上部余白を強制削除 */
+.content-panel > *:first-child,
+.step-section:first-child,
+.step-section > *:first-child,
+.step-header:first-child,
+.step-content:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* 印刷用要素の後に来る最初の表示セクション */
+.print-toc-page + .step-section:not(.is-hidden),
+.print-cover + .print-toc-page + .step-section:not(.is-hidden) {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
 /* セクション表示制御を強化 */
 .step-section.is-hidden{ 
   display: none !important; 
