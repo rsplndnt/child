@@ -827,34 +827,6 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   margin-bottom: 0;
 }
 
-#top.step-section--top .top-scrollable{
-  /* 単一スクロールにするためここではスクロールさせない */
-  overflow: visible;
-  -webkit-overflow-scrolling: auto;
-  scrollbar-gutter: auto;
-  overscroll-behavior: auto;
-  padding-right: 0;
-  padding-bottom: clamp(24px, 6vh, 72px);
-  box-sizing: border-box;
-}
-
-#top.step-section--top .top-scrollable::-webkit-scrollbar {
-  width: 8px;
-}
-
-#top.step-section--top .top-scrollable::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-}
-
-#top.step-section--top .top-scrollable::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-#top.step-section--top .top-scrollable {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.12);
-}
 
 @media (max-width: 768px){
   .step-section--top{
