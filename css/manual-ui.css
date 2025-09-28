@@ -718,6 +718,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   box-shadow: 0 18px 40px rgba(0, 38, 71, 0.18);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 .step-section--top::after{
   content: "";
@@ -828,6 +829,30 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   }
   .top-feature-card{
     padding: 22px 18px;
+  }
+}
+
+@media (max-height: 840px) {
+  #top.step-section--top {
+    max-height: calc(100dvh - 48px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 28px;
+    scrollbar-gutter: stable both-edges;
+  }
+  #top.step-section--top::-webkit-scrollbar {
+    width: 8px;
+  }
+  #top.step-section--top::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+  }
+  #top.step-section--top::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  #top.step-section--top {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.12);
   }
 }
 
