@@ -825,19 +825,21 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .top-feature-link:focus-visible{ outline: 2px solid rgba(255,255,255,0.8); outline-offset: 4px; border-radius: 999px; padding: 2px 6px; }
 
 #top.step-section--top{
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0; /* margin-bottomを削除 */
-  min-height: auto; /* 高さ制限を解除 */
-  flex-shrink: 0; /* 縮小を防ぐ */
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: 0 !important; /* 他のスタイルを確実に上書き */
+  min-height: auto !important; /* 高さ制限を解除 */
+  flex-shrink: 0 !important; /* 縮小を防ぐ */
 }
 
 /* TOPページ下部の白い余白専用 */
 .top-page-bottom-spacing {
-  height: 80px; /* 少し大きめに */
-  background: transparent;
-  display: block;
-  width: 100%;
+  height: 80px !important; /* 少し大きめに */
+  background: transparent !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 
