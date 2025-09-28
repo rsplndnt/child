@@ -570,7 +570,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   
   /* ハンバーガーメニューとH2が被らないように上部マージンを追加 */
   .step-section:not(.is-hidden) {
-    margin-top: 24px !important;
+    margin-top: 36px !important;
   }
   
   /* 画面構成セクションのワンポイントアドバイスを調整 */
