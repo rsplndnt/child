@@ -752,7 +752,8 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 16px;
-  overflow: hidden;
+  max-width: 100%;
+  padding-top: 6px;
 }
 
 .top-feature-card{
@@ -767,7 +768,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   min-height: 260px;
 }
 .top-feature-card:hover{
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: 0 18px 36px rgba(0,0,0,0.16);
 }
 .top-feature-icon{
@@ -803,6 +804,29 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .top-feature-link .material-icons{ font-size: 20px; }
 .top-feature-link:hover{ color: var(--color-primary); }
 .top-feature-link:focus-visible{ outline: 2px solid rgba(255,255,255,0.8); outline-offset: 4px; border-radius: 999px; padding: 2px 6px; }
+
+@media (max-width: 768px){
+  .step-section--top{
+    padding: 32px 24px 40px;
+  }
+  .top-feature-grid{
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .top-feature-card{
+    min-height: 0;
+    padding: 24px 22px;
+  }
+}
+
+@media (max-width: 480px){
+  .step-section--top{
+    padding: 28px 18px 36px;
+  }
+  .top-feature-card{
+    padding: 22px 18px;
+  }
+}
 
 .step-objective{
   /* やや濃い塗り + 細い枠線でカード化 */
