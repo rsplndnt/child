@@ -1975,4 +1975,38 @@
   }
 
 
+  /* ---------------- モバイル時のレイアウト調整 ---------------- */
+  function adjustMobileLayout() {
+    const isMobile = window.innerWidth <= 768;
+    
+    document.querySelectorAll('.step-with-image').forEach(container => {
+      const noteCard = container.querySelector('.step-text .note-card');
+      const stepText = container.querySelector('.step-text');
+      
+      if (noteCard && stepText) {
+        if (isMobile) {
+          // モバイル時：note-cardをstep-with-imageの最後に移動
+          if (noteCard.parentElement === stepText) {
+            container.appendChild(noteCard);
+            noteCard.dataset.movedFromText = 'true';
+          }
+        } else {
+          // デスクトップ時：note-cardを元の位置（step-text内）に戻す
+          if (noteCard.dataset.movedFromText === 'true') {
+            stepText.appendChild(noteCard);
+            delete noteCard.dataset.movedFromText;
+          }
+        }
+      }
+    });
+  }
+  
+  // 初回実行とリサイズ時に実行
+  adjustMobileLayout();
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(adjustMobileLayout, 250);
+  });
+
 })(); // EOF
