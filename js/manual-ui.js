@@ -224,22 +224,40 @@
 
       // 現在表示中のセクションを探す
       const visibleSection = document.querySelector('.step-section:not(.is-hidden)');
-      console.log('戻るボタン: 表示中のセクション =', visibleSection?.id);
 
       if (visibleSection) {
         const h2 = visibleSection.querySelector('h2');
         if (h2) {
-          console.log('戻るボタン: h2要素が見つかりました');
-          const targetY = Math.max(0, h2.getBoundingClientRect().top + getWindowScrollY() - 80);
-          fastSmoothScrollTo({ target: targetY });
+          // .manual-contentコンテナ内でのスクロール位置を計算
+          const container = document.querySelector('.manual-content');
+          if (container) {
+            const containerRect = container.getBoundingClientRect();
+            const h2Rect = h2.getBoundingClientRect();
+            const targetY = Math.max(0, container.scrollTop + (h2Rect.top - containerRect.top) - 80);
+            container.scrollTo({ top: targetY, behavior: 'smooth' });
+          } else {
+            // フォールバック: ページ全体でのスクロール
+            const targetY = Math.max(0, h2.getBoundingClientRect().top + getWindowScrollY() - 80);
+            fastSmoothScrollTo({ target: targetY });
+          }
         } else {
-          console.log('戻るボタン: h2要素が見つからない、セクション先頭へ');
-          const y = Math.max(0, visibleSection.getBoundingClientRect().top + getWindowScrollY());
-          fastSmoothScrollTo({ target: y });
+          // h2がない場合はセクション先頭へ
+          const container = document.querySelector('.manual-content');
+          if (container) {
+            const containerRect = container.getBoundingClientRect();
+            const sectionRect = visibleSection.getBoundingClientRect();
+            const targetY = Math.max(0, container.scrollTop + (sectionRect.top - containerRect.top));
+            container.scrollTo({ top: targetY, behavior: 'smooth' });
+          }
         }
       } else {
-        console.log('戻るボタン: 表示中のセクションが見つからない、ページトップへ');
-        fastSmoothScrollTo({ target: 0 });
+        // セクションが見つからない場合はページトップへ
+        const container = document.querySelector('.manual-content');
+        if (container) {
+          container.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          fastSmoothScrollTo({ target: 0 });
+        }
       }
     });
   }
