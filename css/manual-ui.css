@@ -717,8 +717,9 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   color: #fff;
   box-shadow: 0 18px 40px rgba(0, 38, 71, 0.18);
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* hiddenからvisibleに変更 */
   box-sizing: border-box;
+  height: auto; /* 明示的に高さを自動に */
 }
 .step-section--top::after{
   content: "";
@@ -822,8 +823,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .top-feature-link:focus-visible{ outline: 2px solid rgba(255,255,255,0.8); outline-offset: 4px; border-radius: 999px; padding: 2px 6px; }
 
 #top.step-section--top{
-  display: flex;
-  flex-direction: column;
+  display: block; /* flexからblockに変更 */
   margin-bottom: 0;
 }
 
