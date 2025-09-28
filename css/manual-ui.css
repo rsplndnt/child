@@ -768,7 +768,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   border-radius: 50%;
   background: rgba(0,113,184,0.12);
   color: var(--color-primary);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px !important;
