@@ -133,6 +133,166 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   overflow: hidden; /* 復活：サイドバー固定のため */
 }
 
+.spec-list{
+  margin: 12px 0 0;
+  font-size: 0.95em;
+  line-height: 1.7;
+}
+dl.spec-list{
+  padding-left: 0;
+}
+dl.spec-list dt{
+  font-weight: 700;
+  margin-top: 12px;
+}
+dl.spec-list dt:first-of-type{
+  margin-top: 8px;
+}
+dl.spec-list dd{
+  margin: 4px 0 0;
+  padding-left: 0;
+}
+dl.spec-list dd + dt{
+  margin-top: 14px;
+}
+ul.spec-list{
+  padding-left: 1.2em;
+  margin: 12px 0 0;
+}
+ul.spec-list li{
+  margin: 4px 0;
+}
+
+.local-section-search{
+  margin: 0 0 24px;
+  padding: 16px 18px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.08);
+}
+.local-section-search__label{
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.local-section-search__field{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 8px 18px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 2px transparent;
+  transition: box-shadow .18s ease, border-color .18s ease;
+}
+.local-section-search__field:focus-within{
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 2px rgba(0,113,184,0.15);
+}
+.local-section-search__input{
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+  min-width: 0;
+}
+.local-section-search__submit{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.local-section-search__submit:hover{
+  background: var(--color-primary-700);
+  box-shadow: 0 6px 16px rgba(0,113,184,0.25);
+  transform: translateY(-1px);
+}
+.local-section-search__submit:focus-visible{
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+.local-section-search__submit .material-icons{
+  font-size: 20px;
+}
+.local-section-search__status{
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--on-surface-variant);
+}
+.local-section-search__results{
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.local-section-search__result{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--outline-variant);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.local-section-search__result:hover{
+  border-color: rgba(0,113,184,0.35);
+  box-shadow: 0 6px 16px rgba(15,23,42,0.10);
+  transform: translateY(-1px);
+}
+.local-section-search__result:focus-visible{
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.local-section-search__result-title{
+  font-weight: 700;
+  color: var(--on-surface);
+}
+.local-section-search__result-snippet{
+  font-size: 14px;
+  color: var(--on-surface-variant);
+}
+.local-section-search__result-snippet mark{
+  background: rgba(0,113,184,0.25);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.local-section-search__results-empty{
+  padding: 12px 0;
+  color: var(--on-surface-variant);
+  font-size: 14px;
+}
+.local-search-no-results{
+  display: none;
+}
+
+#mic-usage-tips .step-text ul{
+  margin: 0 0 12px;
+  padding-left: 1.2em;
+}
+#mic-usage-tips .step-text li{
+  margin-bottom: 6px;
+  line-height: 1.7;
+}
+#mic-usage-tips .step-text ul li:last-child{
+  margin-bottom: 0;
+}
+
 /* サイドバー */
 .manual-sidebar{
   flex: 0 0 var(--sidebar-w);
@@ -795,14 +955,13 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 .top-feature-grid{
   position: relative;
   z-index: 1;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: clamp(18px, 2.4vw, 26px);
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 0;
   padding-top: 12px;
-  padding-bottom: 40px; /* 余白を小さく調整 */
+  padding-bottom: 16px;
   max-width: 100%;
-  /* スクロールは親/ページで行う（グリッドはスクロールしない） */
   max-height: none;
   overflow: visible;
   padding-right: 0;
@@ -824,20 +983,22 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   transition: transform .2s ease, box-shadow .2s ease;
   min-height: 260px;
 }
+.top-feature-visual{
+  margin: 0 0 8px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f1f5f9;
+  box-shadow: inset 0 0 0 1px rgba(11,34,57,0.08);
+}
+.top-feature-visual img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .top-feature-card:hover{
   transform: translateY(-4px);
   box-shadow: 0 18px 36px rgba(0,0,0,0.16);
-}
-.top-feature-icon{
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(0,113,184,0.12);
-  color: var(--color-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px !important;
 }
 .top-feature-card h3{
   margin: 0;
@@ -851,6 +1012,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 }
 .top-feature-link{
   margin-top: auto;
+  align-self: flex-end;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -877,11 +1039,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .step-section--top{
     padding: 32px 24px 40px;
   }
-  .top-feature-grid{
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-    padding-bottom: 40px; /* 余白を小さく調整 */
-  }
+  .top-feature-grid{ gap: 20px; padding-bottom: 40px; }
   .top-feature-card{
     min-height: 0;
     padding: 24px 22px;
@@ -1266,11 +1424,14 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  display: flex; /* 常に表示 */
+  display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity .2s ease, visibility .2s ease;
   z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .back-to-top:hover {
@@ -1307,6 +1468,18 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   .back-to-top {
     display: none !important;
   }
+}
+
+.back-to-top.show{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.back-to-top.is-static-hidden{
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* ワンポイントアドバイス - 新レイアウト */
@@ -1927,19 +2100,6 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   outline-offset: 2px;
 }
 
-.top-feature-icon{
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-primary);
-  background: rgba(0,102,204,0.08);
-  box-shadow: inset 0 0 0 1px rgba(0,102,204,0.15);
-  margin-bottom: 4px;
-}
-
 .top-feature-card h3{
   margin: 4px 0 6px;
   font-size: clamp(18px, 2.2vw, 22px);
@@ -1956,7 +2116,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 
 .top-feature-link{
   margin-top: auto;
-  align-self: flex-start;
+  align-self: flex-end;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1984,18 +2144,17 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   transform: translateX(3px);
 }
 
-/* grid tuning */
+/* feature card stack tuning */
 .top-feature-grid{
   position: relative;
   z-index: 1;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: clamp(18px, 2.4vw, 26px);
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   margin-bottom: 0;
   padding-top: 12px;
-  padding-bottom: 0px; /* 下部に適度な余白を追加 */
+  padding-bottom: 0;
   max-width: 100%;
-  /* スクロールは親/ページで行う（グリッドはスクロールしない） */
   max-height: none;
   overflow: visible;
   padding-right: 0;
@@ -2012,7 +2171,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 
 /* ヒーローCTA */
 .top-hero-actions{
-  margin: 16px auto 0;
+  margin: clamp(40px, 6vw, 64px) auto 0;
   display: inline-flex;
   gap: 12px;
 }

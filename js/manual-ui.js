@@ -31,6 +31,43 @@
     return base + 16;
   }
 
+  function updateUrlHash(hash, { replace = false } = {}) {
+    if (!hash) return;
+    const value = hash.startsWith('#') ? hash : `#${hash}`;
+    try {
+      if (window.location.hash === value && !replace) return;
+      if (typeof history !== 'undefined' && history.pushState) {
+        if (replace || window.location.hash === value) {
+          history.replaceState(null, '', value);
+        } else {
+          history.pushState(null, '', value);
+        }
+      } else {
+        window.location.hash = value;
+      }
+    } catch (_) {
+      try {
+        window.location.hash = value;
+      } catch (__) {}
+    }
+  }
+
+  function replaceUrlWithoutQuery(hash) {
+    const value = hash && hash.startsWith('#') ? hash : `#${hash || ''}`;
+    try {
+      const base = window.location.href.split('#')[0].split('?')[0];
+      if (typeof history !== 'undefined' && history.replaceState) {
+        history.replaceState(null, '', `${base}${value}`);
+      } else {
+        window.location.hash = value;
+      }
+    } catch (_) {
+      try {
+        window.location.hash = value;
+      } catch (__) {}
+    }
+  }
+
   // カスタムスクロールアニメーション（約300msで滑らか）
   const DEFAULT_SCROLL_DURATION = 315;
   const scrollAnimationMap = new WeakMap();
@@ -223,6 +260,15 @@
       if (c && c.scrollHeight > c.clientHeight) return c;
       return null;
     }
+    function toggleStaticVisibility(){
+      const container = document.querySelector('.manual-content');
+      if (!container) {
+        button.classList.add('is-static-hidden');
+        return;
+      }
+      const hasScroll = container.scrollHeight > container.clientHeight + 4;
+      button.classList.toggle('is-static-hidden', !hasScroll);
+    }
     function getOffsetTopWithin(container, el){
       let y = 0; let node = el;
       while (node && node !== container){
@@ -267,6 +313,38 @@
           fastSmoothScrollTo({ target: 0 });
         }
       }
+    });
+
+    function toggleVisibility() {
+      const container = getScrollContainer();
+      if (!container) {
+        button.classList.remove('show');
+        return;
+      }
+      const threshold = 200;
+      const show = container.scrollTop > threshold;
+      button.classList.toggle('show', show);
+    }
+
+    toggleStaticVisibility();
+    toggleVisibility();
+
+    const container = document.querySelector('.manual-content');
+    if (container){
+      container.addEventListener('scroll', toggleVisibility, { passive: true });
+    }
+    window.addEventListener('resize', () => {
+      toggleStaticVisibility();
+      toggleVisibility();
+    });
+
+    const observer = new MutationObserver(() => {
+      toggleStaticVisibility();
+      toggleVisibility();
+    });
+    observer.observe(document.querySelector('.content-panel') || document.body, {
+      childList: true,
+      subtree: true
     });
   }
 
@@ -317,6 +395,7 @@
     insertPlaceholders();
     addDummyContent();
     markEmptyInfoCards();
+    setupLocalSectionSearch();
 
     // 初期化時に✕ボタンを非表示
     const closeBtn = document.getElementById('sidebarCloseBtn');
@@ -528,9 +607,12 @@
       }
     });
 
-    // 初期表示のセクション
-    activateSection('#top', { scrollToTop: false });
-    
+    const initialHandledByTarget = handleInitialTargetRequest();
+    const initialHandledByHash = initialHandledByTarget ? true : handleInitialHash();
+    if (!initialHandledByTarget && !initialHandledByHash) {
+      activateSection('#top', { scrollToTop: false, updateUrl: false });
+    }
+
     // スクロール連動機能
     setupScrollSync();
 
@@ -547,7 +629,6 @@
     });
 
     // クエリパラメータによる初期表示調整（?target=xxx）
-    handleInitialTargetRequest();
 
     // 検索トリガ（ボタン/Enter）共通処理
     function handleSearchTrigger() {
@@ -602,10 +683,10 @@
     function handleInitialTargetRequest() {
       const params = new URLSearchParams(window.location.search || '');
       const targetId = (params.get('target') || '').trim();
-      if (!targetId) return;
+      if (!targetId) return false;
       const hash = `#${targetId.replace(/^#+/, '')}`;
       const targetEl = document.querySelector(hash);
-      if (!targetEl) return;
+      if (!targetEl) return false;
 
       const sectionEl = targetEl.closest('.step-section');
       const sectionHash = sectionEl && sectionEl.id ? `#${sectionEl.id}` : '#top';
@@ -615,8 +696,9 @@
       forcedTocState.subHash = hash;
       setScrollSyncManual(true);
 
-      activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash });
+      activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash, updateUrl: false });
       scrollToElementNoAnim(hash);
+      replaceUrlWithoutQuery(hash);
 
       // 一定時間後にスクロール連動を再開
       forcedTocState.timer = setTimeout(() => {
@@ -625,6 +707,55 @@
         setScrollSyncManual(false);
         triggerScrollSyncUpdate();
       }, 800);
+
+      return true;
+    }
+
+    function handleInitialHash() {
+      let hash = (window.location.hash || '').trim();
+      if (!hash || hash === '#top') return false;
+
+      const targetEl = document.querySelector(hash);
+      let sectionEl = null;
+      if (targetEl) {
+        sectionEl = targetEl.classList.contains('step-section') ? targetEl : targetEl.closest('.step-section');
+      } else {
+        const id = hash.replace(/^#/, '');
+        const possibleSection = document.getElementById(id);
+        if (possibleSection && possibleSection.classList.contains('step-section')) {
+          sectionEl = possibleSection;
+        } else {
+          return false;
+        }
+      }
+
+      const sectionHash = sectionEl && sectionEl.id ? `#${sectionEl.id}` : '#top';
+      const isSectionAnchor = sectionHash === hash;
+      const subHash = isSectionAnchor ? null : hash;
+
+      if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+      forcedTocState.sectionHash = sectionHash;
+      forcedTocState.subHash = subHash;
+      setScrollSyncManual(true);
+
+      activateSection(sectionHash, {
+        scrollToTop: false,
+        parentHasActiveChild: Boolean(subHash),
+        activeSubHash: subHash,
+        updateUrl: false
+      });
+
+      if (subHash) scrollToElementNoAnim(subHash);
+      else scrollToElementNoAnim(sectionHash);
+
+      forcedTocState.timer = setTimeout(() => {
+        forcedTocState.sectionHash = null;
+        forcedTocState.subHash = null;
+        setScrollSyncManual(false);
+        triggerScrollSyncUpdate();
+      }, 800);
+
+      return true;
     }
 
     // 検索ボタン
@@ -1275,6 +1406,11 @@
         }
       }
       if (opts.closeMobile && window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+
+      if (opts.updateUrl !== false) {
+        const hashForUrl = (activeSubHash && activeSubHash.trim()) || normalizedTarget;
+        updateUrlHash(hashForUrl);
+      }
     }
 
     function scrollToElement(hash) {
@@ -1292,6 +1428,7 @@
         const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
         fastSmoothScrollTo({ target: y });
       }
+      updateUrlHash(hash, { replace: true });
     }
 
     // スクロールアニメーションなしで瞬時に目的位置へ移動
@@ -1315,6 +1452,7 @@
         const y = Math.max(0, el.getBoundingClientRect().top + (doc.defaultView?.scrollY || window.scrollY) - offset);
         (doc.defaultView || window).scrollTo({ top: y, behavior: 'auto' });
       }
+      if (!docRef) updateUrlHash(hash, { replace: true });
     }
 
     function updateTabsForViewport() {
@@ -1399,6 +1537,228 @@
       dragging = false; document.body.style.userSelect = '';
       // localStorage への保存を無効化
       // try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
+    });
+  }
+
+  function setupLocalSectionSearch() {
+    const buildSnippet = (text, terms) => {
+      if (!text) return '';
+      const trimmed = text.trim();
+      let snippet = trimmed.length > 180 ? trimmed.slice(0, 180) + '…' : trimmed;
+      snippet = escapeHtml(snippet);
+      terms.forEach(term => {
+        const re = new RegExp(`(${escapeRegExp(term)})`, 'ig');
+        snippet = snippet.replace(re, '<mark>$1</mark>');
+      });
+      return snippet;
+    };
+
+    const configs = [
+      {
+        scope: 'terminology',
+        sectionSelector: '#terminology',
+        inputSelector: '#search-terminology',
+        submitSelector: '#search-terminology-submit',
+        statusSelector: '[data-search-status="terminology"]',
+        emptyLabel: '該当する用語は見つかりません。',
+        totalLabel: (count) => `全${count}件を表示中`,
+        filterItems: true
+      },
+      {
+        scope: 'faq',
+        sectionSelector: '#faq',
+        inputSelector: '#search-faq',
+        submitSelector: '#search-faq-submit',
+        statusSelector: '[data-search-status="faq"]',
+        emptyLabel: '該当するFAQは見つかりません。',
+        totalLabel: (count) => `全${count}件のFAQを表示中`,
+        filterItems: true
+      },
+      {
+        scope: 'product-specs',
+        sectionSelector: '#product-specs',
+        inputSelector: '#search-product-specs',
+        submitSelector: '#search-product-specs-submit',
+        statusSelector: '[data-search-status="product-specs"]',
+        emptyLabel: '該当する仕様は見つかりません。',
+        totalLabel: (count) => `全${count}件の仕様項目を表示中`,
+        filterItems: false,
+        resultsSelector: '[data-search-results="product-specs"]'
+      }
+    ];
+
+    configs.forEach(cfg => {
+      const sectionRoot = document.querySelector(cfg.sectionSelector);
+      const section = sectionRoot ? sectionRoot.querySelector('.step-content') : null;
+      const input = document.querySelector(cfg.inputSelector);
+      const status = document.querySelector(cfg.statusSelector);
+      const resultsContainer = cfg.resultsSelector ? document.querySelector(cfg.resultsSelector) : null;
+      const submitBtn = cfg.submitSelector ? document.querySelector(cfg.submitSelector) : null;
+      if (!section || !input) return;
+      const items = Array.from(section.querySelectorAll('.procedure-item'));
+      if (!items.length) return;
+      const filterItems = cfg.filterItems !== false;
+
+      const total = items.length;
+      let lastQuery = '';
+      const state = {
+        matches: [],
+        pointer: 0
+      };
+      const entryData = items.map(item => {
+        const heading = item.querySelector('h4');
+        const title = (heading?.textContent || '').trim();
+        const text = (item.textContent || '').trim();
+        const anchor = heading && heading.id ? `#${heading.id}` : '';
+        return {
+          item,
+          heading,
+          title,
+          text,
+          textLower: text.toLowerCase(),
+          anchor
+        };
+      });
+      const updateStatus = (visibleCount, hasQuery) => {
+        if (!status) return;
+        if (!hasQuery) {
+          status.textContent = cfg.totalLabel ? cfg.totalLabel(total) : `全${total}件を表示中`;
+          return;
+        }
+        if (visibleCount === 0) {
+          status.textContent = cfg.emptyLabel || '該当する結果はありません。';
+        } else {
+          status.textContent = `${visibleCount}件表示中`;
+        }
+      };
+
+      updateStatus(total, false);
+
+      const scrollElementIntoView = (element) => {
+        if (!element) return;
+        const offset = getScrollOffset();
+        const container = document.querySelector('.manual-content');
+        if (container && typeof container.scrollTo === 'function') {
+          const cRect = container.getBoundingClientRect();
+          const eRect = element.getBoundingClientRect();
+          const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+          fastSmoothScrollTo({ container, target: Math.max(0, target) });
+        } else {
+          const y = Math.max(0, element.getBoundingClientRect().top + getWindowScrollY() - offset);
+          fastSmoothScrollTo({ target: y });
+        }
+      };
+
+      const navigateToFirstMatch = () => {
+        if (!state.matches.length) return;
+        const entry = state.matches[state.pointer] || state.matches[0];
+        state.pointer = (state.pointer + 1) % state.matches.length;
+        let targetEl = entry.heading || entry.item;
+        if (entry.anchor) {
+          const anchorEl = document.querySelector(entry.anchor);
+          if (anchorEl) {
+            targetEl = anchorEl.closest('.procedure-item') || anchorEl;
+          }
+        }
+        scrollElementIntoView(targetEl);
+        if (resultsContainer) {
+          const selector = entry.anchor ? `.local-section-search__result[data-anchor="${entry.anchor}"]` : '.local-section-search__result';
+          const firstBtn = resultsContainer.querySelector(selector);
+          if (firstBtn) {
+            try { firstBtn.focus({ preventScroll: true }); } catch (_) { firstBtn.focus(); }
+          }
+        }
+      };
+
+      if (resultsContainer) {
+        resultsContainer.addEventListener('click', (ev) => {
+          const btn = ev.target.closest('.local-section-search__result');
+          if (!btn) return;
+          const anchor = btn.getAttribute('data-anchor');
+          if (!anchor) return;
+          const targetEl = document.querySelector(anchor);
+          if (!targetEl) return;
+          scrollElementIntoView(targetEl.closest('.procedure-item') || targetEl);
+          const idx = state.matches.findIndex(entry => entry.anchor === anchor);
+          if (idx >= 0) {
+            state.pointer = (idx + 1) % state.matches.length;
+          }
+        });
+      }
+
+      if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+          handleInput();
+          navigateToFirstMatch();
+        });
+      }
+
+      input.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          handleInput();
+          navigateToFirstMatch();
+        }
+      });
+
+      const handleInput = () => {
+        const raw = (input.value || '').trim();
+        const normalized = raw.toLowerCase();
+        if (sectionRoot) clearContentHighlights(sectionRoot);
+        if (!raw) {
+          items.forEach(item => { item.style.display = ''; });
+          updateStatus(total, false);
+          if (resultsContainer) resultsContainer.innerHTML = '';
+          lastQuery = '';
+          state.matches = [];
+          state.pointer = 0;
+          return;
+        }
+
+        const terms = raw.split(/\s+/).filter(Boolean);
+        const termsLower = terms.map(t => t.toLowerCase());
+        let visibleCount = 0;
+        const matches = [];
+        entryData.forEach(entry => {
+          const matched = termsLower.every(term => entry.textLower.includes(term));
+          if (filterItems) {
+            entry.item.style.display = matched ? '' : 'none';
+          } else {
+            entry.item.style.display = '';
+          }
+          if (matched) {
+            visibleCount += 1;
+            matches.push(entry);
+          }
+        });
+        updateStatus(visibleCount, true);
+
+        if (sectionRoot && terms.length) {
+          highlightSectionTerms(sectionRoot, terms);
+        }
+
+        if (resultsContainer) {
+          if (!matches.length) {
+            const emptyMsg = cfg.emptyLabel || '該当する結果はありません。';
+            resultsContainer.innerHTML = `<div class="local-section-search__results-empty">${escapeHtml(emptyMsg)}</div>`;
+          } else {
+            const resultsHtml = matches.map(entry => {
+              const anchorAttr = entry.anchor ? ` data-anchor="${entry.anchor}"` : '';
+              const titleHtml = escapeHtml(entry.title || '項目');
+              const snippetHtml = buildSnippet(entry.text, terms);
+              return `<button type="button" class="local-section-search__result"${anchorAttr}><span class="local-section-search__result-title">${titleHtml}</span>${snippetHtml ? `<span class="local-section-search__result-snippet">${snippetHtml}</span>` : ''}</button>`;
+            }).join('');
+            resultsContainer.innerHTML = resultsHtml;
+          }
+        }
+
+        state.matches = matches;
+        state.pointer = 0;
+        lastQuery = normalized;
+      };
+
+      const debounced = debounce(handleInput, 120);
+      input.addEventListener('input', debounced);
     });
   }
 
@@ -1500,10 +1860,10 @@
       if (/後日追記予定/.test(t)) return true;
       if (/詳細は後日追記/.test(t)) return true;
       if (/併用時の制限など/.test(t)) return true;
-      if (/トランスクリプト機能利用時のしゃべり描きの制限など/.test(t)) return true;
+      if (/トランスクリプト機能利用時のしゃべり描き®の制限など/.test(t)) return true;
       if (/可能回数の制限/.test(t)) return true;
       if (/左のマイクボタンを押して入力したら左吹き出し/.test(t)) return true;
-      if (/しゃべり描きマイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
+      if (/しゃべり描き®マイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
       if (/よく失敗するところを詳細に書いてあげる/.test(t)) return true;
       if (/よくある質問と回答/.test(t)) return true;
       return false;
@@ -1638,7 +1998,7 @@
     const topH3 = document.createElement('h3');
     const topLink = document.createElement('a');
     topLink.href = '#top';
-    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳でできること';
+    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳™でできること';
     topH3.appendChild(topLink);
     topSection.appendChild(topH3);
     
@@ -1647,7 +2007,7 @@
     topSubList.className = 'print-toc-sublist';
     const topItems = [
       { text: '２言語間のコミュニケーション', href: '#top' },
-      { text: 'しゃべり描き（音声＋お絵描き）で翻訳', href: '#top' },
+      { text: 'しゃべり描き®（音声＋お絵描き）で翻訳', href: '#top' },
       { text: 'トランスクリプト（会話）の翻訳', href: '#top' }
     ];
     topItems.forEach((item) => {
@@ -1964,7 +2324,7 @@
       .step-content h3,
       .procedure-item h4,
       .procedure-text,
-      p, li
+      p, li, dt, dd
     `);
     const regexes = terms.map(t => new RegExp(`(${escapeRegExp(t)})`, 'ig'));
     targets.forEach(el => {
