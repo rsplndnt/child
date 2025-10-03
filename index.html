@@ -264,7 +264,7 @@
                         </div>
                         <div class="top-hero-actions">
                             <a href="#account-setup" class="hero-btn primary"><span class="material-icons" aria-hidden="true">play_arrow</span><span>まずは初期設定へ</span></a>
-                            <a href="#use-swipe-talk" class="hero-btn ghost"><span class="material-icons" aria-hidden="true">gesture</span><span>使い方を見る</span></a>
+                            <a href="#operation-signin" class="hero-btn ghost"><span class="material-icons" aria-hidden="true">person</span><span>サインインして始める</span></a>
                         </div>
                 </section>
 
@@ -1242,14 +1242,16 @@
                     </header>
                     <div class="step-content">
                         <div class="local-section-search" data-scope="terminology">
-                            <label class="local-section-search__label" for="search-terminology">用語を検索</label>
-                            <div class="local-section-search__field">
-                                <input type="search" id="search-terminology" class="local-section-search__input" placeholder="用語名や説明を入力" autocomplete="off">
-                                <button type="button" id="search-terminology-submit" class="local-section-search__submit" aria-label="検索">
+                            <div class="search-box">
+                                <input type="text" id="terminologySearch" placeholder="用語を検索" aria-label="用語を検索">
+                                <button class="clear-btn" id="terminologySearchClear" aria-label="検索をクリア" style="display: none;">
+                                    <span class="material-icons">close</span>
+                                </button>
+                                <button class="search-btn" id="terminologySearchBtn" aria-label="検索">
                                     <span class="material-icons" aria-hidden="true">search</span>
                                 </button>
                             </div>
-                            <p class="local-section-search__status" data-search-status="terminology" aria-live="polite"></p>
+                            <div id="terminologySearchResults" class="search-results"></div>
                         </div>
 
                         <div class="procedure-item">
@@ -1345,14 +1347,16 @@
                 </header>
                 <div class="step-content">
                     <div class="local-section-search" data-scope="faq">
-                        <label class="local-section-search__label" for="search-faq">FAQを検索</label>
-                        <div class="local-section-search__field">
-                            <input type="search" id="search-faq" class="local-section-search__input" placeholder="質問やキーワードを入力" autocomplete="off">
-                            <button type="button" id="search-faq-submit" class="local-section-search__submit" aria-label="検索">
+                        <div class="search-box">
+                            <input type="text" id="faqSearch" placeholder="FAQを検索" aria-label="FAQを検索">
+                            <button class="clear-btn" id="faqSearchClear" aria-label="検索をクリア" style="display: none;">
+                                <span class="material-icons">close</span>
+                            </button>
+                            <button class="search-btn" id="faqSearchBtn" aria-label="検索">
                                 <span class="material-icons" aria-hidden="true">search</span>
                             </button>
                         </div>
-                        <p class="local-section-search__status" data-search-status="faq" aria-live="polite"></p>
+                        <div id="faqSearchResults" class="search-results"></div>
                     </div>
 
                     <div class="procedure-item">
@@ -1445,15 +1449,16 @@
                 </header>
                 <div class="step-content">
                     <div class="local-section-search" data-scope="product-specs">
-                        <label class="local-section-search__label" for="search-product-specs">製品仕様を検索</label>
-                        <div class="local-section-search__field">
-                            <input type="search" id="search-product-specs" class="local-section-search__input" placeholder="仕様キーワードを入力" autocomplete="off">
-                            <button type="button" id="search-product-specs-submit" class="local-section-search__submit" aria-label="検索">
+                        <div class="search-box">
+                            <input type="text" id="productSpecsSearch" placeholder="製品仕様を検索" aria-label="製品仕様を検索">
+                            <button class="clear-btn" id="productSpecsSearchClear" aria-label="検索をクリア" style="display: none;">
+                                <span class="material-icons">close</span>
+                            </button>
+                            <button class="search-btn" id="productSpecsSearchBtn" aria-label="検索">
                                 <span class="material-icons" aria-hidden="true">search</span>
                             </button>
                         </div>
-                        <p class="local-section-search__status" data-search-status="product-specs" aria-live="polite"></p>
-                        <div class="local-section-search__results" data-search-results="product-specs"></div>
+                        <div id="productSpecsSearchResults" class="search-results"></div>
                     </div>
 
                     <div class="procedure-item">

@@ -395,7 +395,27 @@
     insertPlaceholders();
     addDummyContent();
     markEmptyInfoCards();
-    setupLocalSectionSearch();
+    setupSectionScopedSearch({
+      sectionSelector: '#terminology',
+      inputId: 'terminologySearch',
+      clearButtonId: 'terminologySearchClear',
+      searchButtonId: 'terminologySearchBtn',
+      resultsContainerId: 'terminologySearchResults'
+    });
+    setupSectionScopedSearch({
+      sectionSelector: '#faq',
+      inputId: 'faqSearch',
+      clearButtonId: 'faqSearchClear',
+      searchButtonId: 'faqSearchBtn',
+      resultsContainerId: 'faqSearchResults'
+    });
+    setupSectionScopedSearch({
+      sectionSelector: '#product-specs',
+      inputId: 'productSpecsSearch',
+      clearButtonId: 'productSpecsSearchClear',
+      searchButtonId: 'productSpecsSearchBtn',
+      resultsContainerId: 'productSpecsSearchResults'
+    });
 
     // 初期化時に✕ボタンを非表示
     const closeBtn = document.getElementById('sidebarCloseBtn');
@@ -1540,226 +1560,127 @@
     });
   }
 
-  function setupLocalSectionSearch() {
-    const buildSnippet = (text, terms) => {
-      if (!text) return '';
-      const trimmed = text.trim();
-      let snippet = trimmed.length > 180 ? trimmed.slice(0, 180) + '…' : trimmed;
-      snippet = escapeHtml(snippet);
-      terms.forEach(term => {
-        const re = new RegExp(`(${escapeRegExp(term)})`, 'ig');
-        snippet = snippet.replace(re, '<mark>$1</mark>');
+  function setupSectionScopedSearch({ sectionSelector, inputId, clearButtonId, searchButtonId, resultsContainerId }) {
+    const sectionEl = document.querySelector(sectionSelector);
+    const input = document.getElementById(inputId);
+    const resultsPanel = document.getElementById(resultsContainerId);
+    const searchBtn = document.getElementById(searchButtonId);
+    if (!sectionEl || !input || !resultsPanel || !searchBtn) return;
+    const clearBtn = clearButtonId ? document.getElementById(clearButtonId) : null;
+    const sectionHash = sectionEl.id ? `#${sectionEl.id}` : sectionSelector;
+
+    const searchModule = createSearchModule({
+      sectionsSelector: sectionSelector,
+      procedureSelector: '.procedure-item',
+      searchInput: input,
+      resultsPanel,
+      onJump(anchorId, targetHash) {
+        const sectionTarget = targetHash || sectionHash;
+        const subHash = anchorId ? `#${anchorId}` : null;
+        activateSection(sectionTarget, {
+          scrollToTop: false,
+          parentHasActiveChild: Boolean(subHash),
+          activeSubHash: subHash,
+          updateUrl: true
+        });
+        setTimeout(() => searchModule.jumpTo(anchorId, sectionTarget), 40);
+      }
+    });
+
+    let cycleIndex = -1;
+    let lastQueryValue = '';
+
+    const focusInput = () => { try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); } };
+
+    const handleSearchTrigger = () => {
+      const q = (input.value || '').trim();
+      if (!q) return;
+      const needNewSearch = !resultsPanel.classList.contains('show') || q !== lastQueryValue;
+      if (needNewSearch) {
+        const results = searchModule.search(q);
+        lastQueryValue = q;
+        if (results && results.length) {
+          cycleIndex = 0;
+          setTimeout(() => {
+            const items = resultsPanel.querySelectorAll('.sr-item');
+            if (!items.length) return;
+            const first = items[0];
+            const anchorId = first.getAttribute('data-anchor-id');
+            const targetSection = first.getAttribute('data-target') || sectionHash;
+            activateSection(targetSection, {
+              scrollToTop: false,
+              parentHasActiveChild: Boolean(anchorId),
+              activeSubHash: anchorId ? `#${anchorId}` : null,
+              updateUrl: true
+            });
+            setTimeout(() => searchModule.jumpTo(anchorId, targetSection), 40);
+            focusInput();
+          }, 20);
+        } else {
+          cycleIndex = -1;
+        }
+        return;
+      }
+
+      const items = resultsPanel.querySelectorAll('.sr-item');
+      if (!items.length) return;
+      cycleIndex = (cycleIndex + 1 + items.length) % items.length;
+      const target = items[cycleIndex];
+      if (!target) return;
+      const anchorId = target.getAttribute('data-anchor-id');
+      const targetSection = target.getAttribute('data-target') || sectionHash;
+      activateSection(targetSection, {
+        scrollToTop: false,
+        parentHasActiveChild: Boolean(anchorId),
+        activeSubHash: anchorId ? `#${anchorId}` : null,
+        updateUrl: true
       });
-      return snippet;
+      setTimeout(() => searchModule.jumpTo(anchorId, targetSection), 40);
+      focusInput();
     };
 
-    const configs = [
-      {
-        scope: 'terminology',
-        sectionSelector: '#terminology',
-        inputSelector: '#search-terminology',
-        submitSelector: '#search-terminology-submit',
-        statusSelector: '[data-search-status="terminology"]',
-        emptyLabel: '該当する用語は見つかりません。',
-        totalLabel: (count) => `全${count}件を表示中`,
-        filterItems: true
-      },
-      {
-        scope: 'faq',
-        sectionSelector: '#faq',
-        inputSelector: '#search-faq',
-        submitSelector: '#search-faq-submit',
-        statusSelector: '[data-search-status="faq"]',
-        emptyLabel: '該当するFAQは見つかりません。',
-        totalLabel: (count) => `全${count}件のFAQを表示中`,
-        filterItems: true
-      },
-      {
-        scope: 'product-specs',
-        sectionSelector: '#product-specs',
-        inputSelector: '#search-product-specs',
-        submitSelector: '#search-product-specs-submit',
-        statusSelector: '[data-search-status="product-specs"]',
-        emptyLabel: '該当する仕様は見つかりません。',
-        totalLabel: (count) => `全${count}件の仕様項目を表示中`,
-        filterItems: false,
-        resultsSelector: '[data-search-results="product-specs"]'
-      }
-    ];
-
-    configs.forEach(cfg => {
-      const sectionRoot = document.querySelector(cfg.sectionSelector);
-      const section = sectionRoot ? sectionRoot.querySelector('.step-content') : null;
-      const input = document.querySelector(cfg.inputSelector);
-      const status = document.querySelector(cfg.statusSelector);
-      const resultsContainer = cfg.resultsSelector ? document.querySelector(cfg.resultsSelector) : null;
-      const submitBtn = cfg.submitSelector ? document.querySelector(cfg.submitSelector) : null;
-      if (!section || !input) return;
-      const items = Array.from(section.querySelectorAll('.procedure-item'));
-      if (!items.length) return;
-      const filterItems = cfg.filterItems !== false;
-
-      const total = items.length;
-      let lastQuery = '';
-      const state = {
-        matches: [],
-        pointer: 0
-      };
-      const entryData = items.map(item => {
-        const heading = item.querySelector('h4');
-        const title = (heading?.textContent || '').trim();
-        const text = (item.textContent || '').trim();
-        const anchor = heading && heading.id ? `#${heading.id}` : '';
-        return {
-          item,
-          heading,
-          title,
-          text,
-          textLower: text.toLowerCase(),
-          anchor
-        };
-      });
-      const updateStatus = (visibleCount, hasQuery) => {
-        if (!status) return;
-        if (!hasQuery) {
-          status.textContent = cfg.totalLabel ? cfg.totalLabel(total) : `全${total}件を表示中`;
-          return;
-        }
-        if (visibleCount === 0) {
-          status.textContent = cfg.emptyLabel || '該当する結果はありません。';
-        } else {
-          status.textContent = `${visibleCount}件表示中`;
-        }
-      };
-
-      updateStatus(total, false);
-
-      const scrollElementIntoView = (element) => {
-        if (!element) return;
-        const offset = getScrollOffset();
-        const container = document.querySelector('.manual-content');
-        if (container && typeof container.scrollTo === 'function') {
-          const cRect = container.getBoundingClientRect();
-          const eRect = element.getBoundingClientRect();
-          const target = container.scrollTop + (eRect.top - cRect.top) - offset;
-          fastSmoothScrollTo({ container, target: Math.max(0, target) });
-        } else {
-          const y = Math.max(0, element.getBoundingClientRect().top + getWindowScrollY() - offset);
-          fastSmoothScrollTo({ target: y });
-        }
-      };
-
-      const navigateToFirstMatch = () => {
-        if (!state.matches.length) return;
-        const entry = state.matches[state.pointer] || state.matches[0];
-        state.pointer = (state.pointer + 1) % state.matches.length;
-        let targetEl = entry.heading || entry.item;
-        if (entry.anchor) {
-          const anchorEl = document.querySelector(entry.anchor);
-          if (anchorEl) {
-            targetEl = anchorEl.closest('.procedure-item') || anchorEl;
-          }
-        }
-        scrollElementIntoView(targetEl);
-        if (resultsContainer) {
-          const selector = entry.anchor ? `.local-section-search__result[data-anchor="${entry.anchor}"]` : '.local-section-search__result';
-          const firstBtn = resultsContainer.querySelector(selector);
-          if (firstBtn) {
-            try { firstBtn.focus({ preventScroll: true }); } catch (_) { firstBtn.focus(); }
-          }
-        }
-      };
-
-      if (resultsContainer) {
-        resultsContainer.addEventListener('click', (ev) => {
-          const btn = ev.target.closest('.local-section-search__result');
-          if (!btn) return;
-          const anchor = btn.getAttribute('data-anchor');
-          if (!anchor) return;
-          const targetEl = document.querySelector(anchor);
-          if (!targetEl) return;
-          scrollElementIntoView(targetEl.closest('.procedure-item') || targetEl);
-          const idx = state.matches.findIndex(entry => entry.anchor === anchor);
-          if (idx >= 0) {
-            state.pointer = (idx + 1) % state.matches.length;
-          }
-        });
-      }
-
-      if (submitBtn) {
-        submitBtn.addEventListener('click', () => {
-          handleInput();
-          navigateToFirstMatch();
-        });
-      }
-
-      input.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter') {
-          ev.preventDefault();
-          handleInput();
-          navigateToFirstMatch();
-        }
-      });
-
-      const handleInput = () => {
-        const raw = (input.value || '').trim();
-        const normalized = raw.toLowerCase();
-        if (sectionRoot) clearContentHighlights(sectionRoot);
-        if (!raw) {
-          items.forEach(item => { item.style.display = ''; });
-          updateStatus(total, false);
-          if (resultsContainer) resultsContainer.innerHTML = '';
-          lastQuery = '';
-          state.matches = [];
-          state.pointer = 0;
-          return;
-        }
-
-        const terms = raw.split(/\s+/).filter(Boolean);
-        const termsLower = terms.map(t => t.toLowerCase());
-        let visibleCount = 0;
-        const matches = [];
-        entryData.forEach(entry => {
-          const matched = termsLower.every(term => entry.textLower.includes(term));
-          if (filterItems) {
-            entry.item.style.display = matched ? '' : 'none';
-          } else {
-            entry.item.style.display = '';
-          }
-          if (matched) {
-            visibleCount += 1;
-            matches.push(entry);
-          }
-        });
-        updateStatus(visibleCount, true);
-
-        if (sectionRoot && terms.length) {
-          highlightSectionTerms(sectionRoot, terms);
-        }
-
-        if (resultsContainer) {
-          if (!matches.length) {
-            const emptyMsg = cfg.emptyLabel || '該当する結果はありません。';
-            resultsContainer.innerHTML = `<div class="local-section-search__results-empty">${escapeHtml(emptyMsg)}</div>`;
-          } else {
-            const resultsHtml = matches.map(entry => {
-              const anchorAttr = entry.anchor ? ` data-anchor="${entry.anchor}"` : '';
-              const titleHtml = escapeHtml(entry.title || '項目');
-              const snippetHtml = buildSnippet(entry.text, terms);
-              return `<button type="button" class="local-section-search__result"${anchorAttr}><span class="local-section-search__result-title">${titleHtml}</span>${snippetHtml ? `<span class="local-section-search__result-snippet">${snippetHtml}</span>` : ''}</button>`;
-            }).join('');
-            resultsContainer.innerHTML = resultsHtml;
-          }
-        }
-
-        state.matches = matches;
-        state.pointer = 0;
-        lastQuery = normalized;
-      };
-
-      const debounced = debounce(handleInput, 120);
-      input.addEventListener('input', debounced);
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSearchTrigger();
     });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSearchTrigger();
+      }
+    });
+
+    input.addEventListener('input', () => {
+      cycleIndex = -1;
+      if (!(input.value || '').trim()) {
+        lastQueryValue = '';
+      }
+    });
+
+    if (clearBtn) {
+      const updateClearVisibility = () => {
+        const hasText = (input.value || '').trim().length > 0;
+        clearBtn.style.display = hasText ? 'flex' : 'none';
+        if (!hasText) {
+          cycleIndex = -1;
+          lastQueryValue = '';
+        }
+      };
+      updateClearVisibility();
+      input.addEventListener('input', updateClearVisibility);
+      clearBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        cycleIndex = -1;
+        lastQueryValue = '';
+        searchModule.clearSearch();
+        updateClearVisibility();
+      });
+    }
+
+    resultsPanel.addEventListener('click', () => { cycleIndex = -1; });
   }
 
   /* ---------------- normalize labels ---------------- */
