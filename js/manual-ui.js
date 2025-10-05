@@ -222,33 +222,7 @@
     setTimeout(init, 100);
   });
 
-  // フォールバック: window.onloadでも実行
-  window.addEventListener('load', function() {
-    const hamburger = document.getElementById('hamburgerMenu');
-    if (hamburger && !hamburger.hasAttribute('data-initialized')) {
-      hamburger.setAttribute('data-initialized', 'true');
-      
-      hamburger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const sidebar = document.getElementById('sidebarMenu');
-        const overlay = document.getElementById('menuOverlay');
-        const mi = hamburger.querySelector('.material-icons');
-        
-        const active = hamburger.classList.toggle('active');
-        if (mi) mi.textContent = active ? 'close' : 'menu';
-        hamburger.setAttribute('aria-expanded', String(active));
-        
-        if (sidebar) sidebar.classList.toggle('active', active);
-        if (overlay) overlay.classList.toggle('active', active);
-        
-        if (window.innerWidth <= MOBILE_BREAKPOINT) {
-          document.body.style.overflow = active ? 'hidden' : '';
-        }
-      });
-    }
-  });
+  // 削除: window.onloadのフォールバックは不要（setupHamburgerで統一処理）
 
   /* ---------------- セクショントップに戻るボタン ---------------- */
   function setupBackToTop() {
@@ -366,10 +340,6 @@
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
     const hamburger = document.getElementById('hamburgerMenu');
-    // ここで初期化フラグを立てて、window.onload フォールバックによる二重バインドを防止
-    if (hamburger && !hamburger.hasAttribute('data-initialized')) {
-      hamburger.setAttribute('data-initialized', 'true');
-    }
     const overlay = document.getElementById('menuOverlay');
     const tabs = Array.from(document.querySelectorAll('.content-tabs .tab'));
     const tocLinks = Array.from(document.querySelectorAll('.toc .toc-link'));
@@ -514,30 +484,19 @@
 
     // ハンバーガー（Material Symbolsを使った文字列切替）
     if (hamburger) {
-      setupHamburger(hamburger, sidebar, overlay);
-    } else {
-      // フォールバック: 直接イベントリスナーを設定
-      const hamburgerFallback = document.getElementById('hamburgerMenu');
-      if (hamburgerFallback) {
-        hamburgerFallback.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const sidebar = document.getElementById('sidebarMenu');
-          const overlay = document.getElementById('menuOverlay');
-          const mi = hamburgerFallback.querySelector('.material-icons');
-          
-          const active = hamburgerFallback.classList.toggle('active');
-          if (mi) mi.textContent = active ? 'close' : 'menu';
-          hamburgerFallback.setAttribute('aria-expanded', String(active));
-          
-          if (sidebar) sidebar.classList.toggle('active', active);
-          if (overlay) overlay.classList.toggle('active', active);
-          
-          if (window.innerWidth <= MOBILE_BREAKPOINT) {
-            document.body.style.overflow = active ? 'hidden' : '';
-          }
+      // Material Iconsフォントが読み込まれるまで少し待つ
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          setupHamburger(hamburger, sidebar, overlay);
+        }).catch(() => {
+          // フォントのロードに失敗した場合でも初期化
+          setupHamburger(hamburger, sidebar, overlay);
         });
+      } else {
+        // fonts APIが利用できない古いブラウザの場合
+        setTimeout(() => {
+          setupHamburger(hamburger, sidebar, overlay);
+        }, 100);
       }
     }
 
@@ -1226,6 +1185,13 @@
         return;
       }
       
+      // 既に初期化済みかチェック（重複防止）
+      if (hamburgerEl.hasAttribute('data-initialized')) {
+        console.log('Hamburger already initialized, skipping...');
+        return;
+      }
+      hamburgerEl.setAttribute('data-initialized', 'true');
+      
       // ensure icon child
       let mi = hamburgerEl.querySelector('.mi, .material-icons');
       if (!mi) {
@@ -1234,13 +1200,14 @@
         mi.setAttribute('aria-hidden', 'true');
         mi.textContent = 'menu';
         hamburgerEl.appendChild(mi);
-      } else {
       }
+      
       // initialize aria-expanded according to classes
       const isActive = hamburgerEl.classList.contains('active');
       hamburgerEl.setAttribute('aria-expanded', String(isActive));
       mi.textContent = isActive ? 'close' : 'menu';
 
+      // イベントリスナーを一度だけ追加
       hamburgerEl.addEventListener('click', function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
