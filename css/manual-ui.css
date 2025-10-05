@@ -37,6 +37,11 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   justify-content: center;
 }
 
+/* モバイル専用改行 - デスクトップでは非表示 */
+.mobile-only {
+  display: none;
+}
+
 /* ================================
    Design Tokens (System)
    画像のスケールに合わせて定義
@@ -517,6 +522,11 @@ ul.spec-list li{
 @media (max-width: 768px){
   .sidebar-header h1 { font-size: var(--sd-font-size-lg); } /* xl → lg */
   .sidebar-header h1 span { font-size: var(--sd-font-size-lg); } /* xl → lg */
+  
+  /* モバイル専用改行を表示 */
+  .mobile-only {
+    display: inline;
+  }
 }
 
 /* デスクトップ時（1025px以上）はハンバーガーメニューを非表示 */
@@ -944,7 +954,10 @@ ul.spec-list li{
 
 @media (max-width: 768px){
   .step-section--top{
-    padding: 32px 24px 40px;
+    padding-top: calc(96px + env(safe-area-inset-top, 0px));
+    padding-right: 24px;
+    padding-bottom: 40px;
+    padding-left: 24px;
   }
   .top-feature-grid{ gap: 20px; padding-bottom: 40px; }
   .top-feature-card{
@@ -955,7 +968,10 @@ ul.spec-list li{
 
 @media (max-width: 480px){
   .step-section--top{
-    padding: 28px 18px 36px;
+    padding-top: calc(88px + env(safe-area-inset-top, 0px));
+    padding-right: 18px;
+    padding-bottom: 36px;
+    padding-left: 18px;
   }
   .top-feature-card{
     padding: 22px 18px;
