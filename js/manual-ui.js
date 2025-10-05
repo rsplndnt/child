@@ -31,7 +31,7 @@
     // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
     // ハンバーガーボタンを避けるための最適なオフセット
-    const mobileOffset = isMobile ? 48 : 0; 
+    const mobileOffset = isMobile ? 52 : 0; 
     return base + 16 + mobileOffset;
   }
 
@@ -1431,10 +1431,10 @@
       // オフセット（ヘッダ等）
       const tabs = doc.querySelector('.content-tabs');
       const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
-      // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
+    // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
       const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
       // ハンバーガーボタンを避けるための最適なオフセット
-      const mobileOffset = isMobile ? 48 : 0;
+      const mobileOffset = isMobile ? 52 : 0;
       const offset = base + 16 + mobileOffset;
       const container = doc.querySelector('.manual-content');
       if (container) {
