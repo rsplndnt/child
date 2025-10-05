@@ -205,6 +205,14 @@ ul.spec-list li{
   overflow-x: hidden;      /* 横スクロールを防ぐ */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
+  padding-bottom: 24px;
+  scroll-padding-bottom: 24px;
+}
+@supports(padding: max(0px)) {
+  .manual-sidebar {
+    padding-bottom: max(24px, calc(24px + env(safe-area-inset-bottom)));
+    scroll-padding-bottom: max(24px, calc(24px + env(safe-area-inset-bottom)));
+  }
 }
 
 /* サイドバーのスクロールバーをカスタマイズ */
