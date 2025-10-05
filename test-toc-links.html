@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>TOCリンクテスト</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-link {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .test-link:hover {
+            background: #e0e0e0;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #0071B8;
+            padding-bottom: 10px;
+        }
+        .note {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>TOCリンクのジャンプテスト</h1>
+    
+    <div class="note">
+        <strong>📱 モバイルでテストする場合:</strong><br>
+        ブラウザの開発者ツールでモバイル表示に切り替えてください
+    </div>
+    
+    <div class="test-section">
+        <h2>メインセクションへのリンク</h2>
+        <a href="/index.html#account-setup" class="test-link" target="_blank">1. アカウントの初期設定を行う</a>
+        <a href="/index.html#screen-layout" class="test-link" target="_blank">2. 画面構成</a>
+        <a href="/index.html#operation-guide" class="test-link" target="_blank">3. アプリを操作する</a>
+        <a href="/index.html#mic-usage-tips" class="test-link" target="_blank">4. マイクの使い方のポイント</a>
+        <a href="/index.html#terminology" class="test-link" target="_blank">5. 用語</a>
+        <a href="/index.html#faq" class="test-link" target="_blank">6. FAQ</a>
+        <a href="/index.html#product-specs" class="test-link" target="_blank">7. 製品仕様</a>
+    </div>
+    
+    <div class="test-section">
+        <h2>サブアイテムへのリンク（h4要素）</h2>
+        <a href="/index.html#signin-process" class="test-link" target="_blank">1. サインインする</a>
+        <a href="/index.html#setup-authenticator" class="test-link" target="_blank">2. 二段階認証を設定する</a>
+        <a href="/index.html#sheet-management-area" class="test-link" target="_blank">1. シート管理エリア</a>
+        <a href="/index.html#use-swipe-talk" class="test-link" target="_blank">4. しゃべり描き®を使う</a>
+        <a href="/index.html#term-swipetalk" class="test-link" target="_blank">しゃべり描き翻訳™（SwipeTalk）</a>
+        <a href="/index.html#faq-mic-not-green" class="test-link" target="_blank">Q. マイクボタンが青くならず録音が始まらない</a>
+    </div>
+    
+    <div class="test-section">
+        <h2>テスト結果チェックリスト</h2>
+        <p><strong>モバイル表示（幅1024px以下）で確認:</strong></p>
+        <ul>
+            <li>□ ハンバーガーボタンが表示されている</li>
+            <li>□ リンクをクリックした時、h4要素がハンバーガーボタンの下に適切な余白で表示される</li>
+            <li>□ h4要素がハンバーガーボタンに隠れていない</li>
+            <li>□ スクロール位置が適切（オフセット56px）</li>
+        </ul>
+        
+        <p><strong>デスクトップ表示（幅1025px以上）で確認:</strong></p>
+        <ul>
+            <li>□ ハンバーガーボタンが非表示</li>
+            <li>□ リンクが正しい位置にジャンプする</li>
+        </ul>
+    </div>
+    
+    <div class="note">
+        <strong>現在の設定:</strong><br>
+        モバイル時のスクロールオフセット: 56px<br>
+        ハンバーガーボタン: height:44px + top:16px = 60px
+    </div>
+    
+</body>
+</html>
