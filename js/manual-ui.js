@@ -83,11 +83,19 @@
       console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し直前', hash, 'retry:', retryCount);
       console.log('scrollToWhenStable: forcedTocState=', {...forcedTocState});
       console.log('scrollToWhenStable: typeof scrollToElementNoAnim=', typeof scrollToElementNoAnim);
+      console.log('scrollToWhenStable: scrollToElementNoAnim=', scrollToElementNoAnim);
+      
+      // 直接呼び出してみる
+      const el = document.querySelector(hash);
+      console.log('scrollToWhenStable: 要素確認', hash, el ? '存在' : '存在しない');
+      
       try {
+        console.log('scrollToWhenStable: scrollToElementNoAnim実行開始...');
         scrollToElementNoAnim(hash);
-        console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し完了', hash);
+        console.log('scrollToWhenStable: scrollToElementNoAnim実行終了');
       } catch (error) {
-        console.error('scrollToWhenStable: scrollToElementNoAnimでエラー', error);
+        console.error('scrollToWhenStable: エラー発生', error);
+        console.error('scrollToWhenStable: エラースタック', error.stack);
       }
       console.log('scrollToWhenStable: forcedTocState（呼び出し後）=', {...forcedTocState});
     };
