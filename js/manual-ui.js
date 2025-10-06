@@ -56,47 +56,15 @@
     }
   }
 
-  // レイアウトが完全に安定してから目的位置にスクロールする（より確実な実装）
-  function scrollToWhenStable(hash, { maxAttempts = 15, intervalMs = 80, useNoAnim = false } = {}) {
+  // シンプルで確実なスクロール処理
+  function scrollToWhenStable(hash) {
     if (!hash) return;
-    const targetEl = document.querySelector(hash);
-    if (!targetEl) return;
-    const container = document.querySelector('.manual-content');
-    let lastTop = null;
-    let stableCount = 0;
-    let attempts = 0;
     
-    const measure = () => {
-      attempts += 1;
-      const cTop = container ? container.getBoundingClientRect().top : 0;
-      const tTop = targetEl.getBoundingClientRect().top - cTop;
-      
-      // 位置が安定しているか（連続して2回同じ位置）
-      const isStable = lastTop !== null && Math.abs(tTop - lastTop) < 1;
-      if (isStable) {
-        stableCount += 1;
-      } else {
-        stableCount = 0;
-      }
-      lastTop = tTop;
-      
-      // 連続2回安定 または 最大試行回数に到達
-      if (stableCount >= 2 || attempts >= maxAttempts) {
-        // 瞬時移動を使用（アニメーション中の位置ズレを防止）
-        if (useNoAnim) {
-          scrollToElementNoAnim(hash);
-        } else {
-          scrollToElement(hash);
-        }
-        return;
-      }
-      setTimeout(() => requestAnimationFrame(measure), intervalMs);
-    };
-    
-    // セクション切り替え完了を待つ（最低100ms）
+    // セクション切り替え直後の画像読み込みを待つ
+    // 複雑な安定性チェックではなく、十分な待機時間を確保
     setTimeout(() => {
-      requestAnimationFrame(() => requestAnimationFrame(measure));
-    }, 100);
+      scrollToElementNoAnim(hash);
+    }, 250);
   }
 
   function replaceUrlWithoutQuery(hash) {
@@ -525,7 +493,7 @@
           activeSubHash: anchor
         });
         // レイアウト確定を待ってからスクロール（1回で決まらない問題の対策）
-        scrollToWhenStable(anchor, { useNoAnim: true });
+        scrollToWhenStable(anchor);
         if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
       });
     });
@@ -626,7 +594,7 @@
             activateSection(`#${sectionId}`, { scrollToTop: false });
 
             // レイアウト確定後にスクロール（位置ズレ対策）
-            scrollToWhenStable(normalizedHash, { useNoAnim: true });
+            scrollToWhenStable(normalizedHash);
           }
         }
       }
@@ -722,7 +690,7 @@
       setScrollSyncManual(true);
 
       activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash, updateUrl: false });
-      scrollToWhenStable(hash, { useNoAnim: true, maxAttempts: 20 });
+      scrollToWhenStable(hash);
       replaceUrlWithoutQuery(hash);
 
       // 一定時間後にスクロール連動を再開
@@ -771,7 +739,7 @@
       });
 
       const targetHash = subHash || sectionHash;
-      scrollToWhenStable(targetHash, { useNoAnim: true, maxAttempts: 20 });
+      scrollToWhenStable(targetHash);
 
       forcedTocState.timer = setTimeout(() => {
         forcedTocState.sectionHash = null;
@@ -1172,7 +1140,7 @@
                 activeSubHash: anchor
               });
               
-              scrollToWhenStable(anchor, { useNoAnim: true });
+              scrollToWhenStable(anchor);
               if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
             });
             li.appendChild(na);
@@ -2162,7 +2130,7 @@
       
       // anchorIdが存在する場合はそれを、なければsectionHashを使用
       const targetHash = anchorId ? `#${anchorId.replace(/^#/, '')}` : sectionHash;
-      scrollToWhenStable(targetHash, { useNoAnim: true });
+      scrollToWhenStable(targetHash);
     }
 
     return { search: internalSearchAndRender, jumpTo: internalJumpTo, clearSearch: clearAll };
