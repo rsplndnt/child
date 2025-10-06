@@ -80,8 +80,9 @@
         return;
       }
       
-      console.log('scrollToWhenStable: スクロール実行', hash, 'retry:', retryCount);
+      console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し直前', hash, 'retry:', retryCount);
       scrollToElementNoAnim(hash);
+      console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し完了', hash);
     };
     
     // 最初の試行は少し待ってから
@@ -1127,44 +1128,49 @@
               // その他のセクションは数字を削除
               na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
             }
-            na.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const anchor = na.getAttribute('href');
-              if (!anchor) return;
-              // 対象セクションを特定して切替（右カラムと同様の挙動）
-              let sectionHash = '#top';
-              const anchorEl = document.querySelector(anchor);
-              if (anchorEl) {
-                const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
-                if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
-              } else {
-                const m2 = anchor.match(/^#(section\d+)/i);
-                if (m2) sectionHash = `#${m2[1]}`;
-              }
+            // イベントリスナーの重複登録を防止
+            if (!na.hasAttribute('data-click-handler')) {
+              na.setAttribute('data-click-handler', 'true');
+              na.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const anchor = na.getAttribute('href');
+                console.log('=== TOCサブアイテムクリック ===', anchor);
+                if (!anchor) return;
+                // 対象セクションを特定して切替（右カラムと同様の挙動）
+                let sectionHash = '#top';
+                const anchorEl = document.querySelector(anchor);
+                if (anchorEl) {
+                  const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
+                  if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
+                } else {
+                  const m2 = anchor.match(/^#(section\d+)/i);
+                  if (m2) sectionHash = `#${m2[1]}`;
+                }
 
-              // 強制状態をセット（1500ms程度維持）
-              if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
-              forcedTocState.sectionHash = sectionHash;
-              forcedTocState.subHash = anchor;
-              setScrollSyncManual(true);
-              forcedTocState.timer = setTimeout(() => {
-                forcedTocState.sectionHash = null;
-                forcedTocState.subHash = null;
-                setScrollSyncManual(false);
-                triggerScrollSyncUpdate();
-              }, 1500);
+                // 強制状態をセット（1500ms程度維持）
+                if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+                forcedTocState.sectionHash = sectionHash;
+                forcedTocState.subHash = anchor;
+                setScrollSyncManual(true);
+                forcedTocState.timer = setTimeout(() => {
+                  forcedTocState.sectionHash = null;
+                  forcedTocState.subHash = null;
+                  setScrollSyncManual(false);
+                  triggerScrollSyncUpdate();
+                }, 1500);
 
-              applySubLinkActiveState(sectionHash, anchor);
-              activateSection(sectionHash, {
-                scrollToTop: false,
-                parentHasActiveChild: true,
-                activeSubHash: anchor
+                applySubLinkActiveState(sectionHash, anchor);
+                activateSection(sectionHash, {
+                  scrollToTop: false,
+                  parentHasActiveChild: true,
+                  activeSubHash: anchor
+                });
+                
+                scrollToWhenStable(anchor);
+                if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
               });
-              
-              scrollToWhenStable(anchor);
-              if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
-            });
+            }
             li.appendChild(na);
             sublist.appendChild(li);
           });
