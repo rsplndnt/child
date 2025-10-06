@@ -1010,11 +1010,17 @@
       // スクロールイベントのデバウンス処理（高速化）
       const handleScroll = debounce(() => {
         clearTimeout(scrollTimeout);
-        // サブ項目クリック直後はアップデートを停止
-        if (forcedTocState.sectionHash) {
+        // forcedTocStateがアクティブな間はスクロール連動を完全に停止
+        if (forcedTocState.sectionHash || forcedTocState.subHash) {
+          console.log('handleScroll: forcedTocState有効のためスキップ');
           return;
         }
         scrollTimeout = setTimeout(() => {
+          // 再度forcedTocStateをチェック
+          if (forcedTocState.sectionHash || forcedTocState.subHash) {
+            console.log('handleScroll timeout: forcedTocState有効のためスキップ');
+            return;
+          }
           setScrollSyncManual(false);
           updateActiveSection();
         }, 20);  // 100ms → 20msに短縮
@@ -1184,20 +1190,23 @@
 
                 // 強制状態をセット（2000ms程度維持）
                 if (forcedTocState.timer) {
-                  console.log('TOCサブアイテム: 既存のforcedTocState.timerをクリア');
+                  console.log('TOCサブアイテム: 既存のforcedTocState.timer=' + forcedTocState.timer + 'をクリア');
                   clearTimeout(forcedTocState.timer);
+                  forcedTocState.timer = null;
                 }
                 forcedTocState.sectionHash = sectionHash;
                 forcedTocState.subHash = anchor;
                 setScrollSyncManual(true);
-                console.log('TOCサブアイテム: forcedTocStateをセット', {sectionHash, anchor});
-                forcedTocState.timer = setTimeout(() => {
-                  console.log('TOCサブアイテム: forcedTocStateタイマー終了');
+                const timerId = setTimeout(() => {
+                  console.log('TOCサブアイテム: forcedTocStateタイマー終了 (timerId=' + timerId + ')');
                   forcedTocState.sectionHash = null;
                   forcedTocState.subHash = null;
+                  forcedTocState.timer = null;
                   setScrollSyncManual(false);
                   triggerScrollSyncUpdate();
                 }, 2000);  // 1500ms → 2000msに延長
+                forcedTocState.timer = timerId;
+                console.log('TOCサブアイテム: forcedTocStateをセット timerId=' + timerId, {sectionHash, anchor});
 
                 applySubLinkActiveState(sectionHash, anchor);
                 activateSection(sectionHash, {
@@ -1523,19 +1532,25 @@
 
     // スクロールアニメーションなしで瞬時に目的位置へ移動（シンプル版）
     function scrollToElementNoAnim(hash, docRef) {
+      console.log('>>> scrollToElementNoAnim 開始', hash);
       const doc = docRef || document;
-      if (!hash) return;
+      if (!hash) {
+        console.warn('scrollToElementNoAnim: hashなし');
+        return;
+      }
       const el = doc.querySelector(hash);
       if (!el) {
         console.warn('scrollToElementNoAnim: 要素が見つかりません', hash);
         return;
       }
+      console.log('scrollToElementNoAnim: 要素発見', el.tagName, el.id);
       
       const container = doc.querySelector('.manual-content');
       if (!container) {
         console.warn('scrollToElementNoAnim: コンテナが見つかりません');
         return;
       }
+      console.log('scrollToElementNoAnim: コンテナ発見');
       
       // 要素のコンテナからの相対位置を計算
       const containerRect = container.getBoundingClientRect();
@@ -1549,7 +1564,7 @@
       // 目標スクロール位置
       const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
       
-      console.log('scrollToElementNoAnim:', {
+      console.log('scrollToElementNoAnim: スクロール実行前', {
         hash,
         elementTag: el.tagName,
         elementId: el.id,
@@ -1561,6 +1576,7 @@
       
       // 瞬時にスクロール
       container.scrollTop = targetScrollTop;
+      console.log('>>> scrollToElementNoAnim: スクロール実行完了 scrollTop=', container.scrollTop);
       
       if (!docRef) updateUrlHash(hash, { replace: true });
     }
