@@ -1458,6 +1458,24 @@
         const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
         fastSmoothScrollTo({ target: y });
       }
+      
+      // procedure-itemをハイライト
+      const procedureItem = el.closest('.procedure-item');
+      if (procedureItem) {
+        // 既存のハイライトを削除
+        document.querySelectorAll('.procedure-item.highlight-flash').forEach(item => {
+          item.classList.remove('highlight-flash');
+        });
+        // スクロール完了後にハイライトを追加
+        setTimeout(() => {
+          procedureItem.classList.add('highlight-flash');
+          // 1.2秒後にクラスを削除
+          setTimeout(() => {
+            procedureItem.classList.remove('highlight-flash');
+          }, 1200);
+        }, 350); // スクロールアニメーション完了後
+      }
+      
       updateUrlHash(hash, { replace: true });
     }
 
@@ -1485,7 +1503,26 @@
         const y = Math.max(0, el.getBoundingClientRect().top + (doc.defaultView?.scrollY || window.scrollY) - offset);
         (doc.defaultView || window).scrollTo({ top: y, behavior: 'auto' });
       }
-      if (!docRef) updateUrlHash(hash, { replace: true });
+      
+      // procedure-itemをハイライト
+      if (!docRef) {
+        const procedureItem = el.closest('.procedure-item');
+        if (procedureItem) {
+          // 既存のハイライトを削除
+          doc.querySelectorAll('.procedure-item.highlight-flash').forEach(item => {
+            item.classList.remove('highlight-flash');
+          });
+          // 瞬時移動なので少し待ってからハイライト
+          setTimeout(() => {
+            procedureItem.classList.add('highlight-flash');
+            // 1.2秒後にクラスを削除（アニメーション完了後）
+            setTimeout(() => {
+              procedureItem.classList.remove('highlight-flash');
+            }, 1200);
+          }, 50);
+        }
+        updateUrlHash(hash, { replace: true });
+      }
     }
 
     function updateTabsForViewport() {
