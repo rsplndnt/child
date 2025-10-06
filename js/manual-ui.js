@@ -518,30 +518,19 @@
 
     // ハンバーガー（Material Symbolsを使った文字列切替）
     if (hamburger) {
-      setupHamburger(hamburger, sidebar, overlay);
-    } else {
-      // フォールバック: 直接イベントリスナーを設定
-      const hamburgerFallback = document.getElementById('hamburgerMenu');
-      if (hamburgerFallback) {
-        hamburgerFallback.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const sidebar = document.getElementById('sidebarMenu');
-          const overlay = document.getElementById('menuOverlay');
-          const mi = hamburgerFallback.querySelector('.material-icons');
-          
-          const active = hamburgerFallback.classList.toggle('active');
-          if (mi) mi.textContent = active ? 'close' : 'menu';
-          hamburgerFallback.setAttribute('aria-expanded', String(active));
-          
-          if (sidebar) sidebar.classList.toggle('active', active);
-          if (overlay) overlay.classList.toggle('active', active);
-          
-          if (window.innerWidth <= MOBILE_BREAKPOINT) {
-            document.body.style.overflow = active ? 'hidden' : '';
-          }
+      // Material Iconsフォントが読み込まれるまで少し待つ
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          setupHamburger(hamburger, sidebar, overlay);
+        }).catch(() => {
+          // フォントのロードに失敗した場合でも初期化
+          setupHamburger(hamburger, sidebar, overlay);
         });
+      } else {
+        // fonts APIが利用できない古いブラウザの場合
+        setTimeout(() => {
+          setupHamburger(hamburger, sidebar, overlay);
+        }, 100);
       }
     }
 
@@ -1440,10 +1429,10 @@
       applySubLinkActiveState(normalizedTarget, shouldMarkParentHasChild ? activeSubHash : null, applyOpts);
 
       if (opts.scrollToTop !== false) {
-        const contentPanel = document.querySelector('.content-panel');
-        if (contentPanel) {
-          const y = Math.max(0, contentPanel.getBoundingClientRect().top + getWindowScrollY() - 8);
-          fastSmoothScrollTo({ target: y });
+        const container = document.querySelector('.manual-content');
+        if (container) {
+          // セクション切り替え時は先頭にスクロール
+          container.scrollTop = 0;
         }
       }
       if (opts.closeMobile && window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
