@@ -82,8 +82,13 @@
       
       console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し直前', hash, 'retry:', retryCount);
       console.log('scrollToWhenStable: forcedTocState=', {...forcedTocState});
-      scrollToElementNoAnim(hash);
-      console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し完了', hash);
+      console.log('scrollToWhenStable: typeof scrollToElementNoAnim=', typeof scrollToElementNoAnim);
+      try {
+        scrollToElementNoAnim(hash);
+        console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し完了', hash);
+      } catch (error) {
+        console.error('scrollToWhenStable: scrollToElementNoAnimでエラー', error);
+      }
       console.log('scrollToWhenStable: forcedTocState（呼び出し後）=', {...forcedTocState});
     };
     
@@ -109,6 +114,57 @@
         window.location.hash = value;
       } catch (__) {}
     }
+  }
+
+  // スクロールアニメーションなしで瞬時に目的位置へ移動（グローバルスコープに移動）
+  function scrollToElementNoAnim(hash, docRef) {
+    console.log('>>> scrollToElementNoAnim 開始', hash);
+    const doc = docRef || document;
+    if (!hash) {
+      console.warn('scrollToElementNoAnim: hashなし');
+      return;
+    }
+    const el = doc.querySelector(hash);
+    if (!el) {
+      console.warn('scrollToElementNoAnim: 要素が見つかりません', hash);
+      return;
+    }
+    console.log('scrollToElementNoAnim: 要素発見', el.tagName, el.id);
+    
+    const container = doc.querySelector('.manual-content');
+    if (!container) {
+      console.warn('scrollToElementNoAnim: コンテナが見つかりません');
+      return;
+    }
+    console.log('scrollToElementNoAnim: コンテナ発見');
+    
+    // 要素のコンテナからの相対位置を計算
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = el.getBoundingClientRect();
+    const elementRelativeTop = elementRect.top - containerRect.top + container.scrollTop;
+    
+    // モバイル時のオフセット
+    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    const mobileOffset = isMobile ? 70 : 20;
+    
+    // 目標スクロール位置
+    const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
+    
+    console.log('scrollToElementNoAnim: スクロール実行前', {
+      hash,
+      elementTag: el.tagName,
+      elementId: el.id,
+      elementRelativeTop,
+      mobileOffset,
+      targetScrollTop,
+      currentScrollTop: container.scrollTop
+    });
+    
+    // 瞬時にスクロール
+    container.scrollTop = targetScrollTop;
+    console.log('>>> scrollToElementNoAnim: スクロール実行完了 scrollTop=', container.scrollTop);
+    
+    if (!docRef) updateUrlHash(hash, { replace: true });
   }
 
   // カスタムスクロールアニメーション（約300msで滑らか）
@@ -1540,56 +1596,7 @@
       updateUrlHash(hash, { replace: true });
     }
 
-    // スクロールアニメーションなしで瞬時に目的位置へ移動（シンプル版）
-    function scrollToElementNoAnim(hash, docRef) {
-      console.log('>>> scrollToElementNoAnim 開始', hash);
-      const doc = docRef || document;
-      if (!hash) {
-        console.warn('scrollToElementNoAnim: hashなし');
-        return;
-      }
-      const el = doc.querySelector(hash);
-      if (!el) {
-        console.warn('scrollToElementNoAnim: 要素が見つかりません', hash);
-        return;
-      }
-      console.log('scrollToElementNoAnim: 要素発見', el.tagName, el.id);
-      
-      const container = doc.querySelector('.manual-content');
-      if (!container) {
-        console.warn('scrollToElementNoAnim: コンテナが見つかりません');
-        return;
-      }
-      console.log('scrollToElementNoAnim: コンテナ発見');
-      
-      // 要素のコンテナからの相対位置を計算
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = el.getBoundingClientRect();
-      const elementRelativeTop = elementRect.top - containerRect.top + container.scrollTop;
-      
-      // モバイル時のオフセット
-      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-      const mobileOffset = isMobile ? 70 : 20;
-      
-      // 目標スクロール位置
-      const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
-      
-      console.log('scrollToElementNoAnim: スクロール実行前', {
-        hash,
-        elementTag: el.tagName,
-        elementId: el.id,
-        elementRelativeTop,
-        mobileOffset,
-        targetScrollTop,
-        currentScrollTop: container.scrollTop
-      });
-      
-      // 瞬時にスクロール
-      container.scrollTop = targetScrollTop;
-      console.log('>>> scrollToElementNoAnim: スクロール実行完了 scrollTop=', container.scrollTop);
-      
-      if (!docRef) updateUrlHash(hash, { replace: true });
-    }
+    // scrollToElementNoAnimはグローバルスコープに移動済み（重複定義を削除）
 
     function updateTabsForViewport() {
       const tabsEl = document.querySelector('.content-tabs');
