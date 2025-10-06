@@ -81,8 +81,10 @@
       }
       
       console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し直前', hash, 'retry:', retryCount);
+      console.log('scrollToWhenStable: forcedTocState=', {...forcedTocState});
       scrollToElementNoAnim(hash);
       console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し完了', hash);
+      console.log('scrollToWhenStable: forcedTocState（呼び出し後）=', {...forcedTocState});
     };
     
     // 最初の試行は少し待ってから
@@ -503,7 +505,10 @@
         }, 2000);  // 1500ms → 2000msに延長
 
         applySubLinkActiveState(sectionHash, anchor);
-        activateSection(sectionHash, {
+        // enhancedActivateSectionを使用
+        const activateFn = window.activateSection || activateSection;
+        console.log('右カラムサブリンク: activateSection呼び出し', activateFn === window.activateSection ? 'enhanced' : 'original');
+        activateFn(sectionHash, {
           scrollToTop: false,
           parentHasActiveChild: true,
           activeSubHash: anchor
@@ -1197,19 +1202,24 @@
                 forcedTocState.sectionHash = sectionHash;
                 forcedTocState.subHash = anchor;
                 setScrollSyncManual(true);
+                const startTime = Date.now();
                 const timerId = setTimeout(() => {
-                  console.log('TOCサブアイテム: forcedTocStateタイマー終了 (timerId=' + timerId + ')');
+                  const elapsed = Date.now() - startTime;
+                  console.log('TOCサブアイテム: forcedTocStateタイマー終了 (timerId=' + timerId + ', elapsed=' + elapsed + 'ms)');
                   forcedTocState.sectionHash = null;
                   forcedTocState.subHash = null;
                   forcedTocState.timer = null;
                   setScrollSyncManual(false);
                   triggerScrollSyncUpdate();
-                }, 2000);  // 1500ms → 2000msに延長
+                }, 2000);
                 forcedTocState.timer = timerId;
-                console.log('TOCサブアイテム: forcedTocStateをセット timerId=' + timerId, {sectionHash, anchor});
+                console.log('TOCサブアイテム: forcedTocState.timerを設定 timerId=' + timerId, {sectionHash, anchor, 'currentTime': Date.now()});
 
                 applySubLinkActiveState(sectionHash, anchor);
-                activateSection(sectionHash, {
+                // enhancedActivateSectionを使用（window.activateSectionが設定されている場合）
+                const activateFn = window.activateSection || activateSection;
+                console.log('TOCサブアイテム: activateSection呼び出し', activateFn === window.activateSection ? 'enhanced' : 'original');
+                activateFn(sectionHash, {
                   scrollToTop: false,
                   parentHasActiveChild: true,
                   activeSubHash: anchor
