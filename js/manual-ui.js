@@ -1196,6 +1196,16 @@
         link.addEventListener('click', (e) => {
           e.preventDefault();
           
+          // 用語、FAQ、製品仕様は常にセクション先頭にスクロール
+          const isScrollToTopSection = hash === '#terminology' || hash === '#faq' || hash === '#product-specs';
+          
+          if (isScrollToTopSection) {
+            // 検索専用セクションは常にセクション先頭にスクロール
+            const activateFn = window.activateSection || activateSection;
+            activateFn(hash, { closeMobile: true, scrollToTop: true });
+            return;
+          }
+          
           // サブ項目がある場合はトグルのみ（画面遷移なし）
           if (items.length > 0) {
             const nowOpen = !sublist.classList.contains('show');
