@@ -48,26 +48,38 @@
   }
 
   // シンプルで確実なスクロール処理
-  function scrollToWhenStable(hash) {
+  function scrollToWhenStable(hash, retryCount = 0) {
     if (!hash) return;
+    const maxRetries = 5;
     
-    // セクション切り替え後、CSSトランジションとレイアウト確定を待つ
-    setTimeout(() => {
-      const el = document.querySelector(hash);
-      if (!el) {
-        console.warn('scrollToWhenStable: 要素が見つかりません', hash);
-        return;
-      }
-      
-      // 要素が表示されているか確認
-      const isHidden = el.closest('.is-hidden');
-      if (isHidden) {
-        console.warn('scrollToWhenStable: 要素がis-hidden内にあります', hash);
-        return;
-      }
-      
-      scrollToElementNoAnim(hash);
-    }, 100);
+    // セクション切り替えのDOM更新を確実に待つ
+    // requestAnimationFrameを3回使用してレンダリング確定を保証
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const el = document.querySelector(hash);
+          if (!el) {
+            console.warn('scrollToWhenStable: 要素が見つかりません', hash);
+            return;
+          }
+          
+          // 要素が表示されているか確認
+          const isHidden = el.closest('.is-hidden');
+          if (isHidden) {
+            console.warn('scrollToWhenStable: 要素がis-hidden内にあります (retry:', retryCount, ')', hash);
+            // 再試行（最大5回まで）
+            if (retryCount < maxRetries) {
+              setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 50);
+            } else {
+              console.error('scrollToWhenStable: 最大再試行回数に達しました', hash);
+            }
+            return;
+          }
+          
+          scrollToElementNoAnim(hash);
+        });
+      });
+    });
   }
 
   function replaceUrlWithoutQuery(hash) {
