@@ -56,6 +56,31 @@
     }
   }
 
+  // レイアウトが安定してから目的位置にスクロールする
+  function scrollToWhenStable(hash, { maxAttempts = 8, intervalMs = 50 } = {}) {
+    if (!hash) return;
+    const targetEl = document.querySelector(hash);
+    if (!targetEl) return;
+    const container = document.querySelector('.manual-content');
+    let lastTop = null;
+    let attempts = 0;
+    const measure = () => {
+      attempts += 1;
+      const cTop = container ? container.getBoundingClientRect().top : 0;
+      const tTop = targetEl.getBoundingClientRect().top - cTop;
+      const isStable = lastTop !== null && Math.abs(tTop - lastTop) < 1;
+      lastTop = tTop;
+      if (isStable || attempts >= maxAttempts) {
+        // 最終的にスクロール実行
+        scrollToElement(hash);
+        return;
+      }
+      setTimeout(() => requestAnimationFrame(measure), intervalMs);
+    };
+    // 2フレーム待ってから計測開始（表示切替の反映待ち）
+    requestAnimationFrame(() => requestAnimationFrame(measure));
+  }
+
   function replaceUrlWithoutQuery(hash) {
     const value = hash && hash.startsWith('#') ? hash : `#${hash || ''}`;
     try {
@@ -481,7 +506,8 @@
           parentHasActiveChild: true,
           activeSubHash: anchor
         });
-        setTimeout(() => scrollToElement(anchor), 40);
+        // レイアウト確定を待ってからスクロール（1回で決まらない問題の対策）
+        scrollToWhenStable(anchor);
         if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
       });
     });
@@ -581,10 +607,8 @@
             // まずセクションを表示
             activateSection(`#${sectionId}`, { scrollToTop: false });
 
-            // 瞬時に該当要素へ
-            setTimeout(() => {
-              scrollToElementNoAnim(normalizedHash);
-            }, 0);
+            // レイアウト確定後にスクロール（位置ズレ対策）
+            scrollToWhenStable(normalizedHash);
           }
         }
       }
@@ -1756,10 +1780,10 @@
       if (/後日追記予定/.test(t)) return true;
       if (/詳細は後日追記/.test(t)) return true;
       if (/併用時の制限など/.test(t)) return true;
-      if (/トランスクリプト機能利用時のしゃべり描き®の制限など/.test(t)) return true;
+      if (/トランスクリプト機能利用時のしゃべり描き&reg;の制限など/.test(t)) return true;
       if (/可能回数の制限/.test(t)) return true;
       if (/左のマイクボタンを押して入力したら左吹き出し/.test(t)) return true;
-      if (/しゃべり描き®マイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
+      if (/しゃべり描き&reg;マイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
       if (/よく失敗するところを詳細に書いてあげる/.test(t)) return true;
       if (/よくある質問と回答/.test(t)) return true;
       return false;
@@ -1894,7 +1918,7 @@
     const topH3 = document.createElement('h3');
     const topLink = document.createElement('a');
     topLink.href = '#top';
-    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳™でできること';
+    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳&trade;でできること';
     topH3.appendChild(topLink);
     topSection.appendChild(topH3);
     
@@ -1903,7 +1927,7 @@
     topSubList.className = 'print-toc-sublist';
     const topItems = [
       { text: '２言語間のコミュニケーション', href: '#top' },
-      { text: 'しゃべり描き®（音声＋お絵描き）で翻訳', href: '#top' },
+      { text: 'しゃべり描き&reg;（音声＋お絵描き）で翻訳', href: '#top' },
       { text: 'トランスクリプト（会話）の翻訳', href: '#top' }
     ];
     topItems.forEach((item) => {
