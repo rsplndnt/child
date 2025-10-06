@@ -54,50 +54,23 @@
     
     const tryScroll = () => {
       const el = document.querySelector(hash);
-      if (!el) {
-        console.warn('scrollToWhenStable: 要素が見つかりません', hash);
-        return;
-      }
+      if (!el) return;
       
       // 要素が表示されているか確認
       const isHidden = el.closest('.is-hidden');
-      if (isHidden) {
-        console.warn('scrollToWhenStable: 要素がis-hidden内 (retry:', retryCount, ')', hash);
-        // 再試行
-        if (retryCount < maxRetries) {
-          setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
-        } else {
-          console.error('scrollToWhenStable: 最大再試行回数到達', hash);
-        }
+      if (isHidden && retryCount < maxRetries) {
+        setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
         return;
       }
       
       // 要素の高さが0でないことを確認（レイアウト確定）
       const rect = el.getBoundingClientRect();
       if (rect.height === 0 && retryCount < maxRetries) {
-        console.warn('scrollToWhenStable: 要素の高さが0 (retry:', retryCount, ')', hash);
         setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
         return;
       }
       
-      console.log('scrollToWhenStable: scrollToElementNoAnim呼び出し直前', hash, 'retry:', retryCount);
-      console.log('scrollToWhenStable: forcedTocState=', {...forcedTocState});
-      console.log('scrollToWhenStable: typeof scrollToElementNoAnim=', typeof scrollToElementNoAnim);
-      console.log('scrollToWhenStable: scrollToElementNoAnim=', scrollToElementNoAnim);
-      
-      // 直接呼び出してみる
-      const el = document.querySelector(hash);
-      console.log('scrollToWhenStable: 要素確認', hash, el ? '存在' : '存在しない');
-      
-      try {
-        console.log('scrollToWhenStable: scrollToElementNoAnim実行開始...');
-        scrollToElementNoAnim(hash);
-        console.log('scrollToWhenStable: scrollToElementNoAnim実行終了');
-      } catch (error) {
-        console.error('scrollToWhenStable: エラー発生', error);
-        console.error('scrollToWhenStable: エラースタック', error.stack);
-      }
-      console.log('scrollToWhenStable: forcedTocState（呼び出し後）=', {...forcedTocState});
+      scrollToElementNoAnim(hash);
     };
     
     // 最初の試行は少し待ってから
@@ -124,27 +97,15 @@
     }
   }
 
-  // スクロールアニメーションなしで瞬時に目的位置へ移動（グローバルスコープに移動）
+  // スクロールアニメーションなしで瞬時に目的位置へ移動
   function scrollToElementNoAnim(hash, docRef) {
-    console.log('>>> scrollToElementNoAnim 開始', hash);
     const doc = docRef || document;
-    if (!hash) {
-      console.warn('scrollToElementNoAnim: hashなし');
-      return;
-    }
+    if (!hash) return;
     const el = doc.querySelector(hash);
-    if (!el) {
-      console.warn('scrollToElementNoAnim: 要素が見つかりません', hash);
-      return;
-    }
-    console.log('scrollToElementNoAnim: 要素発見', el.tagName, el.id);
+    if (!el) return;
     
     const container = doc.querySelector('.manual-content');
-    if (!container) {
-      console.warn('scrollToElementNoAnim: コンテナが見つかりません');
-      return;
-    }
-    console.log('scrollToElementNoAnim: コンテナ発見');
+    if (!container) return;
     
     // 要素のコンテナからの相対位置を計算
     const containerRect = container.getBoundingClientRect();
@@ -158,19 +119,8 @@
     // 目標スクロール位置
     const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
     
-    console.log('scrollToElementNoAnim: スクロール実行前', {
-      hash,
-      elementTag: el.tagName,
-      elementId: el.id,
-      elementRelativeTop,
-      mobileOffset,
-      targetScrollTop,
-      currentScrollTop: container.scrollTop
-    });
-    
     // 瞬時にスクロール
     container.scrollTop = targetScrollTop;
-    console.log('>>> scrollToElementNoAnim: スクロール実行完了 scrollTop=', container.scrollTop);
     
     if (!docRef) updateUrlHash(hash, { replace: true });
   }
@@ -553,15 +503,12 @@
           if (m) sectionHash = `#${m[1]}`;
         }
         if (forcedTocState.timer) {
-          console.log('右カラムサブリンク: 既存のforcedTocState.timerをクリア');
           clearTimeout(forcedTocState.timer);
         }
         forcedTocState.sectionHash = sectionHash;
         forcedTocState.subHash = anchor;
         setScrollSyncManual(true);
-        console.log('右カラムサブリンク: forcedTocStateをセット', {sectionHash, anchor});
         forcedTocState.timer = setTimeout(() => {
-          console.log('右カラムサブリンク: forcedTocStateタイマー終了');
           forcedTocState.sectionHash = null;
           forcedTocState.subHash = null;
           setScrollSyncManual(false);
@@ -571,7 +518,6 @@
         applySubLinkActiveState(sectionHash, anchor);
         // enhancedActivateSectionを使用
         const activateFn = window.activateSection || activateSection;
-        console.log('右カラムサブリンク: activateSection呼び出し', activateFn === window.activateSection ? 'enhanced' : 'original');
         activateFn(sectionHash, {
           scrollToTop: false,
           parentHasActiveChild: true,
@@ -780,7 +726,6 @@
 
       // 一定時間後にスクロール連動を再開
       forcedTocState.timer = setTimeout(() => {
-        console.log('handleInitialTargetRequest: forcedTocStateタイマー終了');
         forcedTocState.sectionHash = null;
         forcedTocState.subHash = null;
         setScrollSyncManual(false);
@@ -828,7 +773,6 @@
       scrollToWhenStable(targetHash);
 
       forcedTocState.timer = setTimeout(() => {
-        console.log('handleInitialHash: forcedTocStateタイマー終了');
         forcedTocState.sectionHash = null;
         forcedTocState.subHash = null;
         setScrollSyncManual(false);
@@ -962,21 +906,17 @@
       let lastScrollTop = 0;
 
       setScrollSyncManual = (flag) => { 
-        console.log('setScrollSyncManual:', flag, 'isScrolling:', isScrolling, '→', !!flag);
         isScrolling = !!flag; 
       };
 
       const updateActiveSection = () => {
         if (isScrolling) {
-          console.log('updateActiveSection: スキップ（isScrolling = true）');
           return;
         }
         // forcedTocStateがアクティブな場合もスキップ
         if (forcedTocState.sectionHash || forcedTocState.subHash) {
-          console.log('updateActiveSection: スキップ（forcedTocState有効）', forcedTocState);
           return;
         }
-        console.log('updateActiveSection: 実行中');
         
         // スクロール方向を検出
         const currentScrollTop = manualContent.scrollTop;
@@ -1081,13 +1021,11 @@
         clearTimeout(scrollTimeout);
         // forcedTocStateがアクティブな間はスクロール連動を完全に停止
         if (forcedTocState.sectionHash || forcedTocState.subHash) {
-          console.log('handleScroll: forcedTocState有効のためスキップ');
           return;
         }
         scrollTimeout = setTimeout(() => {
           // 再度forcedTocStateをチェック
           if (forcedTocState.sectionHash || forcedTocState.subHash) {
-            console.log('handleScroll timeout: forcedTocState有効のためスキップ');
             return;
           }
           setScrollSyncManual(false);
@@ -1106,7 +1044,6 @@
         // forcedTocStateが有効な場合は、そちらのタイマーを優先
         const hasForcedState = forcedTocState.sectionHash || forcedTocState.subHash;
         
-        console.log('enhancedActivateSection 呼び出し:', {
           targetHash,
           hasForcedState,
           forcedTocState: {...forcedTocState}
@@ -1114,9 +1051,7 @@
         
         if (!hasForcedState) {
           setScrollSyncManual(true);
-          console.log('enhancedActivateSection: スクロール連動を無効化（forcedTocStateなし）');
         } else {
-          console.log('enhancedActivateSection: forcedTocState有効のためスクロール連動はそのまま');
         }
         
         originalActivateSection.call(this, targetHash, opts);
@@ -1127,14 +1062,11 @@
           scrollTimeout = setTimeout(() => {
             // 再度forcedTocStateをチェック（タイマー設定後に状態が変わった可能性）
             if (!forcedTocState.sectionHash && !forcedTocState.subHash) {
-              console.log('enhancedActivateSection: タイマー終了でスクロール連動を再開');
               setScrollSyncManual(false);
             } else {
-              console.log('enhancedActivateSection: forcedTocState有効なのでスクロール連動は再開しない');
             }
           }, 2000);  // 500ms → 2000msに延長（forcedTocStateより長く）
         } else {
-          console.log('enhancedActivateSection: forcedTocState有効のためタイマー設定なし');
         }
       };
       
@@ -1244,7 +1176,6 @@
                 e.preventDefault();
                 e.stopPropagation();
                 const anchor = na.getAttribute('href');
-                console.log('=== TOCサブアイテムクリック ===', anchor);
                 if (!anchor) return;
                 // 対象セクションを特定して切替（右カラムと同様の挙動）
                 let sectionHash = '#top';
@@ -1259,7 +1190,6 @@
 
                 // 強制状態をセット（2000ms程度維持）
                 if (forcedTocState.timer) {
-                  console.log('TOCサブアイテム: 既存のforcedTocState.timer=' + forcedTocState.timer + 'をクリア');
                   clearTimeout(forcedTocState.timer);
                   forcedTocState.timer = null;
                 }
@@ -1269,7 +1199,6 @@
                 const startTime = Date.now();
                 const timerId = setTimeout(() => {
                   const elapsed = Date.now() - startTime;
-                  console.log('TOCサブアイテム: forcedTocStateタイマー終了 (timerId=' + timerId + ', elapsed=' + elapsed + 'ms)');
                   forcedTocState.sectionHash = null;
                   forcedTocState.subHash = null;
                   forcedTocState.timer = null;
@@ -1277,12 +1206,10 @@
                   triggerScrollSyncUpdate();
                 }, 2000);
                 forcedTocState.timer = timerId;
-                console.log('TOCサブアイテム: forcedTocState.timerを設定 timerId=' + timerId, {sectionHash, anchor, 'currentTime': Date.now()});
 
                 applySubLinkActiveState(sectionHash, anchor);
                 // enhancedActivateSectionを使用（window.activateSectionが設定されている場合）
                 const activateFn = window.activateSection || activateSection;
-                console.log('TOCサブアイテム: activateSection呼び出し', activateFn === window.activateSection ? 'enhanced' : 'original');
                 activateFn(sectionHash, {
                   scrollToTop: false,
                   parentHasActiveChild: true,
@@ -1351,7 +1278,6 @@
       
       // 既に初期化済みかチェック（重複防止）
       if (hamburgerEl.hasAttribute('data-initialized')) {
-        console.log('Hamburger already initialized, skipping...');
         return;
       }
       hamburgerEl.setAttribute('data-initialized', 'true');
@@ -1451,7 +1377,6 @@
       const normalizedSection = (sectionHash || '').trim();
       const requestedSub = subHash ? (subHash.startsWith('#') ? subHash : `#${subHash}`) : '';
       
-      console.log('applySubLinkActiveState 呼び出し:', {
         sectionHash,
         subHash,
         fallbackToFirst,
@@ -1556,7 +1481,6 @@
         }
       });
       const applyOpts = shouldMarkParentHasChild ? {} : { fallbackToFirst: true };
-      console.log('activateSection: applySubLinkActiveState呼び出し', {
         normalizedTarget,
         activeSubHash,
         shouldMarkParentHasChild,
@@ -2021,7 +1945,6 @@
     
     // 重複実行を防ぐ（既に内容がある場合はスキップ）
     if (isPrintTOCGenerating || tocContainer.children.length > 0) {
-      console.log('Skipping TOC generation: already generating or has content'); // デバッグ用
       return;
     }
     
@@ -2029,20 +1952,16 @@
     
     // 既存の内容をクリア
     tocContainer.innerHTML = '';
-    console.log('Cleared container, current HTML:', tocContainer.innerHTML); // デバッグ用
     
     // TOCセクションが生成されるまで待機
     setTimeout(() => {
       // 再度チェック（タイミングの問題を回避）
       if (tocContainer.children.length > 0) {
-        console.log('Content already added, skipping'); // デバッグ用
         isPrintTOCGenerating = false;
         return;
       }
       
       const tocSections = document.querySelectorAll('.toc-section');
-      console.log('Found toc-sections:', tocSections.length); // デバッグ用
-      console.log('Container before adding:', tocContainer.children.length, 'children'); // デバッグ用
     
     // TOPセクションを追加
     const topSection = document.createElement('div');
@@ -2125,8 +2044,6 @@
       tocContainer.appendChild(printSection);
     });
     
-    console.log('Final container children:', tocContainer.children.length); // デバッグ用
-    console.log('Final container HTML length:', tocContainer.innerHTML.length); // デバッグ用
     
     // フラグをリセット（次回の印刷に備えて）
     setTimeout(() => {
@@ -2147,7 +2064,6 @@
     const tocContainer = document.querySelector('.print-toc-content');
     if (tocContainer) {
       tocContainer.innerHTML = '';
-      console.log('Cleared TOC after print'); // デバッグ用
     }
     isPrintTOCGenerating = false;
   });
