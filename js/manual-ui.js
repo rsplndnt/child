@@ -25,15 +25,6 @@
   }
   function escapeRegExp(s) { return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-  function getScrollOffset() {
-    const tabs = document.querySelector('.content-tabs');
-    const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
-    // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
-    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-    // ハンバーガーボタンを避けるための最適なオフセット
-    const mobileOffset = isMobile ? 52 : 0; 
-    return base + 16 + mobileOffset;
-  }
 
   function updateUrlHash(hash, { replace = false } = {}) {
     if (!hash) return;
@@ -60,11 +51,10 @@
   function scrollToWhenStable(hash) {
     if (!hash) return;
     
-    // セクション切り替え直後の画像読み込みを待つ
-    // 複雑な安定性チェックではなく、十分な待機時間を確保
+    // セクション切り替え＋画像読み込みを確実に待つ
     setTimeout(() => {
       scrollToElementNoAnim(hash);
-    }, 250);
+    }, 400);
   }
 
   function replaceUrlWithoutQuery(hash) {
@@ -429,22 +419,7 @@
         if (href) {
           activateSection(href, { closeMobile: true, scrollToTop: false });
           // TOPセクションのh2にスクロール
-          setTimeout(() => {
-            const topHeader = document.querySelector('#top .step-header h2');
-            if (topHeader) {
-              const offset = getScrollOffset();
-              const container = document.querySelector('.manual-content');
-              if (container && typeof container.scrollTo === 'function') {
-                const cRect = container.getBoundingClientRect();
-                const eRect = topHeader.getBoundingClientRect();
-                const target = container.scrollTop + (eRect.top - cRect.top) - offset;
-                fastSmoothScrollTo({ container, target: Math.max(0, target) });
-              } else {
-                const y = Math.max(0, topHeader.getBoundingClientRect().top + getWindowScrollY() - offset);
-                fastSmoothScrollTo({ target: y });
-              }
-            }
-          }, 40);
+          scrollToWhenStable('#top');
         }
       });
     }
@@ -1418,45 +1393,61 @@
       if (!hash) return;
       const el = document.querySelector(hash);
       if (!el) return;
-      const offset = getScrollOffset();
+      
       const container = document.querySelector('.manual-content');
-      if (container && typeof container.scrollTo === 'function') {
-        const cRect = container.getBoundingClientRect();
-        const eRect = el.getBoundingClientRect();
-        const target = container.scrollTop + (eRect.top - cRect.top) - offset;
-        fastSmoothScrollTo({ container, target: Math.max(0, target) });
-      } else {
-        const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
-        fastSmoothScrollTo({ target: y });
+      if (!container) return;
+      
+      // シンプルな計算：要素のコンテナ内での絶対位置
+      let elementTop = 0;
+      let currentEl = el;
+      while (currentEl && currentEl !== container) {
+        elementTop += currentEl.offsetTop || 0;
+        currentEl = currentEl.offsetParent;
+        if (currentEl && !container.contains(currentEl)) break;
       }
+      
+      // モバイル時のオフセット
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      const mobileOffset = isMobile ? 70 : 20;
+      
+      const targetScrollTop = Math.max(0, elementTop - mobileOffset);
+      
+      // スムーズスクロール
+      fastSmoothScrollTo({ container, target: targetScrollTop });
+      
       updateUrlHash(hash, { replace: true });
     }
 
-    // スクロールアニメーションなしで瞬時に目的位置へ移動
+    // スクロールアニメーションなしで瞬時に目的位置へ移動（シンプル版）
     function scrollToElementNoAnim(hash, docRef) {
       const doc = docRef || document;
       if (!hash) return;
       const el = doc.querySelector(hash);
       if (!el) return;
-      // オフセット（ヘッダ等）
-      const tabs = doc.querySelector('.content-tabs');
-      const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
-    // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
-      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-      // ハンバーガーボタンを避けるための最適なオフセット
-      const mobileOffset = isMobile ? 52 : 0;
-      const offset = base + 16 + mobileOffset;
+      
       const container = doc.querySelector('.manual-content');
-      if (container) {
-        const cRect = container.getBoundingClientRect();
-        const eRect = el.getBoundingClientRect();
-        const currentTop = container.scrollTop || 0;
-        const target = currentTop + (eRect.top - cRect.top) - offset;
-        container.scrollTop = Math.max(0, target);
-      } else {
-        const y = Math.max(0, el.getBoundingClientRect().top + (doc.defaultView?.scrollY || window.scrollY) - offset);
-        (doc.defaultView || window).scrollTo({ top: y, behavior: 'auto' });
+      if (!container) return;
+      
+      // シンプルな計算：要素のコンテナ内での絶対位置
+      let elementTop = 0;
+      let currentEl = el;
+      while (currentEl && currentEl !== container) {
+        elementTop += currentEl.offsetTop || 0;
+        currentEl = currentEl.offsetParent;
+        // コンテナの親を超えないようにする
+        if (currentEl && !container.contains(currentEl)) break;
       }
+      
+      // モバイル時のオフセット
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      const mobileOffset = isMobile ? 70 : 20; // シンプルな固定値
+      
+      // 目標スクロール位置
+      const targetScrollTop = Math.max(0, elementTop - mobileOffset);
+      
+      // 瞬時にスクロール
+      container.scrollTop = targetScrollTop;
+      
       if (!docRef) updateUrlHash(hash, { replace: true });
     }
 
