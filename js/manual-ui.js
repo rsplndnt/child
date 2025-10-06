@@ -176,19 +176,14 @@
         // 親のstep-textを取得
         const stepTextContainer = p.parentElement;
         
-        // 既存のolがあるかチェック（新しく作成したもの以外）
-        let ol = stepTextContainer.querySelector('ol:not(.existing-ol)');
+        // 既存のolがあるかチェック
+        let ol = stepTextContainer.querySelector('ol.step-number-list');
         if (!ol) {
-          // 既存のolがあれば削除
-          const existingOl = stepTextContainer.querySelector('ol');
-          if (existingOl) {
-            existingOl.remove();
-          }
-          
           // 新しいolを作成
           ol = document.createElement('ol');
           ol.className = 'step-number-list';
-          stepTextContainer.appendChild(ol);
+          // p要素の位置に挿入（note-cardより前に）
+          stepTextContainer.insertBefore(ol, p);
         }
         
         // li要素を作成
