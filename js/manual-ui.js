@@ -56,29 +56,47 @@
     }
   }
 
-  // レイアウトが安定してから目的位置にスクロールする
-  function scrollToWhenStable(hash, { maxAttempts = 8, intervalMs = 50 } = {}) {
+  // レイアウトが完全に安定してから目的位置にスクロールする（より確実な実装）
+  function scrollToWhenStable(hash, { maxAttempts = 15, intervalMs = 80, useNoAnim = false } = {}) {
     if (!hash) return;
     const targetEl = document.querySelector(hash);
     if (!targetEl) return;
     const container = document.querySelector('.manual-content');
     let lastTop = null;
+    let stableCount = 0;
     let attempts = 0;
+    
     const measure = () => {
       attempts += 1;
       const cTop = container ? container.getBoundingClientRect().top : 0;
       const tTop = targetEl.getBoundingClientRect().top - cTop;
+      
+      // 位置が安定しているか（連続して2回同じ位置）
       const isStable = lastTop !== null && Math.abs(tTop - lastTop) < 1;
+      if (isStable) {
+        stableCount += 1;
+      } else {
+        stableCount = 0;
+      }
       lastTop = tTop;
-      if (isStable || attempts >= maxAttempts) {
-        // 最終的にスクロール実行
-        scrollToElement(hash);
+      
+      // 連続2回安定 または 最大試行回数に到達
+      if (stableCount >= 2 || attempts >= maxAttempts) {
+        // 瞬時移動を使用（アニメーション中の位置ズレを防止）
+        if (useNoAnim) {
+          scrollToElementNoAnim(hash);
+        } else {
+          scrollToElement(hash);
+        }
         return;
       }
       setTimeout(() => requestAnimationFrame(measure), intervalMs);
     };
-    // 2フレーム待ってから計測開始（表示切替の反映待ち）
-    requestAnimationFrame(() => requestAnimationFrame(measure));
+    
+    // セクション切り替え完了を待つ（最低100ms）
+    setTimeout(() => {
+      requestAnimationFrame(() => requestAnimationFrame(measure));
+    }, 100);
   }
 
   function replaceUrlWithoutQuery(hash) {
@@ -507,7 +525,7 @@
           activeSubHash: anchor
         });
         // レイアウト確定を待ってからスクロール（1回で決まらない問題の対策）
-        scrollToWhenStable(anchor);
+        scrollToWhenStable(anchor, { useNoAnim: true });
         if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
       });
     });
@@ -608,7 +626,7 @@
             activateSection(`#${sectionId}`, { scrollToTop: false });
 
             // レイアウト確定後にスクロール（位置ズレ対策）
-            scrollToWhenStable(normalizedHash);
+            scrollToWhenStable(normalizedHash, { useNoAnim: true });
           }
         }
       }
@@ -704,7 +722,7 @@
       setScrollSyncManual(true);
 
       activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash, updateUrl: false });
-      scrollToElementNoAnim(hash);
+      scrollToWhenStable(hash, { useNoAnim: true, maxAttempts: 20 });
       replaceUrlWithoutQuery(hash);
 
       // 一定時間後にスクロール連動を再開
@@ -752,8 +770,8 @@
         updateUrl: false
       });
 
-      if (subHash) scrollToElementNoAnim(subHash);
-      else scrollToElementNoAnim(sectionHash);
+      const targetHash = subHash || sectionHash;
+      scrollToWhenStable(targetHash, { useNoAnim: true, maxAttempts: 20 });
 
       forcedTocState.timer = setTimeout(() => {
         forcedTocState.sectionHash = null;
@@ -1154,7 +1172,7 @@
                 activeSubHash: anchor
               });
               
-              setTimeout(() => scrollToElement(anchor), 40);
+              scrollToWhenStable(anchor, { useNoAnim: true });
               if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
             });
             li.appendChild(na);
@@ -2141,28 +2159,10 @@
         clearContentHighlights(contentRoot);
         if (terms.length) highlightSectionTerms(sectionEl, terms);
       }
-      setTimeout(() => {
-        let el = document.getElementById(anchorId) || document.querySelector(sectionHash);
-        if (!el) return;
-        // 可能な限り h4 見出し自体にスクロール（procedure-itemにIDが付いているケースに対応）
-        if (el && el.tagName !== 'H4') {
-          const directH4 = el.querySelector && el.querySelector('h4');
-          const fromClosest = el.closest && el.closest('.procedure-item');
-          const h4 = directH4 || (fromClosest ? fromClosest.querySelector('h4') : null);
-          if (h4) el = h4;
-        }
-        const offset = getScrollOffset();
-        const container = document.querySelector('.manual-content');
-        if (container && typeof container.scrollTo === 'function') {
-          const cRect = container.getBoundingClientRect();
-          const eRect = el.getBoundingClientRect();
-          const target = container.scrollTop + (eRect.top - cRect.top) - offset;
-          fastSmoothScrollTo({ container, target: Math.max(0, target) });
-        } else {
-          const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
-          fastSmoothScrollTo({ target: y });
-        }
-      }, 30);
+      
+      // anchorIdが存在する場合はそれを、なければsectionHashを使用
+      const targetHash = anchorId ? `#${anchorId.replace(/^#/, '')}` : sectionHash;
+      scrollToWhenStable(targetHash, { useNoAnim: true });
     }
 
     return { search: internalSearchAndRender, jumpTo: internalJumpTo, clearSearch: clearAll };
