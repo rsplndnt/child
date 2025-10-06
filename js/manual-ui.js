@@ -28,7 +28,10 @@
   function getScrollOffset() {
     const tabs = document.querySelector('.content-tabs');
     const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
-    return base + 16;
+    // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
+    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    const mobileOffset = isMobile ? 52 : 0;
+    return base + 16 + mobileOffset;
   }
 
   function updateUrlHash(hash, { replace = false } = {}) {
@@ -1460,7 +1463,10 @@
       // オフセット（ヘッダ等）
       const tabs = doc.querySelector('.content-tabs');
       const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
-      const offset = base + 16;
+      // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      const mobileOffset = isMobile ? 52 : 0;
+      const offset = base + 16 + mobileOffset;
       const container = doc.querySelector('.manual-content');
       if (container) {
         const cRect = container.getBoundingClientRect();
