@@ -486,16 +486,21 @@
           const m = anchor.match(/^#(section\d+)/i);
           if (m) sectionHash = `#${m[1]}`;
         }
-        if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+        if (forcedTocState.timer) {
+          console.log('右カラムサブリンク: 既存のforcedTocState.timerをクリア');
+          clearTimeout(forcedTocState.timer);
+        }
         forcedTocState.sectionHash = sectionHash;
         forcedTocState.subHash = anchor;
         setScrollSyncManual(true);
+        console.log('右カラムサブリンク: forcedTocStateをセット', {sectionHash, anchor});
         forcedTocState.timer = setTimeout(() => {
+          console.log('右カラムサブリンク: forcedTocStateタイマー終了');
           forcedTocState.sectionHash = null;
           forcedTocState.subHash = null;
           setScrollSyncManual(false);
           triggerScrollSyncUpdate();
-        }, 1500);
+        }, 2000);  // 1500ms → 2000msに延長
 
         applySubLinkActiveState(sectionHash, anchor);
         activateSection(sectionHash, {
@@ -706,11 +711,12 @@
 
       // 一定時間後にスクロール連動を再開
       forcedTocState.timer = setTimeout(() => {
+        console.log('handleInitialTargetRequest: forcedTocStateタイマー終了');
         forcedTocState.sectionHash = null;
         forcedTocState.subHash = null;
         setScrollSyncManual(false);
         triggerScrollSyncUpdate();
-      }, 800);
+      }, 2000);  // 800ms → 2000msに延長
 
       return true;
     }
@@ -753,11 +759,12 @@
       scrollToWhenStable(targetHash);
 
       forcedTocState.timer = setTimeout(() => {
+        console.log('handleInitialHash: forcedTocStateタイマー終了');
         forcedTocState.sectionHash = null;
         forcedTocState.subHash = null;
         setScrollSyncManual(false);
         triggerScrollSyncUpdate();
-      }, 800);
+      }, 2000);  // 800ms → 2000msに延長
 
       return true;
     }
@@ -1021,12 +1028,39 @@
       // activateSection関数を拡張して、スクロール連動を一時的に無効化
       const originalActivateSection = window.activateSection || activateSection;
       const enhancedActivateSection = function(targetHash, opts = {}) {
-        setScrollSyncManual(true);
+        // forcedTocStateが有効な場合は、そちらのタイマーを優先
+        const hasForcedState = forcedTocState.sectionHash || forcedTocState.subHash;
+        
+        console.log('enhancedActivateSection 呼び出し:', {
+          targetHash,
+          hasForcedState,
+          forcedTocState: {...forcedTocState}
+        });
+        
+        if (!hasForcedState) {
+          setScrollSyncManual(true);
+          console.log('enhancedActivateSection: スクロール連動を無効化（forcedTocStateなし）');
+        } else {
+          console.log('enhancedActivateSection: forcedTocState有効のためスクロール連動はそのまま');
+        }
+        
         originalActivateSection.call(this, targetHash, opts);
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          setScrollSyncManual(false);
-        }, 500);  // 1000ms → 500msに短縮（クリック後の復帰を高速化）
+        
+        // forcedTocStateがある場合はタイマーを設定しない（そちらが管理）
+        if (!hasForcedState) {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            // 再度forcedTocStateをチェック（タイマー設定後に状態が変わった可能性）
+            if (!forcedTocState.sectionHash && !forcedTocState.subHash) {
+              console.log('enhancedActivateSection: タイマー終了でスクロール連動を再開');
+              setScrollSyncManual(false);
+            } else {
+              console.log('enhancedActivateSection: forcedTocState有効なのでスクロール連動は再開しない');
+            }
+          }, 2000);  // 500ms → 2000msに延長（forcedTocStateより長く）
+        } else {
+          console.log('enhancedActivateSection: forcedTocState有効のためタイマー設定なし');
+        }
       };
       
       // グローバルに公開（デバッグ用）
@@ -1148,17 +1182,22 @@
                   if (m2) sectionHash = `#${m2[1]}`;
                 }
 
-                // 強制状態をセット（1500ms程度維持）
-                if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+                // 強制状態をセット（2000ms程度維持）
+                if (forcedTocState.timer) {
+                  console.log('TOCサブアイテム: 既存のforcedTocState.timerをクリア');
+                  clearTimeout(forcedTocState.timer);
+                }
                 forcedTocState.sectionHash = sectionHash;
                 forcedTocState.subHash = anchor;
                 setScrollSyncManual(true);
+                console.log('TOCサブアイテム: forcedTocStateをセット', {sectionHash, anchor});
                 forcedTocState.timer = setTimeout(() => {
+                  console.log('TOCサブアイテム: forcedTocStateタイマー終了');
                   forcedTocState.sectionHash = null;
                   forcedTocState.subHash = null;
                   setScrollSyncManual(false);
                   triggerScrollSyncUpdate();
-                }, 1500);
+                }, 2000);  // 1500ms → 2000msに延長
 
                 applySubLinkActiveState(sectionHash, anchor);
                 activateSection(sectionHash, {
