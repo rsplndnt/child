@@ -50,36 +50,46 @@
   // シンプルで確実なスクロール処理
   function scrollToWhenStable(hash, retryCount = 0) {
     if (!hash) return;
-    const maxRetries = 5;
+    const maxRetries = 10;
     
-    // セクション切り替えのDOM更新を確実に待つ
-    // requestAnimationFrameを3回使用してレンダリング確定を保証
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const el = document.querySelector(hash);
-          if (!el) {
-            console.warn('scrollToWhenStable: 要素が見つかりません', hash);
-            return;
-          }
-          
-          // 要素が表示されているか確認
-          const isHidden = el.closest('.is-hidden');
-          if (isHidden) {
-            console.warn('scrollToWhenStable: 要素がis-hidden内にあります (retry:', retryCount, ')', hash);
-            // 再試行（最大5回まで）
-            if (retryCount < maxRetries) {
-              setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 50);
-            } else {
-              console.error('scrollToWhenStable: 最大再試行回数に達しました', hash);
-            }
-            return;
-          }
-          
-          scrollToElementNoAnim(hash);
-        });
-      });
-    });
+    const tryScroll = () => {
+      const el = document.querySelector(hash);
+      if (!el) {
+        console.warn('scrollToWhenStable: 要素が見つかりません', hash);
+        return;
+      }
+      
+      // 要素が表示されているか確認
+      const isHidden = el.closest('.is-hidden');
+      if (isHidden) {
+        console.warn('scrollToWhenStable: 要素がis-hidden内 (retry:', retryCount, ')', hash);
+        // 再試行
+        if (retryCount < maxRetries) {
+          setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
+        } else {
+          console.error('scrollToWhenStable: 最大再試行回数到達', hash);
+        }
+        return;
+      }
+      
+      // 要素の高さが0でないことを確認（レイアウト確定）
+      const rect = el.getBoundingClientRect();
+      if (rect.height === 0 && retryCount < maxRetries) {
+        console.warn('scrollToWhenStable: 要素の高さが0 (retry:', retryCount, ')', hash);
+        setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
+        return;
+      }
+      
+      console.log('scrollToWhenStable: スクロール実行', hash, 'retry:', retryCount);
+      scrollToElementNoAnim(hash);
+    };
+    
+    // 最初の試行は少し待ってから
+    if (retryCount === 0) {
+      setTimeout(tryScroll, 50);
+    } else {
+      tryScroll();
+    }
   }
 
   function replaceUrlWithoutQuery(hash) {
