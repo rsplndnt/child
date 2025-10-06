@@ -1400,10 +1400,10 @@
       applySubLinkActiveState(normalizedTarget, shouldMarkParentHasChild ? activeSubHash : null, applyOpts);
 
       if (opts.scrollToTop !== false) {
-        const contentPanel = document.querySelector('.content-panel');
-        if (contentPanel) {
-          const y = Math.max(0, contentPanel.getBoundingClientRect().top + getWindowScrollY() - 8);
-          fastSmoothScrollTo({ target: y });
+        const container = document.querySelector('.manual-content');
+        if (container) {
+          // セクション切り替え時は先頭にスクロール
+          container.scrollTop = 0;
         }
       }
       if (opts.closeMobile && window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
