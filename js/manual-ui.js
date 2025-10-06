@@ -51,12 +51,23 @@
   function scrollToWhenStable(hash) {
     if (!hash) return;
     
-    // DOMの更新を待ってからスクロール（最小限の遅延）
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        scrollToElementNoAnim(hash);
-      });
-    });
+    // セクション切り替え後、CSSトランジションとレイアウト確定を待つ
+    setTimeout(() => {
+      const el = document.querySelector(hash);
+      if (!el) {
+        console.warn('scrollToWhenStable: 要素が見つかりません', hash);
+        return;
+      }
+      
+      // 要素が表示されているか確認
+      const isHidden = el.closest('.is-hidden');
+      if (isHidden) {
+        console.warn('scrollToWhenStable: 要素がis-hidden内にあります', hash);
+        return;
+      }
+      
+      scrollToElementNoAnim(hash);
+    }, 100);
   }
 
   function replaceUrlWithoutQuery(hash) {
@@ -1421,10 +1432,16 @@
       const doc = docRef || document;
       if (!hash) return;
       const el = doc.querySelector(hash);
-      if (!el) return;
+      if (!el) {
+        console.warn('scrollToElementNoAnim: 要素が見つかりません', hash);
+        return;
+      }
       
       const container = doc.querySelector('.manual-content');
-      if (!container) return;
+      if (!container) {
+        console.warn('scrollToElementNoAnim: コンテナが見つかりません');
+        return;
+      }
       
       // 要素のコンテナからの相対位置を計算
       const containerRect = container.getBoundingClientRect();
@@ -1437,6 +1454,16 @@
       
       // 目標スクロール位置
       const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
+      
+      console.log('scrollToElementNoAnim:', {
+        hash,
+        elementTag: el.tagName,
+        elementId: el.id,
+        elementRelativeTop,
+        mobileOffset,
+        targetScrollTop,
+        currentScrollTop: container.scrollTop
+      });
       
       // 瞬時にスクロール
       container.scrollTop = targetScrollTop;
