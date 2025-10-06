@@ -884,10 +884,22 @@
       let scrollTimeout;
       let lastScrollTop = 0;
 
-      setScrollSyncManual = (flag) => { isScrolling = !!flag; };
+      setScrollSyncManual = (flag) => { 
+        console.log('setScrollSyncManual:', flag, 'isScrolling:', isScrolling, '→', !!flag);
+        isScrolling = !!flag; 
+      };
 
       const updateActiveSection = () => {
-        if (isScrolling) return;
+        if (isScrolling) {
+          console.log('updateActiveSection: スキップ（isScrolling = true）');
+          return;
+        }
+        // forcedTocStateがアクティブな場合もスキップ
+        if (forcedTocState.sectionHash || forcedTocState.subHash) {
+          console.log('updateActiveSection: スキップ（forcedTocState有効）', forcedTocState);
+          return;
+        }
+        console.log('updateActiveSection: 実行中');
         
         // スクロール方向を検出
         const currentScrollTop = manualContent.scrollTop;
@@ -1310,6 +1322,15 @@
       const { fallbackToFirst = false, preserveExisting = false } = opts;
       const normalizedSection = (sectionHash || '').trim();
       const requestedSub = subHash ? (subHash.startsWith('#') ? subHash : `#${subHash}`) : '';
+      
+      console.log('applySubLinkActiveState 呼び出し:', {
+        sectionHash,
+        subHash,
+        fallbackToFirst,
+        preserveExisting,
+        normalizedSection,
+        requestedSub
+      });
 
       const sectionLink = normalizedSection
         ? document.querySelector(`.toc .toc-link[href="${normalizedSection}"]`)
@@ -1407,6 +1428,12 @@
         }
       });
       const applyOpts = shouldMarkParentHasChild ? {} : { fallbackToFirst: true };
+      console.log('activateSection: applySubLinkActiveState呼び出し', {
+        normalizedTarget,
+        activeSubHash,
+        shouldMarkParentHasChild,
+        applyOpts
+      });
       applySubLinkActiveState(normalizedTarget, shouldMarkParentHasChild ? activeSubHash : null, applyOpts);
 
       if (opts.scrollToTop !== false) {
