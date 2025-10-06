@@ -28,6 +28,14 @@ body {
   --sidebar-w-max: 520px;
 }
 
+/* 電話番号の自動リンク化を抑止（特にiOS Safari） */
+.no-tel-link, .no-tel-link a, .spec-list .no-tel-link {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: inherit;
+}
+
 /* Base typography using tokens */
 body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-height: var(--sd-line-height-normal); } /* md → lg */
 
