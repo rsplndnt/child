@@ -510,7 +510,8 @@
           parentHasActiveChild: true,
           activeSubHash: anchor
         });
-        setTimeout(() => scrollToElement(anchor), 40);
+        // 画像読み込みを待ってからスクロール
+        setTimeout(() => scrollToElement(anchor), 150);
         if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
       });
     });
@@ -621,10 +622,10 @@
             // まずセクションを表示
             activateSection(`#${sectionId}`, { scrollToTop: false });
 
-            // 瞬時に該当要素へ
+            // 画像読み込みを待ってからスクロール
             setTimeout(() => {
               scrollToElementNoAnim(normalizedHash);
-            }, 0);
+            }, 100);
           }
         }
       }
@@ -720,7 +721,10 @@
       setScrollSyncManual(true);
 
       activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash, updateUrl: false });
-      scrollToElementNoAnim(hash);
+      // 画像読み込みを待ってからスクロール
+      setTimeout(() => {
+        scrollToElementNoAnim(hash);
+      }, 150);
       replaceUrlWithoutQuery(hash);
 
       // 一定時間後にスクロール連動を再開
@@ -768,8 +772,11 @@
         updateUrl: false
       });
 
-      if (subHash) scrollToElementNoAnim(subHash);
-      else scrollToElementNoAnim(sectionHash);
+      // 画像読み込みを待ってからスクロール
+      const targetHash = subHash || sectionHash;
+      setTimeout(() => {
+        scrollToElementNoAnim(targetHash);
+      }, 150);
 
       forcedTocState.timer = setTimeout(() => {
         forcedTocState.sectionHash = null;
@@ -1170,7 +1177,8 @@
                 activeSubHash: anchor
               });
               
-              setTimeout(() => scrollToElement(anchor), 40);
+              // 画像読み込みを待ってからスクロール
+              setTimeout(() => scrollToElement(anchor), 150);
               if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
             });
             li.appendChild(na);
