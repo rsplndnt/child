@@ -220,34 +220,6 @@
     setTimeout(init, 100);
   });
 
-  // フォールバック: window.onloadでも実行
-  window.addEventListener('load', function() {
-    const hamburger = document.getElementById('hamburgerMenu');
-    if (hamburger && !hamburger.hasAttribute('data-initialized')) {
-      hamburger.setAttribute('data-initialized', 'true');
-      
-      hamburger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const sidebar = document.getElementById('sidebarMenu');
-        const overlay = document.getElementById('menuOverlay');
-        const mi = hamburger.querySelector('.material-icons');
-        
-        const active = hamburger.classList.toggle('active');
-        if (mi) mi.textContent = active ? 'close' : 'menu';
-        hamburger.setAttribute('aria-expanded', String(active));
-        
-        if (sidebar) sidebar.classList.toggle('active', active);
-        if (overlay) overlay.classList.toggle('active', active);
-        
-        if (window.innerWidth <= MOBILE_BREAKPOINT) {
-          document.body.style.overflow = active ? 'hidden' : '';
-        }
-      });
-    }
-  });
-
   /* ---------------- セクショントップに戻るボタン ---------------- */
   function setupBackToTop() {
     const button = document.getElementById('back-to-top');
@@ -364,10 +336,6 @@
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
     const hamburger = document.getElementById('hamburgerMenu');
-    // ここで初期化フラグを立てて、window.onload フォールバックによる二重バインドを防止
-    if (hamburger && !hamburger.hasAttribute('data-initialized')) {
-      hamburger.setAttribute('data-initialized', 'true');
-    }
     const overlay = document.getElementById('menuOverlay');
     const tabs = Array.from(document.querySelectorAll('.content-tabs .tab'));
     const tocLinks = Array.from(document.querySelectorAll('.toc .toc-link'));
@@ -513,20 +481,8 @@
 
     // ハンバーガー（Material Symbolsを使った文字列切替）
     if (hamburger) {
-      // Material Iconsフォントが読み込まれるまで少し待つ
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-          setupHamburger(hamburger, sidebar, overlay);
-        }).catch(() => {
-          // フォントのロードに失敗した場合でも初期化
-          setupHamburger(hamburger, sidebar, overlay);
-        });
-      } else {
-        // fonts APIが利用できない古いブラウザの場合
-        setTimeout(() => {
-          setupHamburger(hamburger, sidebar, overlay);
-        }, 100);
-      }
+      // 即座に初期化（フォント待機なし、より確実）
+      setupHamburger(hamburger, sidebar, overlay);
     }
 
     // overlay click
@@ -1239,12 +1195,15 @@
         mi.setAttribute('aria-hidden', 'true');
         mi.textContent = 'menu';
         hamburgerEl.appendChild(mi);
-      } else {
       }
+      
       // initialize aria-expanded according to classes
       const isActive = hamburgerEl.classList.contains('active');
       hamburgerEl.setAttribute('aria-expanded', String(isActive));
       mi.textContent = isActive ? 'close' : 'menu';
+
+      // イベントリスナー登録直前にdata-initializedを設定
+      hamburgerEl.setAttribute('data-initialized', 'true');
 
       hamburgerEl.addEventListener('click', function (ev) {
         ev.preventDefault();
