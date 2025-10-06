@@ -51,10 +51,12 @@
   function scrollToWhenStable(hash) {
     if (!hash) return;
     
-    // セクション切り替え＋画像読み込みを確実に待つ
-    setTimeout(() => {
-      scrollToElementNoAnim(hash);
-    }, 400);
+    // DOMの更新を待ってからスクロール（最小限の遅延）
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scrollToElementNoAnim(hash);
+      });
+    });
   }
 
   function replaceUrlWithoutQuery(hash) {
@@ -1397,20 +1399,16 @@
       const container = document.querySelector('.manual-content');
       if (!container) return;
       
-      // シンプルな計算：要素のコンテナ内での絶対位置
-      let elementTop = 0;
-      let currentEl = el;
-      while (currentEl && currentEl !== container) {
-        elementTop += currentEl.offsetTop || 0;
-        currentEl = currentEl.offsetParent;
-        if (currentEl && !container.contains(currentEl)) break;
-      }
+      // 要素のコンテナからの相対位置を計算
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = el.getBoundingClientRect();
+      const elementRelativeTop = elementRect.top - containerRect.top + container.scrollTop;
       
       // モバイル時のオフセット
       const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
       const mobileOffset = isMobile ? 70 : 20;
       
-      const targetScrollTop = Math.max(0, elementTop - mobileOffset);
+      const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
       
       // スムーズスクロール
       fastSmoothScrollTo({ container, target: targetScrollTop });
@@ -1428,22 +1426,17 @@
       const container = doc.querySelector('.manual-content');
       if (!container) return;
       
-      // シンプルな計算：要素のコンテナ内での絶対位置
-      let elementTop = 0;
-      let currentEl = el;
-      while (currentEl && currentEl !== container) {
-        elementTop += currentEl.offsetTop || 0;
-        currentEl = currentEl.offsetParent;
-        // コンテナの親を超えないようにする
-        if (currentEl && !container.contains(currentEl)) break;
-      }
+      // 要素のコンテナからの相対位置を計算
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = el.getBoundingClientRect();
+      const elementRelativeTop = elementRect.top - containerRect.top + container.scrollTop;
       
       // モバイル時のオフセット
       const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-      const mobileOffset = isMobile ? 70 : 20; // シンプルな固定値
+      const mobileOffset = isMobile ? 70 : 20;
       
       // 目標スクロール位置
-      const targetScrollTop = Math.max(0, elementTop - mobileOffset);
+      const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
       
       // 瞬時にスクロール
       container.scrollTop = targetScrollTop;
