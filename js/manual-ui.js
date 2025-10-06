@@ -25,6 +25,11 @@
   }
   function escapeRegExp(s) { return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+  function getScrollOffset() {
+    const tabs = document.querySelector('.content-tabs');
+    const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
+    return base + 16;
+  }
 
   function updateUrlHash(hash, { replace = false } = {}) {
     if (!hash) return;
@@ -47,40 +52,6 @@
     }
   }
 
-  // シンプルで確実なスクロール処理
-  function scrollToWhenStable(hash, retryCount = 0) {
-    if (!hash) return;
-    const maxRetries = 10;
-    
-    const tryScroll = () => {
-      const el = document.querySelector(hash);
-      if (!el) return;
-      
-      // 要素が表示されているか確認
-      const isHidden = el.closest('.is-hidden');
-      if (isHidden && retryCount < maxRetries) {
-        setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
-        return;
-      }
-      
-      // 要素の高さが0でないことを確認（レイアウト確定）
-      const rect = el.getBoundingClientRect();
-      if (rect.height === 0 && retryCount < maxRetries) {
-        setTimeout(() => scrollToWhenStable(hash, retryCount + 1), 30);
-        return;
-      }
-      
-      scrollToElementNoAnim(hash);
-    };
-    
-    // 最初の試行は少し待ってから
-    if (retryCount === 0) {
-      setTimeout(tryScroll, 50);
-    } else {
-      tryScroll();
-    }
-  }
-
   function replaceUrlWithoutQuery(hash) {
     const value = hash && hash.startsWith('#') ? hash : `#${hash || ''}`;
     try {
@@ -95,34 +66,6 @@
         window.location.hash = value;
       } catch (__) {}
     }
-  }
-
-  // スクロールアニメーションなしで瞬時に目的位置へ移動
-  function scrollToElementNoAnim(hash, docRef) {
-    const doc = docRef || document;
-    if (!hash) return;
-    const el = doc.querySelector(hash);
-    if (!el) return;
-    
-    const container = doc.querySelector('.manual-content');
-    if (!container) return;
-    
-    // 要素のコンテナからの相対位置を計算
-    const containerRect = container.getBoundingClientRect();
-    const elementRect = el.getBoundingClientRect();
-    const elementRelativeTop = elementRect.top - containerRect.top + container.scrollTop;
-    
-    // モバイル時のオフセット
-    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-    const mobileOffset = isMobile ? 70 : 20;
-    
-    // 目標スクロール位置
-    const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
-    
-    // 瞬時にスクロール
-    container.scrollTop = targetScrollTop;
-    
-    if (!docRef) updateUrlHash(hash, { replace: true });
   }
 
   // カスタムスクロールアニメーション（約300msで滑らか）
@@ -279,7 +222,33 @@
     setTimeout(init, 100);
   });
 
-  // 削除: window.onloadのフォールバックは不要（setupHamburgerで統一処理）
+  // フォールバック: window.onloadでも実行
+  window.addEventListener('load', function() {
+    const hamburger = document.getElementById('hamburgerMenu');
+    if (hamburger && !hamburger.hasAttribute('data-initialized')) {
+      hamburger.setAttribute('data-initialized', 'true');
+      
+      hamburger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const sidebar = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('menuOverlay');
+        const mi = hamburger.querySelector('.material-icons');
+        
+        const active = hamburger.classList.toggle('active');
+        if (mi) mi.textContent = active ? 'close' : 'menu';
+        hamburger.setAttribute('aria-expanded', String(active));
+        
+        if (sidebar) sidebar.classList.toggle('active', active);
+        if (overlay) overlay.classList.toggle('active', active);
+        
+        if (window.innerWidth <= MOBILE_BREAKPOINT) {
+          document.body.style.overflow = active ? 'hidden' : '';
+        }
+      });
+    }
+  });
 
   /* ---------------- セクショントップに戻るボタン ---------------- */
   function setupBackToTop() {
@@ -397,6 +366,10 @@
     const sidebar = document.getElementById('sidebarMenu');
     const resizer = document.getElementById('sidebarResizer');
     const hamburger = document.getElementById('hamburgerMenu');
+    // ここで初期化フラグを立てて、window.onload フォールバックによる二重バインドを防止
+    if (hamburger && !hamburger.hasAttribute('data-initialized')) {
+      hamburger.setAttribute('data-initialized', 'true');
+    }
     const overlay = document.getElementById('menuOverlay');
     const tabs = Array.from(document.querySelectorAll('.content-tabs .tab'));
     const tocLinks = Array.from(document.querySelectorAll('.toc .toc-link'));
@@ -471,7 +444,22 @@
         if (href) {
           activateSection(href, { closeMobile: true, scrollToTop: false });
           // TOPセクションのh2にスクロール
-          scrollToWhenStable('#top');
+          setTimeout(() => {
+            const topHeader = document.querySelector('#top .step-header h2');
+            if (topHeader) {
+              const offset = getScrollOffset();
+              const container = document.querySelector('.manual-content');
+              if (container && typeof container.scrollTo === 'function') {
+                const cRect = container.getBoundingClientRect();
+                const eRect = topHeader.getBoundingClientRect();
+                const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+                fastSmoothScrollTo({ container, target: Math.max(0, target) });
+              } else {
+                const y = Math.max(0, topHeader.getBoundingClientRect().top + getWindowScrollY() - offset);
+                fastSmoothScrollTo({ target: y });
+              }
+            }
+          }, 40);
         }
       });
     }
@@ -502,9 +490,7 @@
           const m = anchor.match(/^#(section\d+)/i);
           if (m) sectionHash = `#${m[1]}`;
         }
-        if (forcedTocState.timer) {
-          clearTimeout(forcedTocState.timer);
-        }
+        if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
         forcedTocState.sectionHash = sectionHash;
         forcedTocState.subHash = anchor;
         setScrollSyncManual(true);
@@ -513,37 +499,45 @@
           forcedTocState.subHash = null;
           setScrollSyncManual(false);
           triggerScrollSyncUpdate();
-        }, 2000);  // 1500ms → 2000msに延長
+        }, 1500);
 
         applySubLinkActiveState(sectionHash, anchor);
-        // enhancedActivateSectionを使用
-        const activateFn = window.activateSection || activateSection;
-        activateFn(sectionHash, {
+        activateSection(sectionHash, {
           scrollToTop: false,
           parentHasActiveChild: true,
           activeSubHash: anchor
         });
-        // レイアウト確定を待ってからスクロール（1回で決まらない問題の対策）
-        scrollToWhenStable(anchor);
+        setTimeout(() => scrollToElement(anchor), 40);
         if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
       });
     });
 
     // ハンバーガー（Material Symbolsを使った文字列切替）
     if (hamburger) {
-      // Material Iconsフォントが読み込まれるまで少し待つ
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-          setupHamburger(hamburger, sidebar, overlay);
-        }).catch(() => {
-          // フォントのロードに失敗した場合でも初期化
-          setupHamburger(hamburger, sidebar, overlay);
+      setupHamburger(hamburger, sidebar, overlay);
+    } else {
+      // フォールバック: 直接イベントリスナーを設定
+      const hamburgerFallback = document.getElementById('hamburgerMenu');
+      if (hamburgerFallback) {
+        hamburgerFallback.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const sidebar = document.getElementById('sidebarMenu');
+          const overlay = document.getElementById('menuOverlay');
+          const mi = hamburgerFallback.querySelector('.material-icons');
+          
+          const active = hamburgerFallback.classList.toggle('active');
+          if (mi) mi.textContent = active ? 'close' : 'menu';
+          hamburgerFallback.setAttribute('aria-expanded', String(active));
+          
+          if (sidebar) sidebar.classList.toggle('active', active);
+          if (overlay) overlay.classList.toggle('active', active);
+          
+          if (window.innerWidth <= MOBILE_BREAKPOINT) {
+            document.body.style.overflow = active ? 'hidden' : '';
+          }
         });
-      } else {
-        // fonts APIが利用できない古いブラウザの場合
-        setTimeout(() => {
-          setupHamburger(hamburger, sidebar, overlay);
-        }, 100);
       }
     }
 
@@ -624,8 +618,10 @@
             // まずセクションを表示
             activateSection(`#${sectionId}`, { scrollToTop: false });
 
-            // レイアウト確定後にスクロール（位置ズレ対策）
-            scrollToWhenStable(normalizedHash);
+            // 瞬時に該当要素へ
+            setTimeout(() => {
+              scrollToElementNoAnim(normalizedHash);
+            }, 0);
           }
         }
       }
@@ -721,7 +717,7 @@
       setScrollSyncManual(true);
 
       activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash, updateUrl: false });
-      scrollToWhenStable(hash);
+      scrollToElementNoAnim(hash);
       replaceUrlWithoutQuery(hash);
 
       // 一定時間後にスクロール連動を再開
@@ -730,7 +726,7 @@
         forcedTocState.subHash = null;
         setScrollSyncManual(false);
         triggerScrollSyncUpdate();
-      }, 2000);  // 800ms → 2000msに延長
+      }, 800);
 
       return true;
     }
@@ -769,15 +765,15 @@
         updateUrl: false
       });
 
-      const targetHash = subHash || sectionHash;
-      scrollToWhenStable(targetHash);
+      if (subHash) scrollToElementNoAnim(subHash);
+      else scrollToElementNoAnim(sectionHash);
 
       forcedTocState.timer = setTimeout(() => {
         forcedTocState.sectionHash = null;
         forcedTocState.subHash = null;
         setScrollSyncManual(false);
         triggerScrollSyncUpdate();
-      }, 2000);  // 800ms → 2000msに延長
+      }, 800);
 
       return true;
     }
@@ -905,18 +901,10 @@
       let scrollTimeout;
       let lastScrollTop = 0;
 
-      setScrollSyncManual = (flag) => { 
-        isScrolling = !!flag; 
-      };
+      setScrollSyncManual = (flag) => { isScrolling = !!flag; };
 
       const updateActiveSection = () => {
-        if (isScrolling) {
-          return;
-        }
-        // forcedTocStateがアクティブな場合もスキップ
-        if (forcedTocState.sectionHash || forcedTocState.subHash) {
-          return;
-        }
+        if (isScrolling) return;
         
         // スクロール方向を検出
         const currentScrollTop = manualContent.scrollTop;
@@ -1019,15 +1007,11 @@
       // スクロールイベントのデバウンス処理（高速化）
       const handleScroll = debounce(() => {
         clearTimeout(scrollTimeout);
-        // forcedTocStateがアクティブな間はスクロール連動を完全に停止
-        if (forcedTocState.sectionHash || forcedTocState.subHash) {
+        // サブ項目クリック直後はアップデートを停止
+        if (forcedTocState.sectionHash) {
           return;
         }
         scrollTimeout = setTimeout(() => {
-          // 再度forcedTocStateをチェック
-          if (forcedTocState.sectionHash || forcedTocState.subHash) {
-            return;
-          }
           setScrollSyncManual(false);
           updateActiveSection();
         }, 20);  // 100ms → 20msに短縮
@@ -1041,33 +1025,12 @@
       // activateSection関数を拡張して、スクロール連動を一時的に無効化
       const originalActivateSection = window.activateSection || activateSection;
       const enhancedActivateSection = function(targetHash, opts = {}) {
-        // forcedTocStateが有効な場合は、そちらのタイマーを優先
-        const hasForcedState = forcedTocState.sectionHash || forcedTocState.subHash;
-        
-          targetHash,
-          hasForcedState,
-          forcedTocState: {...forcedTocState}
-        });
-        
-        if (!hasForcedState) {
-          setScrollSyncManual(true);
-        } else {
-        }
-        
+        setScrollSyncManual(true);
         originalActivateSection.call(this, targetHash, opts);
-        
-        // forcedTocStateがある場合はタイマーを設定しない（そちらが管理）
-        if (!hasForcedState) {
-          clearTimeout(scrollTimeout);
-          scrollTimeout = setTimeout(() => {
-            // 再度forcedTocStateをチェック（タイマー設定後に状態が変わった可能性）
-            if (!forcedTocState.sectionHash && !forcedTocState.subHash) {
-              setScrollSyncManual(false);
-            } else {
-            }
-          }, 2000);  // 500ms → 2000msに延長（forcedTocStateより長く）
-        } else {
-        }
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          setScrollSyncManual(false);
+        }, 500);  // 1000ms → 500msに短縮（クリック後の復帰を高速化）
       };
       
       // グローバルに公開（デバッグ用）
@@ -1169,57 +1132,44 @@
               // その他のセクションは数字を削除
               na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
             }
-            // イベントリスナーの重複登録を防止
-            if (!na.hasAttribute('data-click-handler')) {
-              na.setAttribute('data-click-handler', 'true');
-              na.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const anchor = na.getAttribute('href');
-                if (!anchor) return;
-                // 対象セクションを特定して切替（右カラムと同様の挙動）
-                let sectionHash = '#top';
-                const anchorEl = document.querySelector(anchor);
-                if (anchorEl) {
-                  const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
-                  if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
-                } else {
-                  const m2 = anchor.match(/^#(section\d+)/i);
-                  if (m2) sectionHash = `#${m2[1]}`;
-                }
+            na.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const anchor = na.getAttribute('href');
+              if (!anchor) return;
+              // 対象セクションを特定して切替（右カラムと同様の挙動）
+              let sectionHash = '#top';
+              const anchorEl = document.querySelector(anchor);
+              if (anchorEl) {
+                const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
+                if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
+              } else {
+                const m2 = anchor.match(/^#(section\d+)/i);
+                if (m2) sectionHash = `#${m2[1]}`;
+              }
 
-                // 強制状態をセット（2000ms程度維持）
-                if (forcedTocState.timer) {
-                  clearTimeout(forcedTocState.timer);
-                  forcedTocState.timer = null;
-                }
-                forcedTocState.sectionHash = sectionHash;
-                forcedTocState.subHash = anchor;
-                setScrollSyncManual(true);
-                const startTime = Date.now();
-                const timerId = setTimeout(() => {
-                  const elapsed = Date.now() - startTime;
-                  forcedTocState.sectionHash = null;
-                  forcedTocState.subHash = null;
-                  forcedTocState.timer = null;
-                  setScrollSyncManual(false);
-                  triggerScrollSyncUpdate();
-                }, 2000);
-                forcedTocState.timer = timerId;
+              // 強制状態をセット（1500ms程度維持）
+              if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+              forcedTocState.sectionHash = sectionHash;
+              forcedTocState.subHash = anchor;
+              setScrollSyncManual(true);
+              forcedTocState.timer = setTimeout(() => {
+                forcedTocState.sectionHash = null;
+                forcedTocState.subHash = null;
+                setScrollSyncManual(false);
+                triggerScrollSyncUpdate();
+              }, 1500);
 
-                applySubLinkActiveState(sectionHash, anchor);
-                // enhancedActivateSectionを使用（window.activateSectionが設定されている場合）
-                const activateFn = window.activateSection || activateSection;
-                activateFn(sectionHash, {
-                  scrollToTop: false,
-                  parentHasActiveChild: true,
-                  activeSubHash: anchor
-                });
-                
-                scrollToWhenStable(anchor);
-                if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+              applySubLinkActiveState(sectionHash, anchor);
+              activateSection(sectionHash, {
+                scrollToTop: false,
+                parentHasActiveChild: true,
+                activeSubHash: anchor
               });
-            }
+              
+              setTimeout(() => scrollToElement(anchor), 40);
+              if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+            });
             li.appendChild(na);
             sublist.appendChild(li);
           });
@@ -1276,12 +1226,6 @@
         return;
       }
       
-      // 既に初期化済みかチェック（重複防止）
-      if (hamburgerEl.hasAttribute('data-initialized')) {
-        return;
-      }
-      hamburgerEl.setAttribute('data-initialized', 'true');
-      
       // ensure icon child
       let mi = hamburgerEl.querySelector('.mi, .material-icons');
       if (!mi) {
@@ -1290,14 +1234,13 @@
         mi.setAttribute('aria-hidden', 'true');
         mi.textContent = 'menu';
         hamburgerEl.appendChild(mi);
+      } else {
       }
-      
       // initialize aria-expanded according to classes
       const isActive = hamburgerEl.classList.contains('active');
       hamburgerEl.setAttribute('aria-expanded', String(isActive));
       mi.textContent = isActive ? 'close' : 'menu';
 
-      // イベントリスナーを一度だけ追加
       hamburgerEl.addEventListener('click', function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -1376,14 +1319,6 @@
       const { fallbackToFirst = false, preserveExisting = false } = opts;
       const normalizedSection = (sectionHash || '').trim();
       const requestedSub = subHash ? (subHash.startsWith('#') ? subHash : `#${subHash}`) : '';
-      
-        sectionHash,
-        subHash,
-        fallbackToFirst,
-        preserveExisting,
-        normalizedSection,
-        requestedSub
-      });
 
       const sectionLink = normalizedSection
         ? document.querySelector(`.toc .toc-link[href="${normalizedSection}"]`)
@@ -1481,18 +1416,13 @@
         }
       });
       const applyOpts = shouldMarkParentHasChild ? {} : { fallbackToFirst: true };
-        normalizedTarget,
-        activeSubHash,
-        shouldMarkParentHasChild,
-        applyOpts
-      });
       applySubLinkActiveState(normalizedTarget, shouldMarkParentHasChild ? activeSubHash : null, applyOpts);
 
       if (opts.scrollToTop !== false) {
-        const container = document.querySelector('.manual-content');
-        if (container) {
-          // セクション切り替え時は先頭にスクロール
-          container.scrollTop = 0;
+        const contentPanel = document.querySelector('.content-panel');
+        if (contentPanel) {
+          const y = Math.max(0, contentPanel.getBoundingClientRect().top + getWindowScrollY() - 8);
+          fastSmoothScrollTo({ target: y });
         }
       }
       if (opts.closeMobile && window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
@@ -1507,28 +1437,43 @@
       if (!hash) return;
       const el = document.querySelector(hash);
       if (!el) return;
-      
+      const offset = getScrollOffset();
       const container = document.querySelector('.manual-content');
-      if (!container) return;
-      
-      // 要素のコンテナからの相対位置を計算
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = el.getBoundingClientRect();
-      const elementRelativeTop = elementRect.top - containerRect.top + container.scrollTop;
-      
-      // モバイル時のオフセット
-      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-      const mobileOffset = isMobile ? 70 : 20;
-      
-      const targetScrollTop = Math.max(0, elementRelativeTop - mobileOffset);
-      
-      // スムーズスクロール
-      fastSmoothScrollTo({ container, target: targetScrollTop });
-      
+      if (container && typeof container.scrollTo === 'function') {
+        const cRect = container.getBoundingClientRect();
+        const eRect = el.getBoundingClientRect();
+        const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+        fastSmoothScrollTo({ container, target: Math.max(0, target) });
+      } else {
+        const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
+        fastSmoothScrollTo({ target: y });
+      }
       updateUrlHash(hash, { replace: true });
     }
 
-    // scrollToElementNoAnimはグローバルスコープに移動済み（重複定義を削除）
+    // スクロールアニメーションなしで瞬時に目的位置へ移動
+    function scrollToElementNoAnim(hash, docRef) {
+      const doc = docRef || document;
+      if (!hash) return;
+      const el = doc.querySelector(hash);
+      if (!el) return;
+      // オフセット（ヘッダ等）
+      const tabs = doc.querySelector('.content-tabs');
+      const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
+      const offset = base + 16;
+      const container = doc.querySelector('.manual-content');
+      if (container) {
+        const cRect = container.getBoundingClientRect();
+        const eRect = el.getBoundingClientRect();
+        const currentTop = container.scrollTop || 0;
+        const target = currentTop + (eRect.top - cRect.top) - offset;
+        container.scrollTop = Math.max(0, target);
+      } else {
+        const y = Math.max(0, el.getBoundingClientRect().top + (doc.defaultView?.scrollY || window.scrollY) - offset);
+        (doc.defaultView || window).scrollTo({ top: y, behavior: 'auto' });
+      }
+      if (!docRef) updateUrlHash(hash, { replace: true });
+    }
 
     function updateTabsForViewport() {
       const tabsEl = document.querySelector('.content-tabs');
@@ -1836,10 +1781,10 @@
       if (/後日追記予定/.test(t)) return true;
       if (/詳細は後日追記/.test(t)) return true;
       if (/併用時の制限など/.test(t)) return true;
-      if (/トランスクリプト機能利用時のしゃべり描き&reg;の制限など/.test(t)) return true;
+      if (/トランスクリプト機能利用時のしゃべり描き®の制限など/.test(t)) return true;
       if (/可能回数の制限/.test(t)) return true;
       if (/左のマイクボタンを押して入力したら左吹き出し/.test(t)) return true;
-      if (/しゃべり描き&reg;マイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
+      if (/しゃべり描き®マイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
       if (/よく失敗するところを詳細に書いてあげる/.test(t)) return true;
       if (/よくある質問と回答/.test(t)) return true;
       return false;
@@ -1945,6 +1890,7 @@
     
     // 重複実行を防ぐ（既に内容がある場合はスキップ）
     if (isPrintTOCGenerating || tocContainer.children.length > 0) {
+      console.log('Skipping TOC generation: already generating or has content'); // デバッグ用
       return;
     }
     
@@ -1952,16 +1898,20 @@
     
     // 既存の内容をクリア
     tocContainer.innerHTML = '';
+    console.log('Cleared container, current HTML:', tocContainer.innerHTML); // デバッグ用
     
     // TOCセクションが生成されるまで待機
     setTimeout(() => {
       // 再度チェック（タイミングの問題を回避）
       if (tocContainer.children.length > 0) {
+        console.log('Content already added, skipping'); // デバッグ用
         isPrintTOCGenerating = false;
         return;
       }
       
       const tocSections = document.querySelectorAll('.toc-section');
+      console.log('Found toc-sections:', tocSections.length); // デバッグ用
+      console.log('Container before adding:', tocContainer.children.length, 'children'); // デバッグ用
     
     // TOPセクションを追加
     const topSection = document.createElement('div');
@@ -1969,7 +1919,7 @@
     const topH3 = document.createElement('h3');
     const topLink = document.createElement('a');
     topLink.href = '#top';
-    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳&trade;でできること';
+    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳™でできること';
     topH3.appendChild(topLink);
     topSection.appendChild(topH3);
     
@@ -1978,7 +1928,7 @@
     topSubList.className = 'print-toc-sublist';
     const topItems = [
       { text: '２言語間のコミュニケーション', href: '#top' },
-      { text: 'しゃべり描き&reg;（音声＋お絵描き）で翻訳', href: '#top' },
+      { text: 'しゃべり描き®（音声＋お絵描き）で翻訳', href: '#top' },
       { text: 'トランスクリプト（会話）の翻訳', href: '#top' }
     ];
     topItems.forEach((item) => {
@@ -2044,6 +1994,8 @@
       tocContainer.appendChild(printSection);
     });
     
+    console.log('Final container children:', tocContainer.children.length); // デバッグ用
+    console.log('Final container HTML length:', tocContainer.innerHTML.length); // デバッグ用
     
     // フラグをリセット（次回の印刷に備えて）
     setTimeout(() => {
@@ -2064,6 +2016,7 @@
     const tocContainer = document.querySelector('.print-toc-content');
     if (tocContainer) {
       tocContainer.innerHTML = '';
+      console.log('Cleared TOC after print'); // デバッグ用
     }
     isPrintTOCGenerating = false;
   });
@@ -2189,10 +2142,28 @@
         clearContentHighlights(contentRoot);
         if (terms.length) highlightSectionTerms(sectionEl, terms);
       }
-      
-      // anchorIdが存在する場合はそれを、なければsectionHashを使用
-      const targetHash = anchorId ? `#${anchorId.replace(/^#/, '')}` : sectionHash;
-      scrollToWhenStable(targetHash);
+      setTimeout(() => {
+        let el = document.getElementById(anchorId) || document.querySelector(sectionHash);
+        if (!el) return;
+        // 可能な限り h4 見出し自体にスクロール（procedure-itemにIDが付いているケースに対応）
+        if (el && el.tagName !== 'H4') {
+          const directH4 = el.querySelector && el.querySelector('h4');
+          const fromClosest = el.closest && el.closest('.procedure-item');
+          const h4 = directH4 || (fromClosest ? fromClosest.querySelector('h4') : null);
+          if (h4) el = h4;
+        }
+        const offset = getScrollOffset();
+        const container = document.querySelector('.manual-content');
+        if (container && typeof container.scrollTo === 'function') {
+          const cRect = container.getBoundingClientRect();
+          const eRect = el.getBoundingClientRect();
+          const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+          fastSmoothScrollTo({ container, target: Math.max(0, target) });
+        } else {
+          const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
+          fastSmoothScrollTo({ target: y });
+        }
+      }, 30);
     }
 
     return { search: internalSearchAndRender, jumpTo: internalJumpTo, clearSearch: clearAll };
