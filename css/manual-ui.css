@@ -2113,7 +2113,9 @@ ul.spec-list li{
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
-  padding: 8px 12px;
+  padding: var(--sd-spacing-xs) var(--sd-spacing-sm);
+  padding-inline-start: var(--sd-spacing-twoXS);
+  padding-left: var(--sd-spacing-twoXS);
   border-radius: var(--sd-radius-lg);
   background: rgba(0,102,204,0.10);
   color: var(--color-primary);
