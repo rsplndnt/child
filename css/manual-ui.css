@@ -892,6 +892,36 @@ ul.spec-list li{
   color: rgba(255,255,255,0.86);
 }
 
+/* 動画コンテナ */
+.top-video-container{
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 32px auto 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+}
+
+.top-video{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 説明文セクション */
+.top-description{
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.top-description h3{
+  color: #fff;
+  font-size: clamp(22px, 2.5vw, 28px);
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
 .top-feature-grid{
   position: relative;
   z-index: 1;
@@ -905,6 +935,19 @@ ul.spec-list li{
   max-height: none;
   overflow: visible;
   padding-right: 0;
+}
+
+/* PC: 横3列レイアウト */
+@media (min-width: 769px){
+  .top-feature-grid{
+    flex-direction: row;
+    gap: 24px;
+    justify-content: space-between;
+  }
+  .top-feature-card{
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .top-feature-grid::-webkit-scrollbar { width: 8px; }
@@ -2090,21 +2133,7 @@ ul.spec-list li{
   transform: translateX(3px);
 }
 
-/* feature card stack tuning */
-.top-feature-grid{
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(18px, 2.4vw, 26px);
-  margin-bottom: 0;
-  padding-top: 12px;
-  padding-bottom: 0;
-  max-width: 100%;
-  max-height: none;
-  overflow: visible;
-  padding-right: 0;
-}
+/* feature card stack tuning - 上部で定義済みのため削除 */
 
 @media (max-width: 1024px){
   .top-feature-card{ padding: 20px 20px 16px; }
