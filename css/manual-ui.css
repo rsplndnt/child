@@ -2113,9 +2113,7 @@ ul.spec-list li{
   align-items: center;
   justify-content: flex-start;
   gap: 6px;
-  padding: var(--sd-spacing-twoXS) var(--sd-spacing-sm);
-  padding-inline-start: var(--sd-spacing-sm);
-  padding-left: var(--sd-spacing-sm);
+  padding: var(--sd-spacing-sm);
   border-radius: var(--sd-radius-lg);
   background: rgba(0,102,204,0.10);
   color: var(--color-primary);
@@ -2145,6 +2143,7 @@ ul.spec-list li{
   .top-feature-link{
     width: 100%;
     justify-content: flex-start;
+    padding: var(--sd-spacing-sm);
   }
 }
 
