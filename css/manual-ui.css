@@ -913,7 +913,6 @@ ul.spec-list li{
 .top-description{
   text-align: center;
   margin-bottom: 40px;
-  margin-top: 80px;
 }
 
 .top-description h3{
@@ -973,7 +972,7 @@ ul.spec-list li{
   border-radius: 16px;
   overflow: hidden;
   background: #f1f5f9;
-  box-shadow: var(--sd-shadow-1), inset 0 0 0 1px rgba(11,34,57,0.08);
+  box-shadow: inset 0 0 0 1px rgba(11,34,57,0.08);
 }
 .top-feature-visual img{
   width: 100%;
@@ -2110,13 +2109,11 @@ ul.spec-list li{
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: 999px;
   background: rgba(0,102,204,0.10);
   color: var(--color-primary);
-  font-size: 14px;
   font-weight: 700;
-  line-height: 1.4;
   text-decoration: none;
   box-shadow: inset 0 0 0 1px rgba(0,102,204,0.25);
   transition: background .18s ease, transform .18s ease, box-shadow .18s ease, color .18s ease;
@@ -2129,7 +2126,7 @@ ul.spec-list li{
   outline-offset: 2px;
 }
 .top-feature-link .material-icons{
-  font-size: 18px;
+  font-size: 20px;
   transition: transform .18s ease;
 }
 .top-feature-link:hover .material-icons{
@@ -2158,8 +2155,7 @@ ul.spec-list li{
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  border-radius: 14px;
-  font-size: 15px;
+  border-radius: 999px;
   font-weight: 700;
   text-decoration: none;
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
@@ -2181,20 +2177,7 @@ ul.spec-list li{
 .top-hero-actions .hero-btn.ghost:hover{
   background: rgba(255,255,255,0.22);
 }
-.top-hero-actions .material-icons{ font-size: 18px; }
-
-@media (max-width: 480px){
-  .top-hero-actions{
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-  }
-  .top-hero-actions .hero-btn{
-    justify-content: center;
-    width: 100%;
-  }
-}
+.top-hero-actions .material-icons{ font-size: 20px; }
 
 @media (min-width: 481px) and (max-width: 768px) {
   /* ハンバーガーメニューとH2が被らないように上部マージンを追加（中間モバイル幅） */
