@@ -2106,9 +2106,10 @@ ul.spec-list li{
 
 .top-feature-link{
   margin-top: auto;
-  align-self: flex-start;
+  align-self: flex-end;
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
   padding: 8px 12px;
   border-radius: var(--sd-radius-lg);
@@ -2139,7 +2140,7 @@ ul.spec-list li{
 @media (max-width: 480px){
   .top-feature-link{
     width: 100%;
-    justify-content: center;
+    justify-content: flex-end;
   }
 }
 
