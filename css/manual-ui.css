@@ -896,7 +896,7 @@ ul.spec-list li{
 .top-video-container{
   position: relative;
   width: 100%;
-  max-width: 720px;
+  max-width: min(960px, 92vw);
   margin: 32px auto 40px;
   border-radius: 16px;
   overflow: hidden;
@@ -906,6 +906,7 @@ ul.spec-list li{
 .top-video{
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 9;
   display: block;
 }
 
