@@ -1917,43 +1917,18 @@
       console.log('Found toc-sections:', tocSections.length); // デバッグ用
       console.log('Container before adding:', tocContainer.children.length, 'children'); // デバッグ用
     
-    // TOPセクションを追加
-    const topSection = document.createElement('div');
-    topSection.className = 'print-toc-section';
-    const topH3 = document.createElement('h3');
-    const topLink = document.createElement('a');
-    topLink.href = '#top';
-    topLink.innerHTML = '<span class="toc-icon">📝</span> TOP - しゃべり描き翻訳™でできること';
-    topH3.appendChild(topLink);
-    topSection.appendChild(topH3);
-    
-    // TOPのサブ項目を追加（リンク付き）
-    const topSubList = document.createElement('ul');
-    topSubList.className = 'print-toc-sublist';
-    const topItems = [
-      { text: '２言語間のコミュニケーション', href: '#top' },
-      { text: 'しゃべり描き®（音声＋お絵描き）で翻訳', href: '#top' },
-      { text: 'トランスクリプト（会話）の翻訳', href: '#top' }
-    ];
-    topItems.forEach((item) => {
-      const li = document.createElement('li');
-      const link = document.createElement('a');
-      link.href = item.href;
-      link.textContent = item.text;
-      li.appendChild(link);
-      topSubList.appendChild(li);
-    });
-    topSection.appendChild(topSubList);
-    tocContainer.appendChild(topSection);
-    
     tocSections.forEach((section, index) => {
       const tocLink = section.querySelector('.toc-link');
       if (!tocLink) return;
       
+      const sectionHref = tocLink.getAttribute('href') || '#';
+      if (sectionHref === '#top') {
+        return;
+      }
+      
       // セクションのタイトルとhrefを取得
       const titleText = tocLink.querySelector('span')?.textContent || '';
       const icon = tocLink.querySelector('i')?.className || '';
-      const sectionHref = tocLink.getAttribute('href') || '#';
       
       // 印刷用セクションを作成
       const printSection = document.createElement('div');
