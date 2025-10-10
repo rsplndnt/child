@@ -367,25 +367,13 @@
 
     /* ====== 印刷用 目次とフッター ====== */
     /* 1ページ目: 既存のイラスト入り表紙（#top セクションを表紙扱い） */
-    .print-cover { 
-      display: block !important; 
+    .print-cover.only-print { 
+      display: flex !important;
       break-after: page !important; /* 新しい仕様 */
       page-break-after: always !important; /* 旧ブラウザ対応 */
       break-before: auto !important; /* 前のページ区切りをリセット */
       page-break-before: auto !important; /* 旧ブラウザ対応 */
-    }
-    .print-cover:not(.only-print) {
-      display: none !important;
-      break-after: auto !important;
-      page-break-after: auto !important;
-      break-before: auto !important;
-      page-break-before: auto !important;
-    }
-    
-    /* 印刷表紙のスタイル */
-    .print-cover.only-print {
       padding: 0 !important;
-      display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
       justify-content: center !important;
