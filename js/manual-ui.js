@@ -1508,41 +1508,67 @@
     
     // ブラウザの戻る/進むボタン対応
     window.addEventListener('popstate', function(e) {
-      const hash = window.location.hash;
-      
-      // デバッグ用ログ（必要に応じてコメントアウト）
-      // console.log('Popstate event triggered with hash:', hash);
-      
-      if (hash) {
-        // ハッシュからセクションとサブセクションを分離
-        const hashParts = hash.split('/');
-        const sectionHash = hashParts[0];
-        const subHash = hashParts[1] ? `#${hashParts[1]}` : null;
+      try {
+        console.log('Popstate event triggered'); // デバッグログ
+        const hash = window.location.hash;
+        console.log('Current hash:', hash); // デバッグログ
+        console.log('Available sections:', sections ? sections.map(s => s.id) : 'sections is undefined'); // デバッグログ
+        console.log('activateSection function exists?', typeof activateSection); // デバッグログ
         
-        // セクション切り替え（URLは更新しない）
-        activateSection(sectionHash, {
-          updateUrl: false,  // 重要：無限ループを防ぐ
-          scrollToTop: true,
-          closeMobile: false,
-          activeSubHash: subHash
-        });
+        // 要素の存在を確認
+        if (!sections || sections.length === 0) {
+          console.error('Sections not found or empty');
+          return;
+        }
         
-        // サブセクションがある場合はスクロール
-        if (subHash) {
-          setTimeout(() => {
-            scrollToElement(subHash);
-          }, 100); // セクション切り替え完了後にスクロール
+        if (typeof activateSection !== 'function') {
+          console.error('activateSection is not a function');
+          return;
         }
-      } else {
-        // ハッシュがない場合は最初のセクションを表示
-        const firstSection = sections[0];
-        if (firstSection) {
-          activateSection(`#${firstSection.id}`, {
-            updateUrl: false,
-            scrollToTop: true,
-            closeMobile: false
-          });
-        }
+        
+        // 少し遅延を入れて確実に処理する
+        setTimeout(() => {
+          try {
+            if (hash) {
+              // ハッシュからセクションとサブセクションを分離
+              const hashParts = hash.split('/');
+              const sectionHash = hashParts[0];
+              const subHash = hashParts[1] ? `#${hashParts[1]}` : null;
+              
+              console.log('Activating section:', sectionHash, 'with sub:', subHash); // デバッグログ
+              
+              // セクション切り替え（URLは更新しない）
+              activateSection(sectionHash, {
+                updateUrl: false,  // 重要：無限ループを防ぐ
+                scrollToTop: true,
+                closeMobile: false,
+                activeSubHash: subHash
+              });
+              
+              // サブセクションがある場合はスクロール
+              if (subHash) {
+                setTimeout(() => {
+                  scrollToElement(subHash);
+                }, 100); // セクション切り替え完了後にスクロール
+              }
+            } else {
+              // ハッシュがない場合は最初のセクションを表示
+              console.log('No hash, showing first section'); // デバッグログ
+              const firstSection = sections[0];
+              if (firstSection) {
+                activateSection(`#${firstSection.id}`, {
+                  updateUrl: false,
+                  scrollToTop: true,
+                  closeMobile: false
+                });
+              }
+            }
+          } catch (innerError) {
+            console.error('Error in setTimeout:', innerError);
+          }
+        }, 50); // 少し遅延を入れる
+      } catch (error) {
+        console.error('Error in popstate handler:', error);
       }
     });
     
