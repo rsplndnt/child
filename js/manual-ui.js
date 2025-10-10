@@ -1506,6 +1506,46 @@
       }
     }
     
+    // ブラウザの戻る/進むボタン対応
+    window.addEventListener('popstate', function(e) {
+      const hash = window.location.hash;
+      
+      // デバッグ用ログ（必要に応じてコメントアウト）
+      // console.log('Popstate event triggered with hash:', hash);
+      
+      if (hash) {
+        // ハッシュからセクションとサブセクションを分離
+        const hashParts = hash.split('/');
+        const sectionHash = hashParts[0];
+        const subHash = hashParts[1] ? `#${hashParts[1]}` : null;
+        
+        // セクション切り替え（URLは更新しない）
+        activateSection(sectionHash, {
+          updateUrl: false,  // 重要：無限ループを防ぐ
+          scrollToTop: true,
+          closeMobile: false,
+          activeSubHash: subHash
+        });
+        
+        // サブセクションがある場合はスクロール
+        if (subHash) {
+          setTimeout(() => {
+            scrollToElement(subHash);
+          }, 100); // セクション切り替え完了後にスクロール
+        }
+      } else {
+        // ハッシュがない場合は最初のセクションを表示
+        const firstSection = sections[0];
+        if (firstSection) {
+          activateSection(`#${firstSection.id}`, {
+            updateUrl: false,
+            scrollToTop: true,
+            closeMobile: false
+          });
+        }
+      }
+    });
+    
     // ページトップに戻るボタンの初期化
     setupBackToTop();
   } // end init
