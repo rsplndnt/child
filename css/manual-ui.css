@@ -859,6 +859,7 @@ ul.spec-list li{
   height: auto; /* 明示的に高さを自動に */
 }
 
+/* グラデーション削除 
 .step-section--top::after{
   content: "";
   position: absolute;
@@ -869,11 +870,12 @@ ul.spec-list li{
   opacity: .7;
   pointer-events: none;
 }
+*/
 
 .step-section--top .top-hero{
   text-align: center;
   color: #fff;
-  margin-bottom: 24px;
+  /* margin-bottom: 24px; */
   position: relative; /* sticky解除 */
   top: auto;
   z-index: auto;

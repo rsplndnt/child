@@ -86,11 +86,23 @@
       page-break-before: always;  /* 旧プロパティ互換 */
     }
 
+    /* TOPページとその関連要素を完全に非表示 */
     #top.step-section--top,
     section#top,
     .content-panel > #top,
-    .step-section--top {
+    .step-section--top,
+    #top,
+    [id="top"],
+    .step-section--top *,
+    #top * {
       display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      position: absolute !important;
+      left: -9999px !important;
     }
     #top.step-section--top + .step-section,
     section#top + .step-section,
