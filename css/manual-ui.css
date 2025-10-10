@@ -2141,7 +2141,7 @@ ul.spec-list li{
 
 @media (max-width: 480px){
   .top-feature-link{
-    width: 100%;
+    /* width: 100%; */
     justify-content: flex-start;
     padding: var(--sd-spacing-sm);
   }
