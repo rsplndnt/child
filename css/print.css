@@ -41,6 +41,12 @@
       display: none !important;
     }
   
+    #terminology .local-section-search,
+    #faq .local-section-search,
+    #product-specs .local-section-search {
+      display: none !important;
+    }
+  
     /* 中央カラムを全幅に */
     .manual-content {
       display: block !important;
