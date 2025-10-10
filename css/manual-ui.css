@@ -2111,11 +2111,10 @@ ul.spec-list li{
   align-self: flex-end;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 6px;
-  padding: var(--sd-spacing-xs) var(--sd-spacing-sm);
+  padding: var(--sd-spacing-twoXS) var(--sd-spacing-sm);
   padding-inline-start: var(--sd-spacing-twoXS);
-  padding-left: var(--sd-spacing-twoXS);
   border-radius: var(--sd-radius-lg);
   background: rgba(0,102,204,0.10);
   color: var(--color-primary);
@@ -2144,7 +2143,7 @@ ul.spec-list li{
 @media (max-width: 480px){
   .top-feature-link{
     width: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 }
 
