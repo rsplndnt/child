@@ -86,10 +86,14 @@
       page-break-before: always;  /* 旧プロパティ互換 */
     }
 
-    #top.step-section--top {
+    #top.step-section--top,
+    section#top,
+    .content-panel > #top {
       display: none !important;
     }
-    #top.step-section--top + .step-section {
+    #top.step-section--top + .step-section,
+    section#top + .step-section,
+    .content-panel > #top + .step-section {
       break-before: auto !important;
       page-break-before: auto !important;
     }
