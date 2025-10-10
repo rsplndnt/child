@@ -1509,66 +1509,79 @@
     // ブラウザの戻る/進むボタン対応
     window.addEventListener('popstate', function(e) {
       try {
-        console.log('Popstate event triggered'); // デバッグログ
         const hash = window.location.hash;
-        console.log('Current hash:', hash); // デバッグログ
-        console.log('Available sections:', sections ? sections.map(s => s.id) : 'sections is undefined'); // デバッグログ
-        console.log('activateSection function exists?', typeof activateSection); // デバッグログ
         
-        // 要素の存在を確認
-        if (!sections || sections.length === 0) {
-          console.error('Sections not found or empty');
-          return;
-        }
-        
-        if (typeof activateSection !== 'function') {
-          console.error('activateSection is not a function');
-          return;
-        }
-        
-        // 少し遅延を入れて確実に処理する
-        setTimeout(() => {
-          try {
-            if (hash) {
-              // ハッシュからセクションとサブセクションを分離
-              const hashParts = hash.split('/');
-              const sectionHash = hashParts[0];
-              const subHash = hashParts[1] ? `#${hashParts[1]}` : null;
-              
-              console.log('Activating section:', sectionHash, 'with sub:', subHash); // デバッグログ
+        if (hash) {
+          // ハッシュから要素を探す（サブセクションの可能性もある）
+          const targetElement = document.querySelector(hash);
+          
+          if (targetElement) {
+            // 要素が見つかった場合、その親のセクションを探す
+            const parentSection = targetElement.closest('.step-section');
+            
+            if (parentSection) {
+              // 親セクションのIDを取得
+              const sectionId = `#${parentSection.id}`;
               
               // セクション切り替え（URLは更新しない）
-              activateSection(sectionHash, {
+              activateSection(sectionId, {
                 updateUrl: false,  // 重要：無限ループを防ぐ
-                scrollToTop: true,
-                closeMobile: false,
-                activeSubHash: subHash
+                scrollToTop: false, // スクロール位置は後で調整
+                closeMobile: false
               });
               
-              // サブセクションがある場合はスクロール
-              if (subHash) {
-                setTimeout(() => {
-                  scrollToElement(subHash);
-                }, 100); // セクション切り替え完了後にスクロール
-              }
+              // サブセクションへスクロール（少し遅延を入れて確実に）
+              setTimeout(() => {
+                const targetEl = document.querySelector(hash);
+                if (targetEl) {
+                  const container = document.querySelector('.manual-content');
+                  if (container) {
+                    const containerTop = container.getBoundingClientRect().top;
+                    const targetTop = targetEl.getBoundingClientRect().top;
+                    const scrollTop = container.scrollTop;
+                    const offset = targetTop - containerTop + scrollTop - 20; // 20pxの余白
+                    
+                    container.scrollTo({
+                      top: offset,
+                      behavior: 'smooth'
+                    });
+                  }
+                }
+              }, 100);
             } else {
-              // ハッシュがない場合は最初のセクションを表示
-              console.log('No hash, showing first section'); // デバッグログ
-              const firstSection = sections[0];
-              if (firstSection) {
-                activateSection(`#${firstSection.id}`, {
+              // セクション自体の場合
+              const sectionElement = sections.find(s => `#${s.id}` === hash);
+              if (sectionElement) {
+                activateSection(hash, {
                   updateUrl: false,
                   scrollToTop: true,
                   closeMobile: false
                 });
               }
             }
-          } catch (innerError) {
-            console.error('Error in setTimeout:', innerError);
           }
-        }, 50); // 少し遅延を入れる
+        } else {
+          // ハッシュがない場合は最初のセクションを表示
+          const firstSection = sections[0];
+          if (firstSection) {
+            activateSection(`#${firstSection.id}`, {
+              updateUrl: false,
+              scrollToTop: true,
+              closeMobile: false
+            });
+          }
+        }
       } catch (error) {
         console.error('Error in popstate handler:', error);
+        // エラー時は最初のセクションを表示して復旧
+        const firstSection = sections[0];
+        if (firstSection) {
+          activateSection(`#${firstSection.id}`, {
+            updateUrl: false,
+            scrollToTop: true,
+            closeMobile: false
+          });
+        }
       }
     });
     
