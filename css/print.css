@@ -374,6 +374,13 @@
       break-before: auto !important; /* 前のページ区切りをリセット */
       page-break-before: auto !important; /* 旧ブラウザ対応 */
     }
+    .print-cover:not(.only-print) {
+      display: none !important;
+      break-after: auto !important;
+      page-break-after: auto !important;
+      break-before: auto !important;
+      page-break-before: auto !important;
+    }
     
     /* 印刷表紙のスタイル */
     .print-cover.only-print {
