@@ -2105,6 +2105,15 @@
         if (e.matches) switchToPdfTitle(); else restoreScreenTitle();
       });
     }
+
+    // キーボードの印刷ショートカット（Ctrl+P / Cmd+P）に先行してタイトルを切り替え
+    document.addEventListener('keydown', (ev) => {
+      const isPrintShortcut = (ev.key === 'p' || ev.key === 'P') && (ev.ctrlKey || ev.metaKey);
+      if (!isPrintShortcut) return;
+      switchToPdfTitle();
+      // 念のため少し遅れて復帰（afterprintが来ないケースの保険）
+      setTimeout(restoreScreenTitle, 8000);
+    }, { passive: true });
   })();
 
   /* ---------------- Search module factory ---------------- */
