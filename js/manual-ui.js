@@ -2079,6 +2079,34 @@
     isPrintTOCGenerating = false;
   });
 
+  /* ---------------- 印刷中のPDFファイル名用にタイトルを一時変更 ---------------- */
+  (function setupPrintTitleSwitcher(){
+    const SCREEN_TITLE = document.title; // 例: しゃべり描き翻訳 Ver. 1.0 | マニュアル
+    const PDF_TITLE = 'しゃべり描き翻訳Ver. 1.0_マニュアル';
+    let isSwitched = false;
+
+    function switchToPdfTitle(){
+      if (isSwitched) return;
+      try { document.title = PDF_TITLE; isSwitched = true; } catch(e) {}
+    }
+    function restoreScreenTitle(){
+      if (!isSwitched) return;
+      try { document.title = SCREEN_TITLE; isSwitched = false; } catch(e) {}
+    }
+
+    // 標準の印刷イベント
+    window.addEventListener('beforeprint', switchToPdfTitle);
+    window.addEventListener('afterprint', restoreScreenTitle);
+
+    // 一部ブラウザ向け（印刷ダイアログの検知が難しい場合のフォールバック）
+    const mq = window.matchMedia && window.matchMedia('print');
+    if (mq && typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', (e) => {
+        if (e.matches) switchToPdfTitle(); else restoreScreenTitle();
+      });
+    }
+  })();
+
   /* ---------------- Search module factory ---------------- */
   function createSearchModule({ sectionsSelector = '.content-panel .step-section', procedureSelector = '.procedure-item', searchInput, resultsPanel, onJump }) {
     const sections = Array.from(document.querySelectorAll(sectionsSelector));
