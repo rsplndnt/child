@@ -1032,7 +1032,13 @@ ul.spec-list li{
   }
   /* ハンバーガーメニューとの重なりを防ぐ */
   .step-section--top .top-hero{
-    margin-top: 64px;
+    margin-top: 64px !important;
+  }
+  .step-section--top .step-header.top-hero{
+    margin-top: 64px !important;
+  }
+  #top .step-header.top-hero h2{
+    padding-top: 64px !important;
   }
   .top-feature-grid{ gap: 20px; padding-bottom: 40px; }
   .top-feature-card{
@@ -1050,7 +1056,13 @@ ul.spec-list li{
   }
   /* ハンバーガーメニューとの重なりを防ぐ（モバイル） */
   .step-section--top .top-hero{
-    margin-top: 64px;
+    margin-top: 64px !important;
+  }
+  .step-section--top .step-header.top-hero{
+    margin-top: 64px !important;
+  }
+  #top .step-header.top-hero h2{
+    padding-top: 64px !important;
   }
   .top-feature-card{
     padding: 22px 18px;
