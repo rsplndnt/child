@@ -1348,6 +1348,16 @@ ul.spec-list li{
   max-width: 100%; /* 親要素の幅を超えない */
 }
 
+/* mailtoリンクの改行設定 */
+.step-text a[href^="mailto"] {
+  word-wrap: break-word; /* 古いブラウザ対応 */
+  overflow-wrap: break-word; /* 標準仕様 */
+  word-break: break-all; /* メールアドレスを任意の位置で改行 */
+  hyphens: none; /* ハイフン処理を無効化 */
+  display: inline-block; /* インラインブロックで幅を制限可能に */
+  max-width: 100%; /* 親要素の幅を超えない */
+}
+
 /* ★独立した注意事項カード */
 .note-card{
   background: #FFF7E6;              /* 読みやすい淡黄色 */
