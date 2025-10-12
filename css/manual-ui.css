@@ -1030,6 +1030,10 @@ ul.spec-list li{
     padding-bottom: 40px;
     padding-left: 24px;
   }
+  /* ハンバーガーメニューとの重なりを防ぐ */
+  .step-section--top .top-hero{
+    margin-top: 64px;
+  }
   .top-feature-grid{ gap: 20px; padding-bottom: 40px; }
   .top-feature-card{
     min-height: 0;
@@ -1043,6 +1047,10 @@ ul.spec-list li{
     padding-right: 18px;
     padding-bottom: 36px;
     padding-left: 18px;
+  }
+  /* ハンバーガーメニューとの重なりを防ぐ（モバイル） */
+  .step-section--top .top-hero{
+    margin-top: 64px;
   }
   .top-feature-card{
     padding: 22px 18px;
@@ -2165,6 +2173,7 @@ ul.spec-list li{
   margin: clamp(40px, 6vw, 64px) auto 0;
   display: inline-flex;
   gap: 12px;
+  margin-bottom: 40px;
 }
 .top-hero-actions .hero-btn{
   display: inline-flex;
