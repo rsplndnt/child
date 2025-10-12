@@ -885,6 +885,13 @@ ul.spec-list li{
   margin-top: 36px;
   margin-bottom: 12px;
   font-size: clamp(28px, 3vw, 32px);
+  line-height: 1.4;
+}
+.step-section--top .top-hero__subtitle{
+  font-size: 0.85em;
+  font-weight: normal;
+  display: block;
+  margin-top: 8px;
 }
 .top-hero__lead{
   margin: 0 auto;
@@ -2176,6 +2183,10 @@ ul.spec-list li{
 }
 @media (max-width: 768px){
   .step-section--top .top-hero__lead{ font-size: 14px; }
+  .step-section--top .top-hero__subtitle{ 
+    font-size: 0.8em; 
+    margin-top: 6px;
+  }
   .top-feature-card{ padding: 18px 18px 16px; border-radius: 14px; }
 }
 /* === /TOP UI Refresh === */
