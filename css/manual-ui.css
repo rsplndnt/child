@@ -1030,15 +1030,15 @@ ul.spec-list li{
     padding-bottom: 40px;
     padding-left: 24px;
   }
-  /* ハンバーガーメニューとの重なりを防ぐ */
+  /* ハンバーガーメニューとの重なりを防ぐ（適度な間隔） */
   .step-section--top .top-hero{
-    margin-top: 64px !important;
+    margin-top: 24px !important;
   }
   .step-section--top .step-header.top-hero{
-    margin-top: 64px !important;
+    margin-top: 24px !important;
   }
   #top .step-header.top-hero h2{
-    padding-top: 64px !important;
+    padding-top: 24px !important;
   }
   .top-feature-grid{ gap: 20px; padding-bottom: 40px; }
   .top-feature-card{
@@ -1054,15 +1054,15 @@ ul.spec-list li{
     padding-bottom: 36px;
     padding-left: 18px;
   }
-  /* ハンバーガーメニューとの重なりを防ぐ（モバイル） */
+  /* ハンバーガーメニューとの重なりを防ぐ（モバイル・適度な間隔） */
   .step-section--top .top-hero{
-    margin-top: 64px !important;
+    margin-top: 24px !important;
   }
   .step-section--top .step-header.top-hero{
-    margin-top: 64px !important;
+    margin-top: 24px !important;
   }
   #top .step-header.top-hero h2{
-    padding-top: 64px !important;
+    padding-top: 24px !important;
   }
   .top-feature-card{
     padding: 22px 18px;
