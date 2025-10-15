@@ -282,10 +282,10 @@ ul.spec-list li{
   text-decoration: none;
 }
 .sidebar-header h1 img{
-  width: 52px;
+  width: 64px;
   height: auto;
   flex-shrink: 0;
-  margin-top: -2px;  /* 画像位置を微調整 */
+  margin-top: -4px;  /* 画像位置を微調整 */
 }
 .sidebar-header h1 span{
   line-height: var(--sd-line-height-tight);
