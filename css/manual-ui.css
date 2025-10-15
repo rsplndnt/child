@@ -1357,6 +1357,28 @@ ul.spec-list li{
   max-width: 100%; /* 親要素の幅を超えない */
 }
 
+/* 製品仕様テーブル */
+.spec-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 16px;
+  font-size: 0.95em;
+}
+.spec-table th,
+.spec-table td{
+  border: 1px solid var(--outline-variant);
+  padding: 8px 10px;
+  vertical-align: top;
+}
+.spec-table thead th{
+  background: var(--surface-variant);
+  color: var(--on-surface-variant);
+  font-weight: 700;
+}
+.spec-table tbody tr:nth-child(even){
+  background: rgba(0,0,0,0.02);
+}
+
 /* mailtoリンクの改行設定 */
 .step-text a[href^="mailto"] {
   word-wrap: break-word; /* 古いブラウザ対応 */
