@@ -282,10 +282,10 @@ ul.spec-list li{
   text-decoration: none;
 }
 .sidebar-header h1 img{
-  width: 40px;
+  width: 52px;
   height: auto;
   flex-shrink: 0;
-  margin-top: 4px;  /* 画像位置を微調整 */
+  margin-top: -4px;  /* 画像位置を微調整 */
 }
 .sidebar-header h1 span{
   line-height: var(--sd-line-height-tight);
@@ -390,8 +390,17 @@ ul.spec-list li{
   background: var(--color-primary-700);
 }
 
-.search-btn .material-icons {
+.search-btn .material-icons,
+.search-btn img {
   font-size: var(--sd-font-size-xl); /* lg → xl */
+  width: 24px;
+  height: 24px;
+}
+
+/* 検索アイコン用の追加スタイル */
+.step-key-icon img {
+  vertical-align: middle;
+  margin-right: 2px;
 }
 
 .clear-btn {
