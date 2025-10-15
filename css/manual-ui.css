@@ -285,7 +285,7 @@ ul.spec-list li{
   width: 52px;
   height: auto;
   flex-shrink: 0;
-  margin-top: -4px;  /* 画像位置を微調整 */
+  margin-top: -2px;  /* 画像位置を微調整 */
 }
 .sidebar-header h1 span{
   line-height: var(--sd-line-height-tight);
@@ -1706,7 +1706,8 @@ ul.spec-list li{
   font-size: var(--sd-font-size-md); /* sm → md */ line-height: var(--sd-line-height-normal);
   white-space: normal; word-break: break-word; hyphens: auto;
 }
-.toc .toc-section h3 .toc-link i{ 
+.toc .toc-section h3 .toc-link i,
+.toc .toc-section h3 .toc-link .toc-icon { 
   font-size: 18px; 
   color: var(--color-primary); 
   display: flex;
@@ -1714,9 +1715,19 @@ ul.spec-list li{
   justify-content: center;
   padding-top: 5px; /* 微調整 */
 }
+.toc .toc-section h3 .toc-link .toc-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
 .toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
 .toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
-.toc .toc-section h3 .toc-link.active i{ color:#fff; }
+.toc .toc-section h3 .toc-link.active i,
+.toc .toc-section h3 .toc-link.active .toc-icon { 
+  color:#fff; 
+  filter: brightness(0) invert(1); /* SVG画像を白色に変更 */
+}
 /* 中項目が選択されている時の大項目のスタイル */
 .toc .toc-section h3 .toc-link.has-active-child{ 
   background: var(--hovered-variant); 
