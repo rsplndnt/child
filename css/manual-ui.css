@@ -1713,11 +1713,11 @@ ul.spec-list li{
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 5px; /* 微調整 */
+  /* padding-top: 5px; 微調整 */
 }
 .toc .toc-section h3 .toc-link .toc-icon {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
   margin-right: 10px;
 }
