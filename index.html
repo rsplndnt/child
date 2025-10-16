@@ -138,7 +138,7 @@
         <aside class="manual-sidebar" id="sidebarMenu" aria-label="大項目ナビ">
             <div class="sidebar-header">
                 <h1><a href="#top" class="header-title-link" aria-label="トップページへ移動">
-                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/logo-header_4x.png"
+                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/logo-header.svg"
                             alt="MelBridge® - しゃべり描き翻訳™ロゴ" width="40" height="40" loading="eager">
                         <span>しゃべり描き翻訳™<br>ユーザーマニュアル</span>
                     </a></h1>
@@ -1355,6 +1355,118 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-swipe-talk-feature">しゃべり描き®（Swipe Talk機能）</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>音声入力と同時にキャンバスに文字を配置する機能。入力文・翻訳文・折り返し翻訳が3段で表示されます。</p>
+                                    <ul>
+                                        <li>マイクボタンを押して発話するだけで、リアルタイムに翻訳結果がキャンバス上に可視化されます。</li>
+                                        <li>色や文字サイズはツールパレットから変更できます。</li>
+                                        <li>配置後の文字はバウンディングボックスで移動・編集・削除が可能です（<a href="#use-swipe-talk">使い方</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-sheet-management-area">シート管理エリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>画面上部に配置されたシート一覧とタイトル編集、書き出しボタンのある領域。</p>
+                                    <ul>
+                                        <li>最大10枚まで同時保持できます。11枚目を作成すると最終更新日時の古いシートから自動的に非表示になります。</li>
+                                        <li>タイトル部分をクリックすると編集できます。</li>
+                                        <li>「書き出し」ボタンで現在のキャンバスを画像として保存できます（<a href="#sheet-management-area">画面構成</a>、<a href="#create-new-sheet">シート作成</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-transcript-area">トランスクリプトエリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>画面右側（またはモバイル時は下側）に表示される会話記録領域。</p>
+                                    <ul>
+                                        <li>吹き出し形式で発話者ごとに音声入力が蓄積され、翻訳・折り返し翻訳もセットで表示されます。</li>
+                                        <li>トランスクリプトボタンをクリックしてエリアを開き、マイクを有効にして使用します。</li>
+                                        <li>10分連続で利用すると自動停止するため、長時間利用時は途中で再開してください（<a href="#transcript-area">画面構成</a>、<a href="#use-transcript">使い方</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-bounding-box">バウンディングボックス</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバス上の要素（テキストや画像）をクリックすると表示される選択枠。</p>
+                                    <ul>
+                                        <li>この枠をドラッグして要素を移動できます。</li>
+                                        <li>削除アイコンをクリックすると要素を消去できます。</li>
+                                        <li>テキストの場合はダブルクリックで内容を編集できます（<a href="#edit-elements">要素の編集</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-mic-button">マイクボタン（左右）</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>しゃべり描き®とトランスクリプトで使用する音声入力ボタン。左右それぞれが異なる言語に紐づきます。</p>
+                                    <ul>
+                                        <li>ボタンを押してから青く光るまで短い待ち時間（1〜2秒）があります（<a href="#mic-input-lag">詳細</a>）。</li>
+                                        <li>会話者ごとの入力切り替えに使用します。</li>
+                                        <li>左右のマイクと設定言語、吹き出しの色は自動的に紐づきます（<a href="#dual-user-mic-usage">マイクと言語の紐づき</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-language-pair">言語ペア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>翻訳元と翻訳先の2言語の組み合わせ。画面上部の言語選択メニューで設定します。</p>
+                                    <ul>
+                                        <li>しゃべり描き®とトランスクリプトで共通の設定を使用します。</li>
+                                        <li>対応言語は全30言語です（<a href="#supported-languages">翻訳言語一覧</a>）。</li>
+                                        <li>言語を切り替えると、左右のマイクに割り当てられる認識言語も変わります（<a href="#select-language">言語を選ぶ</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-undo-redo">アンドゥ・リドゥ</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバス上の操作を取り消し（アンドゥ）・やり直し（リドゥ）する機能。</p>
+                                    <ul>
+                                        <li>ツールパレット下部のボタンから操作できます。</li>
+                                        <li>描画や要素配置のミスをすぐに修正できます。</li>
+                                        <li>複数回の操作を順番に取り消し・やり直すことが可能です。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-export">書き出し（エクスポート）</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>現在のキャンバス内容を画像ファイル（PNG形式）として保存する機能。</p>
+                                    <ul>
+                                        <li>シート管理エリアの「書き出し」ボタンまたは各シートのメニューから実行します。</li>
+                                        <li>書き出し範囲は表示中のキャンバス領域に依存するため、ズーム率やウィンドウサイズを調整してから実行してください。</li>
+                                        <li>画像はブラウザのダウンロードフォルダに保存されます（<a href="#export-canvas">書き出し手順</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     </section>
 
@@ -1453,6 +1565,150 @@
                                     <li>ブラウザでログイン後、Authenticator の設定画面に進み直し、QRコードを表示します（<a href="#setup-authenticator">設定手順</a>）。</li>
                                     <li>スマートフォンのアプリで <strong>アカウントの追加</strong> &gt; <strong>職場または学校アカウント</strong> を選び、表示されたQRコードをスキャンしてください。</li>
                                     <li>最後に2桁コードを入力し、PC側で「通知が承認されました」と表示されれば再設定が完了します（<a href="#authenticate-with-app">認証手順</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-voice-not-recognized">Q. 音声が認識されない／翻訳が表示されない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>次の点を確認してください。</p>
+                                <ul>
+                                    <li>マイクボタンが青く光っているか確認してください（光るまで1〜2秒待ちます）。</li>
+                                    <li>ブラウザのマイク権限が許可されているか確認してください。</li>
+                                    <li>周囲の騒音が大きすぎないか、マイクとの距離が適切か確認してください。</li>
+                                    <li>選択している言語が発話内容と一致しているか確認してください（<a href="#select-language">言語を選ぶ</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-back-translation-different">Q. 折り返し翻訳の内容が元の文と大きく違う</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>折り返し翻訳は翻訳精度の確認用フィードバックです。</p>
+                                <ul>
+                                    <li>大きく意味が変わる場合は、入力文を短くしたり言い換えたりすると改善することがあります。</li>
+                                    <li>専門用語や固有名詞が誤訳される場合は、より一般的な表現に置き換えてみてください。</li>
+                                    <li>折り返し翻訳の仕組みについては用語集をご覧ください（<a href="#term-back-translation">折り返し翻訳とは</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-simultaneous-use">Q. しゃべり描き®とトランスクリプトは同時に使える？</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>基本的に同時使用は可能ですが、以下の制約があります。</p>
+                                <ul>
+                                    <li>同じマイクボタンを同時に押すことはできません（どちらか一方のみ有効）。</li>
+                                    <li>一方で音声入力中にもう一方のマイクを押すと、先に押していた方の入力が停止します。</li>
+                                    <li>詳細は「マイクの使い方のポイント」をご覧ください（<a href="#concurrent-usage-notes">同時使用の条件</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-transcript-auto-stop">Q. トランスクリプトが10分で自動停止する</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>連続使用の制限により、10分経過すると自動的にマイクが停止します。</p>
+                                <ul>
+                                    <li>長時間利用する場合は、途中で一旦マイクを停止→再度開始してください。</li>
+                                    <li>停止前の会話履歴は消えず、トランスクリプトエリアに残ります。</li>
+                                    <li>詳細は用語集をご覧ください（<a href="#term-transcript">トランスクリプト</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-cannot-select-element">Q. キャンバス上の要素が選択できない／動かせない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>以下を確認してください。</p>
+                                <ul>
+                                    <li>ツールパレットで「カーソル（矢印）」モードが選択されているか確認してください。</li>
+                                    <li>要素をクリックしてバウンディングボックス（選択枠）が表示されるか確認してください。</li>
+                                    <li>ペンや消しゴムモードになっていると選択できないため、カーソルに切り替えてください。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#edit-elements">要素を編集する</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-export-size-issue">Q. 書き出した画像が小さい／切れている</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>書き出し範囲は表示中のキャンバス領域に依存します。</p>
+                                <ul>
+                                    <li>ブラウザのズーム率を100%に戻してください。</li>
+                                    <li>ウィンドウサイズを広げてキャンバス全体が見える状態にしてください。</li>
+                                    <li>必要に応じてキャンバスの表示倍率を調整してから書き出してください。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#export-canvas">書き出し手順</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-change-sheet-title">Q. シートのタイトルを変更したい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>シート管理エリアで対象シートを選択し、タイトル部分をクリックすると編集できます。</p>
+                                <ul>
+                                    <li>変更後はEnterキーを押すか、別の場所をクリックして確定してください。</li>
+                                    <li>タイトルは最大50文字まで入力できます。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#create-new-sheet">シートを作成する</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-old-sheet-not-found">Q. 過去に作成したシートが見つからない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>同時に保持できるのは10枚までです。11枚目を作成すると最終更新日時の古いシートから非表示になります。</p>
+                                <ul>
+                                    <li>重要なシートは定期的に「書き出し」で画像保存することをお勧めします。</li>
+                                    <li>サーバー側に自動保存されているため、完全に削除されるわけではありません。</li>
+                                    <li>詳細は用語集とFAQをご覧ください（<a href="#term-sheet">シートとは</a>、<a href="#faq-sheet-limit">シート制限</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-change-pen-color">Q. ペンの色や太さを変更したい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>ツールパレットから以下のように操作します。</p>
+                                <ul>
+                                    <li><strong>色の変更：</strong> パレットアイコンをクリックして希望の色を選択してください。</li>
+                                    <li><strong>太さの変更：</strong> ペン小・ペン中・ペン大のいずれかを選択してください。</li>
+                                    <li>設定は次回の描画から反映されます（既存の線には影響しません）。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#drawing-tools">お絵描きを行う</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-multiple-window-restriction">Q. 複数のウィンドウで同時に音声入力できない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>同じアカウントで複数のブラウザウィンドウ/タブを開いている場合、音声入力は1つのウィンドウでのみ有効です。</p>
+                                <ul>
+                                    <li>他のウィンドウでマイクを使いたい場合は、現在入力中のウィンドウでマイクを停止してください。</li>
+                                    <li>これはマイクリソースの競合を防ぐための仕様です。</li>
+                                    <li>詳細は「マイクの使い方のポイント」をご覧ください（<a href="#multiple-window-restriction">複数ウィンドウ制限</a>）。</li>
                                 </ul>
                             </div>
                         </div>
