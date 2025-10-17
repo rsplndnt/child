@@ -1052,9 +1052,10 @@
         const section = h3.parentElement;
         if (!section || !section.classList.contains('toc-section')) return;
         
-        // リンク内にトグルアイコンがなければ追加
+        // リンク内にトグルアイコンがなければ追加（製品仕様セクションは除外）
         let toggleIcon = link.querySelector('.toc-toggle-icon');
-        if (!toggleIcon && items.length > 0) {
+        const isProductSpecs = link.getAttribute('href') === '#product-specs';
+        if (!toggleIcon && items.length > 0 && !isProductSpecs) {
           toggleIcon = document.createElement('span');
           toggleIcon.className = 'toc-toggle-icon material-icons';
           toggleIcon.textContent = 'expand_more';
