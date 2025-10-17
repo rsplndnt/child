@@ -2347,24 +2347,30 @@ ul.spec-list li{
   color: #1a1a1a;
 }
 
-.oss-license-table tbody td:nth-child(2) {
-  color: #666;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-}
 
 .oss-license-table tbody td a {
   color: var(--color-primary);
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
   gap: 4px;
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 
 .oss-license-table tbody td a:hover {
   color: var(--color-primary-700);
   text-decoration: underline;
+}
+
+.oss-license-table tbody td a .material-icons {
+  font-size: 16px !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 /* レスポンシブ対応 */
@@ -2383,10 +2389,6 @@ ul.spec-list li{
 
   .oss-license-table tbody td {
     padding: 10px 12px;
-  }
-
-  .oss-license-table tbody td:nth-child(2) {
-    font-size: 11px;
   }
 }
 
@@ -2432,10 +2434,6 @@ ul.spec-list li{
 
   .oss-license-table tbody td:nth-child(2):before {
     content: "ライセンス: ";
-  }
-
-  .oss-license-table tbody td:nth-child(3):before {
-    content: "リンク先: ";
   }
 }
 
