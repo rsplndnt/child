@@ -2299,3 +2299,199 @@ ul.spec-list li{
     margin-top: 36px !important;
   }
 }
+
+/* OSS License Table */
+.oss-license-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.oss-license-table thead {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.oss-license-table thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.oss-license-table tbody tr {
+  border-bottom: 1px solid #e8e8e8;
+  transition: background-color 0.2s ease;
+}
+
+.oss-license-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.oss-license-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.oss-license-table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+}
+
+.oss-license-table tbody td:first-child {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.oss-license-table tbody td:nth-child(2) {
+  color: #666;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.oss-license-table tbody td a {
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.oss-license-table tbody td a:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .oss-license-table {
+    font-size: 12px;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .oss-license-table thead th {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .oss-license-table tbody td {
+    padding: 10px 12px;
+  }
+
+  .oss-license-table tbody td:nth-child(2) {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .oss-license-table thead {
+    display: none;
+  }
+
+  .oss-license-table tbody,
+  .oss-license-table tbody tr,
+  .oss-license-table tbody td {
+    display: block;
+  }
+
+  .oss-license-table tbody tr {
+    margin-bottom: 16px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .oss-license-table tbody td {
+    padding: 8px 0;
+    border: none;
+    text-align: left;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .oss-license-table tbody td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 10px;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .oss-license-table tbody td:first-child:before {
+    content: "OSS名: ";
+  }
+
+  .oss-license-table tbody td:nth-child(2):before {
+    content: "ライセンス: ";
+  }
+
+  .oss-license-table tbody td:nth-child(3):before {
+    content: "リンク先: ";
+  }
+}
+
+/* OSS Table Toggle Button */
+.oss-table-toggle {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.oss-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 113, 184, 0.2);
+}
+
+.oss-toggle-btn:hover {
+  background: var(--color-primary-700);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 113, 184, 0.3);
+}
+
+.oss-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.oss-toggle-btn .material-icons {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.oss-toggle-btn[aria-expanded="true"] .material-icons {
+  transform: rotate(180deg);
+}
+
+.oss-toggle-btn .toggle-count {
+  color: rgba(255,255,255,0.9);
+}
+
+/* Hidden rows */
+.oss-license-table tbody tr.oss-row-hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .oss-toggle-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

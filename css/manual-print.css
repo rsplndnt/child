@@ -340,3 +340,14 @@
 /* 画面側との干渉回避：
    表紙を入れたせいで :first-of-type 調整が崩れる場合の軽微な補正 */
 .print-cover + .step-section { margin-top: 8px; }
+
+/* OSS License Table - 印刷時は全て表示 */
+@media print {
+  .oss-license-table tbody tr.oss-row-hidden {
+    display: table-row !important;
+  }
+  
+  .oss-table-toggle {
+    display: none !important;
+  }
+}

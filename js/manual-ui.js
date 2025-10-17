@@ -2404,4 +2404,54 @@
   //   resizeTimer = setTimeout(adjustMobileLayout, 250);
   // });
 
+  // OSS License Table Toggle
+  function initOssTableToggle() {
+    const toggleBtn = document.getElementById('toggleOssTable');
+    const ossTable = document.querySelector('.oss-license-table tbody');
+    
+    if (!toggleBtn || !ossTable) return;
+    
+    const rows = Array.from(ossTable.querySelectorAll('tr'));
+    const visibleCount = 10;
+    const hiddenRows = rows.slice(visibleCount);
+    
+    // 初期状態：11行目以降を非表示
+    hiddenRows.forEach(row => {
+      row.classList.add('oss-row-hidden');
+    });
+    
+    // ボタンクリックで展開/折りたたみ
+    toggleBtn.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      
+      if (isExpanded) {
+        // 折りたたむ
+        hiddenRows.forEach(row => {
+          row.classList.add('oss-row-hidden');
+        });
+        this.setAttribute('aria-expanded', 'false');
+        this.querySelector('.toggle-text').textContent = 'すべて表示';
+        this.querySelector('.toggle-count').textContent = `（残り ${hiddenRows.length}個）`;
+        
+        // 表の先頭にスクロール
+        ossTable.closest('.oss-license-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        // 展開
+        hiddenRows.forEach(row => {
+          row.classList.remove('oss-row-hidden');
+        });
+        this.setAttribute('aria-expanded', 'true');
+        this.querySelector('.toggle-text').textContent = '折りたたむ';
+        this.querySelector('.toggle-count').textContent = '';
+      }
+    });
+  }
+  
+  // ページ読み込み時に初期化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOssTableToggle);
+  } else {
+    initOssTableToggle();
+  }
+
 })(); // EOF
