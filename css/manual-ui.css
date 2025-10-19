@@ -1110,7 +1110,7 @@ ul.spec-list li{
   background: var(--surface);
   border-radius: 12px;
   padding: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
 .procedure-item h4{ color: var(--color-primary); margin: 0 0 12px; font-size: var(--sd-font-size-xl); } /* lg → xl */
