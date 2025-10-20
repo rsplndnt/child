@@ -1614,6 +1614,12 @@ ul.spec-list li{
     margin-bottom: 16px;
 }
 
+/* 画面構成セクション内の注意カード */
+#screen-layout .note-card {
+    margin-left: 0;
+    margin-top: 16px;
+}
+
 /* 構造化されたアドバイスコンテンツ */
 .advice-content {
     flex: 1;
