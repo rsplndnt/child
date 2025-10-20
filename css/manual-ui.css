@@ -1593,14 +1593,14 @@ ul.spec-list li{
 .feature-detail {
     margin-top: 16px;
     padding-left: 20px;
-    border-left: 3px solid #e0e0e0;
+    border-left: 3px solid var(--color-primary);
 }
 
 .feature-detail h6 {
     margin: 0 0 8px;
-    font-size: 15px;
+    font-size: var(--sd-font-size-md);
     font-weight: 600;
-    color: #555;
+    color: var(--color-primary);
     line-height: 1.6;
 }
 
@@ -1618,7 +1618,7 @@ ul.spec-list li{
 #screen-layout .note-card {
     margin-left: 0;
     margin-top: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 /* 構造化されたアドバイスコンテンツ */
@@ -1907,11 +1907,11 @@ ul.spec-list li{
   }
   
   .feature-detail h6 {
-    font-size: 14px;
+    font-size: var(--sd-font-size-sm);
   }
   
   .feature-detail p {
-    font-size: 14px;
+    font-size: var(--sd-font-size-sm);
   }
   
   .advice-image-placeholder {
