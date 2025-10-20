@@ -1302,6 +1302,12 @@ ul.spec-list li{
     position: relative;
     z-index: 2;
   }
+  
+  /* ワンポイントアドバイスの緑背景を維持 */
+  #screen-layout .step-text.advice-section {
+    background: #E8F5E9;
+    border: 1px solid #C8E6C9;
+  }
 }
 .step-text{
   grid-column: 1;  /* テキストを左側に */
