@@ -1319,8 +1319,9 @@ ul.spec-list li{
 }
 .step-text p{
   margin: 0;
-  font-size: var(--sd-font-size-lg); /* md → lg */
+  font-size: var(--sd-font-size-md); /* md */
   line-height: var(--sd-line-height-normal);
+  margin-top: var(--sd-spacing-xs);
 }
 /* シンプルな番号付きリストスタイル */
 .step-text ol {
@@ -1599,19 +1600,20 @@ ul.spec-list li{
 .feature-detail {
     margin-top: 16px;
     padding-left: 20px;
-    border-left: 3px solid var(--color-primary-700);
+    border-left: 3px solid var(--on-surface);
 }
 
 .feature-detail h6 {
     margin: 0 0 8px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: var(--color-primary-700);
+    color: var(--on-surface);
     line-height: 1.6;
 }
 
 .feature-detail p {
     margin: 0 0 12px;
+    font-size: 15px;
     color: #666;
     line-height: 1.7;
 }
