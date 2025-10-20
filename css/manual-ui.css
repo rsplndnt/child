@@ -1127,7 +1127,7 @@ ul.spec-list li{
 .procedure-steps{
   display: flex;
   flex-direction: column;
-  gap: var(--sd-spacing-3xl); /* 32px - トークン化 */
+  gap: var(--sd-spacing-l); /*トークン化 */
   border-top: var(--sd-border-medium) solid var(--color-primary) !important;
   padding-top: var(--sd-spacing-lg) !important;
   margin-top: var(--sd-spacing-md) !important;
