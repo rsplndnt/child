@@ -1589,6 +1589,31 @@ ul.spec-list li{
     line-height: 1.6;
 }
 
+/* 機能詳細セクション */
+.feature-detail {
+    margin-top: 16px;
+    padding-left: 20px;
+    border-left: 3px solid #e0e0e0;
+}
+
+.feature-detail h6 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #555;
+    line-height: 1.6;
+}
+
+.feature-detail p {
+    margin: 0 0 12px;
+    color: #666;
+    line-height: 1.7;
+}
+
+.feature-detail:last-of-type {
+    margin-bottom: 16px;
+}
+
 /* 構造化されたアドバイスコンテンツ */
 .advice-content {
     flex: 1;
@@ -1866,6 +1891,20 @@ ul.spec-list li{
   
   .advice-content h6 {
     font-size: 15px;
+  }
+  
+  /* 機能詳細セクションのモバイル調整 */
+  .feature-detail {
+    padding-left: 16px;
+    margin-top: 12px;
+  }
+  
+  .feature-detail h6 {
+    font-size: 14px;
+  }
+  
+  .feature-detail p {
+    font-size: 14px;
   }
   
   .advice-image-placeholder {
