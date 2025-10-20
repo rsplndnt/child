@@ -1593,14 +1593,14 @@ ul.spec-list li{
 .feature-detail {
     margin-top: 16px;
     padding-left: 20px;
-    border-left: 3px solid var(--color-primary);
+    border-left: 3px solid var(--color-primary-700);
 }
 
 .feature-detail h6 {
     margin: 0 0 8px;
-    font-size: var(--sd-font-size-md);
+    font-size: 18px;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-primary-700);
     line-height: 1.6;
 }
 
@@ -1612,6 +1612,11 @@ ul.spec-list li{
 
 .feature-detail:last-of-type {
     margin-bottom: 16px;
+}
+
+/* 画面構成セクション内のstrong */
+#screen-layout strong {
+    color: var(--color-primary);
 }
 
 /* 画面構成セクション内の注意カード */
@@ -1907,7 +1912,7 @@ ul.spec-list li{
   }
   
   .feature-detail h6 {
-    font-size: var(--sd-font-size-sm);
+    font-size: var(--sd-font-size-md);
   }
   
   .feature-detail p {
