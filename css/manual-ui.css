@@ -1618,6 +1618,7 @@ ul.spec-list li{
 #screen-layout .note-card {
     margin-left: 0;
     margin-top: 16px;
+    margin-bottom: 8px;
 }
 
 /* 構造化されたアドバイスコンテンツ */
