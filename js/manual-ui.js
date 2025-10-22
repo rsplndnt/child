@@ -214,8 +214,133 @@
     });
   }
 
+  /* ---------------- ブラウザ検出とカメラ設定URLの表示 ---------------- */
+  function setupBrowserCameraSettings() {
+    const urlTextElement = document.getElementById('setting-url-text');
+    const browserNameElement = document.getElementById('browser-name');
+    const copyButton = document.getElementById('copy-url-btn');
+    const urlWrapper = document.querySelector('.browser-url-wrapper');
+    const instructionsList = document.querySelector('.browser-instructions');
+    
+    if (!urlTextElement || !browserNameElement) return;
+    
+    // ブラウザ検出
+    const userAgent = navigator.userAgent.toLowerCase();
+    let browserName = 'Chrome';
+    let settingUrl = 'chrome://settings/content/camera';
+    let isSafari = false;
+    
+    if (userAgent.includes('edg/')) {
+      browserName = 'Microsoft Edge';
+      settingUrl = 'edge://settings/content/camera';
+    } else if (userAgent.includes('firefox')) {
+      browserName = 'Firefox';
+      settingUrl = 'about:preferences#privacy';
+    } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+      browserName = 'Safari';
+      isSafari = true;
+    } else if (userAgent.includes('opr/') || userAgent.includes('opera')) {
+      browserName = 'Opera';
+      settingUrl = 'opera://settings/content/camera';
+    }
+    
+    // Safari の場合は特別な表示
+    if (isSafari) {
+      // コピーボタンを非表示
+      if (copyButton) {
+        copyButton.style.display = 'none';
+      }
+      
+      // URL表示エリアをシステム設定の手順に変更
+      if (urlWrapper) {
+        urlWrapper.classList.add('safari-instructions');
+        urlTextElement.innerHTML = '<strong>macOS システム環境設定</strong> → <strong>プライバシーとセキュリティ</strong> → <strong>カメラ</strong>';
+      }
+      
+      // 手順説明を更新
+      if (instructionsList) {
+        instructionsList.innerHTML = `
+          <li>画面左上のAppleメニュー () から「システム設定...」を開きます</li>
+          <li>左側のメニューから「プライバシーとセキュリティ」を選択します</li>
+          <li>「カメラ」をクリックして、Safariの使用を許可します</li>
+          <li>Safariの設定から特定のカメラを選択することはできないため、macOSのシステムレベルで既定のカメラを変更する必要があります</li>
+        `;
+      }
+      
+      // 動画セクションを非表示
+      const videoContainer = document.querySelector('.camera-settings-video-container');
+      if (videoContainer) {
+        videoContainer.style.display = 'none';
+      }
+    } else {
+      // 通常のブラウザ（URL形式）
+      urlTextElement.textContent = settingUrl;
+    }
+    
+    // ブラウザ名を表示
+    browserNameElement.textContent = browserName;
+    
+    // コピーボタンのイベントリスナー
+    if (copyButton) {
+      copyButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // クリップボードにコピー
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(settingUrl)
+            .then(() => {
+              // コピー成功のフィードバック
+              const icon = copyButton.querySelector('.material-icons');
+              const originalIcon = icon.textContent;
+              icon.textContent = 'check';
+              copyButton.classList.add('copied');
+              
+              setTimeout(() => {
+                icon.textContent = originalIcon;
+                copyButton.classList.remove('copied');
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('コピーに失敗しました:', err);
+              // フォールバック: テキストを選択状態にする
+              const range = document.createRange();
+              range.selectNodeContents(urlTextElement);
+              const selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
+            });
+        } else {
+          // 古いブラウザ向けのフォールバック
+          const range = document.createRange();
+          range.selectNodeContents(urlTextElement);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          
+          try {
+            document.execCommand('copy');
+            const icon = copyButton.querySelector('.material-icons');
+            const originalIcon = icon.textContent;
+            icon.textContent = 'check';
+            copyButton.classList.add('copied');
+            
+            setTimeout(() => {
+              icon.textContent = originalIcon;
+              copyButton.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('コピーに失敗しました:', err);
+          }
+        }
+      });
+    }
+  }
+
   /* ---------------- boot ---------------- */
   document.addEventListener('DOMContentLoaded', function() {
+    // ブラウザ検出とカメラ設定を初期化
+    setupBrowserCameraSettings();
     // 少し遅延を追加して要素が確実に存在することを保証
     setTimeout(init, 100);
   });
