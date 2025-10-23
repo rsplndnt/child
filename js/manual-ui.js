@@ -2342,7 +2342,7 @@
         return;
       }
       const terms = tokenize(q);
-      const visibleTerms = terms.filter(t => normalizeKana(t).length >= 3);
+      const visibleTerms = terms.filter(t => normalizeKana(t).length >= 4);
       const esc = s => escapeHtml(s || '');
       const hl = s => {
         let out = esc(s || '');
@@ -2530,68 +2530,63 @@
       if (!q) return [];
       const normalized = normalizeKana(q).toLowerCase().trim();
       const tokens = [];
-      
+
       // 全体をトークンに追加
       tokens.push(normalized);
-      
+
       // スペース区切りで分割
       const words = normalized.split(/\s+/).filter(Boolean);
       words.forEach(word => {
-        if (word && !tokens.includes(word)) {
-          tokens.push(word);
-        }
+        if (word && !tokens.includes(word)) tokens.push(word);
       });
-      
-      // N-gram（2文字）を生成
+
+      // 3-gram（語長>=4の語のみ）を生成
       words.forEach(word => {
-        if (word.length >= 2) {
-          for (let i = 0; i <= word.length - 2; i++) {
-            const ngram = word.substr(i, 2);
-            if (!tokens.includes(ngram)) {
-              tokens.push(ngram);
-            }
+        if (word.length >= 4) {
+          for (let i = 0; i <= word.length - 3; i++) {
+            const ngram = word.substr(i, 3);
+            if (!tokens.includes(ngram)) tokens.push(ngram);
           }
         }
       });
-      
+
       return tokens;
     }
     function scoreText(text, terms) {
       if (!terms.length) return 0;
       const normalizedText = normalizeKana(text || '').toLowerCase();
       let score = 0;
-      let hasStrongHit = false; // 3文字以上の語でヒットしたか
+      let hasStrongHit = false; // クエリに4文字以上が含まれる場合の実ヒット
+      const requireStrongHit = terms.some(t => (normalizeKana(t) || '').toLowerCase().length >= 4);
 
       for (const term of terms) {
         const normalizedTerm = normalizeKana(term).toLowerCase();
         if (!normalizedTerm) continue;
         const escapedTerm = escapeRegExp(normalizedTerm);
-        const isShort = normalizedTerm.length < 3;
+        const len = normalizedTerm.length;
 
         // 完全一致
         if (normalizedText === normalizedTerm) {
           score += 100;
-          if (!isShort) hasStrongHit = true;
+          if (len >= 4) hasStrongHit = true;
         }
 
         // 前方一致
         if (normalizedText.startsWith(normalizedTerm)) {
-          score += 50;
-          if (!isShort) hasStrongHit = true;
+          score += 70;
+          if (len >= 4) hasStrongHit = true;
         }
 
-        // 部分一致（出現回数×10）
+        // 部分一致（出現回数×8）
         const matches = normalizedText.match(new RegExp(escapedTerm, 'g'));
         if (matches) {
-          score += matches.length * 10;
-          if (!isShort) hasStrongHit = true;
+          score += matches.length * 8;
+          if (len >= 4) hasStrongHit = true;
         }
       }
 
-      // 3文字以上の語でヒットがない場合、2文字以下の語によるスコアは無効化
-      if (!hasStrongHit) {
-        score = 0;
-      }
+      // クエリに4文字以上が含まれる場合、少なくとも4文字以上の語でヒットしていないと無効
+      if (requireStrongHit && !hasStrongHit) score = 0;
 
       return score;
     }
@@ -2599,8 +2594,8 @@
       const normalizedText = normalizeKana(text || '').toLowerCase();
       let pos = -1;
 
-      // 3文字以上の語のみでマッチ位置を検索
-      const visibleTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 3);
+      // 4文字以上の語のみでマッチ位置を検索
+      const visibleTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 4);
       for (const t of visibleTerms) {
         const p = normalizedText.indexOf(t);
         if (p !== -1 && (pos === -1 || p < pos)) pos = p;
@@ -2636,8 +2631,8 @@
   function highlightSectionTerms(sectionEl, terms) {
     if (!sectionEl || !terms || !terms.length) return;
     // termsを正規化（小文字化も適用）
-    // 3文字未満はハイライト対象から除外
-    const normalizedTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 3);
+    // 4文字未満はハイライト対象から除外（誤強調抑止）
+    const normalizedTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 4);
 
     const targets = sectionEl.querySelectorAll(`
       .step-header h2,

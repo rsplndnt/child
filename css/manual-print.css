@@ -1,12 +1,26 @@
 /* ===========================
    印刷スタイル: manual-print.css
    =========================== */
+/*
+  構成
+  1) 基本設定（印刷品質/ページ余白/非表示UI/レイアウト解除）
+  2) 表紙ページ
+  3) 本文（全章出力・見出し/分割抑制/画像等の最小調整）
+  4) 画面構成セクションの印刷専用調整
+  5) 印刷用目次のリンクスタイル
+  6) TOPページ完全非表示と改ページ調整
+  7) OSSライセンス表（印刷時の全件表示と中央寄せ）
+*/
 
 /* 画面では印刷専用要素を隠す */
 .only-print { display: none !important; }
 
+/* 画面側との干渉回避：表紙を入れたせいで :first-of-type 調整が崩れる場合の軽微な補正 */
+.print-cover + .step-section { margin-top: 8px; }
+
 /* 印刷用: すべての章を出力、表紙→改ページ→本文 */
 @media print {
+  /* ===== 1) 基本設定 ===== */
   /* 高品質印刷 */
   :root {
     -webkit-print-color-adjust: exact;
@@ -19,7 +33,7 @@
     counter-reset: section-counter;
   }
 
-  /* 用紙と余白（必要に応じて調整） */
+  /* 用紙と余白 */
   @page {
     size: A4;
     margin: 14mm 16mm;
@@ -53,10 +67,10 @@
     border: 0 !important;
   }
 
-  /* ===== 表紙 ===== */
+  /* ===== 2) 表紙 ===== */
   .print-cover.only-print {
     display: block !important;
-    page-break-after: always;     /* 表紙のあと改ページ */
+    page-break-after: always;
     text-align: center;
     padding-top: 35mm;
   }
@@ -73,80 +87,21 @@
     color: #0b0b0b;
   }
 
-  /* ===== 本文全章を印刷 ===== */
+  /* ===== 3) 本文全章を印刷 ===== */
   /* 画面では隠しているセクションも印刷時は全部表示 */
-  .step-section { 
+  .step-section {
     display: block !important;
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
     margin: 0 0 10mm !important;
-    padding: 10mm !important;  /* 適切なパディングを確保 */
-    break-inside: avoid;          /* 章の途中で改ページをできるだけ避ける */
-  }
-  
-  /* TOPページは印刷時に非表示 */
-  .step-section--top,
-  #top.step-section--top,
-  section#top { 
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 10mm !important;
+    break-inside: avoid;
   }
 
-  /* 章ごとに改ページ（表紙の直後は除く） */
+  /* 章ごとに改ページ */
   .step-section + .step-section {
     break-before: page;
-  }
-
-  /* セクション見出しの余白を印刷向けに */
-  .step-header h2 {
-    font-size: 16pt !important;
-    margin: 0 0 6mm !important;
-    color: #0b0b0b !important;
-    page-break-after: avoid !important;   /* 見出し直後で改ページしない */
-    display: block !important;            /* 確実に表示 */
-  }
-
-  /* 見出しブロックは途中で分割しない */
-  .step-header { 
-    break-inside: avoid !important; 
-    page-break-inside: avoid !important;
-    display: block !important;            /* 確実に表示 */
-  }
-  
-  /* TOPページの印刷時スタイル - 非表示に変更 */
-  .step-section--top,
-  #top.step-section--top,
-  section#top {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  /* TOPページ関連の要素もすべて非表示 */
-  .step-section--top::after,
-  .step-section--top .top-hero,
-  .step-section--top .step-header,
-  .top-hero__lead,
-  .top-feature-grid,
-  .top-feature-card,
-  .top-feature-icon,
-  .top-feature-link {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  /* 各セクションの見出しを強制表示 */
-  .step-section .step-header {
-    display: block !important;
-    visibility: visible !important;
   }
 
   /* 隠されているセクションも印刷時は表示 */
@@ -158,7 +113,7 @@
     overflow: visible !important;
     padding: 10mm !important;
   }
-  
+
   /* セクション内のコンテンツも確実に表示 */
   .step-content,
   .procedure-item,
@@ -166,6 +121,29 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+  }
+
+  /* 各セクションの見出しを強制表示 */
+  .step-section .step-header {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* 見出しブロックは途中で分割しない */
+  .step-header {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* セクション見出しの余白を印刷向けに */
+  .step-header h2 {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 16pt !important;
+    margin: 0 0 6mm !important;
+    color: #0071B8 !important;
+    page-break-after: avoid !important;
   }
 
   /* h2見出しを確実に表示 */
@@ -192,20 +170,6 @@
   section[style*="visibility: hidden"] {
     display: block !important;
     visibility: visible !important;
-  }
-
-  /* セクション見出しの余白を印刷向けに */
-  .step-header h2 {
-    font-size: 16pt !important;
-    margin: 0 0 6mm !important;
-    color: #0071B8 !important;
-    page-break-after: avoid !important;   /* 見出し直後で改ページしない */
-  }
-
-  /* 見出しブロックは途中で分割しない */
-  .step-header { 
-    break-inside: avoid !important; 
-    page-break-inside: avoid !important;
   }
 
   /* 小見出しや本文の最小調整 */
@@ -245,68 +209,64 @@
     color: inherit !important;
     text-decoration: none !important;
   }
-  
-  /* 画面構成セクションの印刷時レイアウト - 画像を先に表示 */
+
+  /* ===== 4) 画面構成セクションの印刷時レイアウト（画像を先に表示） ===== */
   #screen-layout .step-with-image {
     display: flex !important;
     flex-direction: column !important;
-    grid-template-columns: unset !important; /* グリッドを無効化 */
+    grid-template-columns: unset !important;
     grid-template-rows: unset !important;
   }
-  
+
   #screen-layout .step-with-image .step-image {
-    order: -1 !important; /* 画像を最初に（負の値で確実に最初に） */
+    order: -1 !important;
     margin-bottom: 4mm !important;
     width: 100% !important;
     display: block !important;
   }
-  
+
   #screen-layout .step-with-image .step-text {
-    order: 1 !important; /* テキストを後に */
+    order: 1 !important;
     width: 100% !important;
     display: block !important;
   }
-  
+
   #screen-layout .step-with-image .note-card {
-    order: 2 !important; /* 注意事項を最後に */
+    order: 2 !important;
     margin-top: 4mm !important;
   }
-  
+
   #screen-layout .step-with-image .step-advice {
-    order: 3 !important; /* アドバイスを最後に */
+    order: 3 !important;
   }
-  
+
   /* 画像の表示を確実に */
   #screen-layout .step-image img {
     width: 100% !important;
     height: auto !important;
     display: block !important;
   }
-  /* 印刷用目次のリンクスタイル */
+
+  /* ===== 5) 印刷用目次のリンクスタイル ===== */
   .print-toc-content a {
     color: var(--color-primary) !important;
     text-decoration: none !important;
   }
-  
-  @media screen {
-    .print-toc-content a:hover {
-      text-decoration: underline !important;
-    }
-  }
-  
+
   .print-toc-section h3 a {
     color: #0b0b0b !important;
     font-weight: 600 !important;
   }
-  
+
   .print-toc-sublist a {
     color: #333 !important;
   }
-  /* TOPページの最終的な非表示設定（最高優先度） */
-  #top,
-  section#top,
+
+  /* ===== 6) TOPページの最終的な非表示設定（最高優先度） ===== */
   .step-section--top,
   #top.step-section--top,
+  section#top,
+  #top,
   [id="top"],
   .content-panel > #top {
     display: none !important;
@@ -320,14 +280,27 @@
     left: -9999px !important;
     top: -9999px !important;
   }
-  
+
   /* TOPページ内のすべての要素も非表示 */
   #top *,
   .step-section--top * {
     display: none !important;
     visibility: hidden !important;
   }
-  
+
+  /* TOPページ関連の要素もすべて非表示 */
+  .step-section--top::after,
+  .step-section--top .top-hero,
+  .step-section--top .step-header,
+  .top-hero__lead,
+  .top-feature-grid,
+  .top-feature-card,
+  .top-feature-icon,
+  .top-feature-link {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
   /* TOPページの次の要素の改ページを調整 */
   #top + .step-section,
   .step-section--top + .step-section {
@@ -335,19 +308,45 @@
     break-before: auto !important;
     margin-top: 0 !important;
   }
-}
 
-/* 画面側との干渉回避：
-   表紙を入れたせいで :first-of-type 調整が崩れる場合の軽微な補正 */
-.print-cover + .step-section { margin-top: 8px; }
+  /* ===== 7) OSSライセンス表（印刷時の全件表示と中央寄せ） ===== */
+  /* 画面時のflexを解除して印刷時は通常のブロックレイアウトに */
+  .step-text {
+    display: block !important;
+  }
 
-/* OSS License Table - 印刷時は全て表示 */
-@media print {
   .oss-license-table tbody tr.oss-row-hidden {
     display: table-row !important;
   }
-  
+
   .oss-table-toggle {
     display: none !important;
+  }
+
+  /* ライセンス表の中央寄せと紙面幅への最適化 */
+  .oss-license-table {
+    max-width: 160mm !important;
+    width: 100% !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
+  /* ライセンス見出し直下の表だけを厳密に中央寄せ */
+  h4#oss-licenses + .procedure-steps .step-text {
+    text-align: center !important;
+  }
+  h4#oss-licenses + .procedure-steps .step-text .oss-license-table {
+    display: inline-table !important;
+    width: auto !important;
+    max-width: 160mm !important;
+    margin: 0 auto !important;
+    text-align: left !important;
+  }
+}
+
+/* 印刷用目次のリンクスタイル（画面表示時） */
+@media screen {
+  .print-toc-content a:hover {
+    text-decoration: underline !important;
   }
 }
