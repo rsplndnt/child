@@ -1,4 +1,17 @@
-/* ===== Base | brand tokens & resets ===== */
+/* =========================================================
+   CSS Structure Guide (for maintainers)
+   - 00. Base & Resets
+   - 01. Design Tokens (:root variables)
+   - 02. Layout (wrappers, grids)
+   - 03. Typography (headings, lists)
+   - 04. Components (sidebar, header, step sections, notes, advice, buttons, cards, grids)
+   - 05. Utilities (helpers like .button-label)
+   - 06. Responsive rules (kept near related components)
+   - 07. Print handled in dedicated CSS files
+   NOTE: Declaration order is intentionally preserved to avoid regressions.
+   ========================================================= */
+
+/* ===== 00. Base | brand tokens & resets ===== */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
@@ -36,6 +49,7 @@ body {
   color: inherit;
 }
 
+/* ===== 03. Typography ===== */
 /* Base typography using tokens */
 body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-height: var(--sd-line-height-normal); } /* md → lg */
 
@@ -65,10 +79,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
   border-radius: 8px;
 }
 
-/* ================================
-   Design Tokens (System)
-   画像のスケールに合わせて定義
-   ================================ */
+/* ===== 01. Design Tokens (System) ===== */
 :root{
   /* Reference: Dimension Scale */
   --sd-scale-0: 0px;
@@ -153,6 +164,7 @@ body{ font-family: var(--sd-font-sans); font-size: var(--sd-font-size-lg); line-
 /* a11y focus */
 :focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
 
+/* ===== 02. Layout ===== */
 /* 全体レイアウト（外枠カードは使わない） */
 .manual-wrapper{
   display: flex;
@@ -1248,6 +1260,7 @@ ul.spec-list li{
   font-size: 20px;
 }
 
+/* ===== 05. Utilities ===== */
 /* ★ボタン風の装飾（[ボタン名]のような表記） */
 .button-label {
   display: inline-block;
@@ -1391,6 +1404,7 @@ ul.spec-list li{
   margin-bottom: 4px;
 }
 
+/* ===== 04. Components ===== */
 /* Empty placeholders for future notes/advice */
 .note-card.is-empty,
 .step-advice.is-empty{ display: none !important; }
