@@ -1,0 +1,30 @@
+name: Lighthouse CI (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Target URL (default: production)"
+        required: false
+
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use target URL
+        id: vars
+        run: |
+          if [ -z "${{ github.event.inputs.url }}" ]; then
+            echo "url=https://rsplndnt.github.io/child/" >> $GITHUB_OUTPUT
+          else
+            echo "url=${{ github.event.inputs.url }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            ${{ steps.vars.outputs.url }}
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
