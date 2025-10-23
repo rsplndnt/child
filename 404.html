@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ページが見つかりません | しゃべり描き翻訳™ ユーザーマニュアル</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    body{font-family: -apple-system, system-ui, Segoe UI, Roboto, "Noto Sans JP", Hiragino Kaku Gothic ProN, Meiryo, sans-serif; margin:0; background:#f8fafc; color:#0f172a;}
+    .wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;}
+    .card{background:#fff; border-radius:12px; box-shadow:0 4px 18px rgba(0,0,0,.08); padding:24px 28px; max-width:720px; width:100%;}
+    h1{margin:0 0 8px; font-size:24px; color:#0071B8;}
+    p{margin:0 0 16px; line-height:1.7;}
+    a.btn{display:inline-block; padding:10px 16px; border-radius:10px; background:#0071B8; color:#fff; text-decoration:none;}
+  </style>
+  <script>
+    // GitHub Pagesルーティング: 可能ならトップに戻す
+    (function(){
+      try{
+        var to = (location.origin + location.pathname).replace(/\/404\.html$/, '/');
+        setTimeout(function(){ location.replace(to); }, 1500);
+      }catch(_){}
+    })();
+  </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card" role="alert">
+        <h1>ページが見つかりません</h1>
+        <p>URLが変更されたか、削除された可能性があります。1.5秒後にトップへ移動します。</p>
+        <p><a class="btn" href="./">トップに戻る</a></p>
+      </div>
+    </div>
+  </body>
+  </html>
+
