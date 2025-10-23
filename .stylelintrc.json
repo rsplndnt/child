@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/stylelintrc",
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "no-empty-source": null,
+    "block-no-empty": true,
+    "color-hex-length": "short"
+  }
+}
+

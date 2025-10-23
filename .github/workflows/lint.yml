@@ -1,0 +1,31 @@
+name: Lint (detect-only)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install ESLint
+        run: npm i -D eslint
+      - name: Run ESLint (detect only)
+        run: npx eslint js/**/*.js || true
+
+  stylelint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Stylelint
+        run: npm i -D stylelint stylelint-config-standard
+      - name: Run Stylelint (detect only)
+        run: npx stylelint "css/**/*.css" || true
+
