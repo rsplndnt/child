@@ -1266,7 +1266,7 @@ ul.spec-list li{
 
 /* ボタンラベルをセマンティックに1段階大きく */
 .button-label--lg {
-  font-size: 1.1em;
+  font-size: 1.5em;
 }
 
 /* URLリンクの改行設定 */
