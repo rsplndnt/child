@@ -1404,6 +1404,14 @@ ul.spec-list li{
   margin-bottom: 4px;
 }
 
+/* ワンポイントアドバイスのリスト */
+.advice-list { list-style: none; padding: 0; margin: 0; }
+.advice-item { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+.advice-item:last-child { margin-bottom: 0; }
+.advice-item > span { flex: 1; line-height: 1.6; }
+.advice-item-content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.advice-item-content > span { line-height: 1.6; }
+
 /* ===== 04. Components ===== */
 /* Empty placeholders for future notes/advice */
 .note-card.is-empty,
@@ -1527,9 +1535,7 @@ ul.spec-list li{
     gap: 16px;
 }
 
-.advice-item-content > span {
-    line-height: 1.6;
-}
+
 
 /* 機能詳細セクション */
 .feature-detail {
