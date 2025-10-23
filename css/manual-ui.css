@@ -1586,6 +1586,7 @@ ul.spec-list li{
     line-height: 1.6;
 }
 
+/* ===== 04-2. Operation Grid (tips images) ===== */
 /* 操作方法グリッドレイアウト */
 .operation-grid {
     display: grid;
@@ -2299,6 +2300,7 @@ ul.spec-list li{
 }
 /* === /TOP UI Refresh === */
 
+/* ===== 04-3. Top Hero Buttons ===== */
 /* ヒーローCTA */
 .top-hero-actions{
   margin: clamp(40px, 6vw, 64px) auto 0;
@@ -2773,3 +2775,5 @@ ul.spec-list li{
     max-height: 300px;
   }
 }
+
+/* ===== 04-3. Top Hero Buttons ===== */
