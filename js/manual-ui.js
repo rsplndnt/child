@@ -2207,8 +2207,8 @@
 
   /* ---------------- 印刷中のPDFファイル名用にタイトルを一時変更 ---------------- */
   (function setupPrintTitleSwitcher(){
-    const SCREEN_TITLE = document.title; // 例: しゃべり描き翻訳 Ver. 1.0 | マニュアル
-    const PDF_TITLE = 'しゃべり描き翻訳Ver. 1.0_ユーザーマニュアル';
+    const SCREEN_TITLE = document.title; // 例: しゃべり描き翻訳™ Ver. 1.0 | マニュアル
+    const PDF_TITLE = 'しゃべり描き翻訳™ Ver. 1.0_ユーザーマニュアル';
     let isSwitched = false;
 
     function switchToPdfTitle(){
