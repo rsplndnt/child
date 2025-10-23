@@ -1,13 +1,18 @@
-/* manual-ui.js — 完全版（サイドバー内トグル削除版）
-   - タブ / TOC / sub-items 同期
-   - サイドバーリサイズ（保存）
-   - モバイルハンバーガー（Material Symbols 文字列切替）
-   - 画像プレースホルダ自動挿入（IMG_SRC）
-   - 内部検索（ハイライト / 精確ジャンプ / Enterで再検索）
-   - 外部重複クリアボタンを排除
-   - a11y配慮 (aria-*)
-   - "サイドバーを隠す" ボタン周りは削除（後で実装する想定）
-*/
+/* =============================================================
+   manual-ui.js — 構成ガイド（実装順そのまま、動作影響なし）
+   Sections (read-only guide):
+   00) bootstrap & tokens
+   01) utilities (debounce, escape, scroll offset)
+   02) URL/hash helpers
+   03) smooth scroll engine
+   04) layout helpers (container detection, scroll-to heading)
+   05) back-to-top button
+   06) content tabs / section activation / hash handling
+   07) search module integration
+   08) sidebar behaviors (resize, hamburger)
+   09) event bindings & startup
+   NOTE: このコメントはメンテ用の目印のみで、コード順・ロジックは変更しません。
+   ============================================================= */
 (function () {
   'use strict';
 
@@ -15,7 +20,7 @@
   const SIDEBAR_WIDTH_KEY = 'mb-manual-sidebar-width';
   const MOBILE_BREAKPOINT = 1024;
 
-  /* ---------------- utilities ---------------- */
+  /* ===== 01) utilities ===== */
   function debounce(fn, wait = 160) {
     let t = null;
     return function (...args) {
@@ -34,6 +39,7 @@
     return base + 16 + mobileOffset;
   }
 
+  /* ===== 02) URL & hash helpers ===== */
   function updateUrlHash(hash, { replace = false } = {}) {
     if (!hash) return;
     const value = hash.startsWith('#') ? hash : `#${hash}`;
@@ -71,7 +77,7 @@
     }
   }
 
-  // カスタムスクロールアニメーション（約300msで滑らか）
+  /* ===== 03) smooth scroll engine ===== */
   const DEFAULT_SCROLL_DURATION = 315;
   const scrollAnimationMap = new WeakMap();
   let windowScrollAnimation = null;
