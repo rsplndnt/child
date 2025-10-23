@@ -2,7 +2,11 @@
   "name": "しゃべり描き翻訳™ マニュアル",
   "short_name": "SwipeTalk Manual",
   "icons": [
-    { "src": "/child/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    {
+      "src": "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/logo-header.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
   ],
   "theme_color": "#0071B8",
   "background_color": "#ffffff",
