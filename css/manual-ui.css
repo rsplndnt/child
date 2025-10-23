@@ -1264,6 +1264,11 @@ ul.spec-list li{
   line-height: 1.2;
 }
 
+/* ボタンラベルをセマンティックに1段階大きく */
+.button-label--lg {
+  font-size: 1.1em;
+}
+
 /* URLリンクの改行設定 */
 .step-text a[href^="http"] {
   word-wrap: break-word; /* 古いブラウザ対応 */
