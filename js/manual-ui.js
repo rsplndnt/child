@@ -39,6 +39,14 @@
     return base + 16 + mobileOffset;
   }
 
+  // ひらがなをカタカナへ正規化（グローバル定義）
+  function normalizeKana(str) {
+    if (!str) return '';
+    return String(str).replace(/[\u3041-\u3096]/g, function(ch){
+      return String.fromCharCode(ch.charCodeAt(0) + 0x60);
+    });
+  }
+
   /* ===== 02) URL & hash helpers ===== */
   function updateUrlHash(hash, { replace = false } = {}) {
     if (!hash) return;
@@ -2334,10 +2342,11 @@
         return;
       }
       const terms = tokenize(q);
+      const visibleTerms = terms.filter(t => normalizeKana(t).length >= 3);
       const esc = s => escapeHtml(s || '');
       const hl = s => {
         let out = esc(s || '');
-        terms.forEach(t => {
+        visibleTerms.forEach(t => {
           const re = new RegExp(`(${escapeRegExp(t)})`, 'ig');
           out = out.replace(re, '<mark class="search-hit">$1</mark>');
         });
@@ -2362,50 +2371,140 @@
     }
 
     function internalJumpTo(anchorId, sectionHash) {
-      const sectionEl = document.querySelector(sectionHash);
+      console.log(`🎯 ジャンプ開始: anchorId="${anchorId}", sectionHash="${sectionHash}"`);
+      
+      const safeSectionHash = (sectionHash && String(sectionHash).trim()) || '#top';
+      const sectionEl = document.querySelector(safeSectionHash);
       if (sectionEl) {
         const terms = tokenize(searchInput.value || '');
         const contentRoot = document.querySelector('.content-panel') || document;
         clearContentHighlights(contentRoot);
         if (terms.length) highlightSectionTerms(sectionEl, terms);
       }
-      setTimeout(() => {
-        let el = document.getElementById(anchorId) || document.querySelector(sectionHash);
-        if (!el) return;
-        // 可能な限り h4 見出し自体にスクロール（procedure-itemにIDが付いているケースに対応）
-        if (el && el.tagName !== 'H4') {
-          const directH4 = el.querySelector && el.querySelector('h4');
-          const fromClosest = el.closest && el.closest('.procedure-item');
-          const h4 = directH4 || (fromClosest ? fromClosest.querySelector('h4') : null);
-          if (h4) el = h4;
-        }
-        const offset = getScrollOffset();
-        const container = document.querySelector('.manual-content');
-        if (container && typeof container.scrollTo === 'function') {
-          const cRect = container.getBoundingClientRect();
-          const eRect = el.getBoundingClientRect();
-          const target = container.scrollTop + (eRect.top - cRect.top) - offset;
-          fastSmoothScrollTo({ container, target: Math.max(0, target) });
-        } else {
-          const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
-          fastSmoothScrollTo({ target: y });
-        }
-      }, 30);
+      
+      // requestAnimationFrame × 2に変更
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          let el = null;
+          
+          // 3段階フォールバック
+          // 1. document.getElementById
+          if (anchorId) {
+            el = document.getElementById(anchorId);
+          }
+          if (el) {
+            console.log(`✅ 要素を発見 (getElementById):`, el);
+          } else {
+            console.log(`❌ getElementById("${anchorId}") で要素が見つかりません`);
+            
+            // 2. data-anchor-id属性で検索
+            if (anchorId) {
+              el = document.querySelector(`[data-anchor-id="${anchorId}"]`);
+            }
+            if (el) {
+              console.log(`✅ 要素を発見 (data-anchor-id):`, el);
+            } else {
+              console.log(`❌ data-anchor-id="${anchorId}" で要素が見つかりません`);
+              
+              // 3. sectionHashで検索
+              el = document.querySelector(safeSectionHash);
+              if (el) {
+                console.log(`✅ 要素を発見 (sectionHash):`, el);
+              } else {
+                console.error(`❌ 要素が見つかりません`);
+                return;
+              }
+            }
+          }
+          
+          // procedure-item内のh4を優先
+          if (el.classList.contains('procedure-item')) {
+            const h4 = el.querySelector('h4');
+            if (h4) {
+              el = h4;
+              console.log(`✅ procedure-item内のh4を使用:`, el);
+            }
+          } else if (el.tagName !== 'H4') {
+            const directH4 = el.querySelector && el.querySelector('h4');
+            const fromClosest = el.closest && el.closest('.procedure-item');
+            const h4 = directH4 || (fromClosest ? fromClosest.querySelector('h4') : null);
+            if (h4) {
+              el = h4;
+              console.log(`✅ h4要素に変更:`, el);
+            }
+          }
+          
+          const offset = getScrollOffset();
+          const container = document.querySelector('.manual-content');
+
+          // 手順内（もしくはセクション）で最初のハイライト箇所を優先スクロール
+          const scope = (el.closest && el.closest('.procedure-item')) || document.querySelector(safeSectionHash) || el;
+          const firstMark = scope && scope.querySelector ? scope.querySelector('mark.search-hit-live') : null;
+          const scrollEl = firstMark || el;
+
+          if (container && typeof container.scrollTo === 'function') {
+            const cRect = container.getBoundingClientRect();
+            const tRect = scrollEl.getBoundingClientRect();
+            const target = container.scrollTop + (tRect.top - cRect.top) - offset - 8; // 少し余白
+            fastSmoothScrollTo({ container, target: Math.max(0, target) });
+          } else {
+            const y = Math.max(0, scrollEl.getBoundingClientRect().top + getWindowScrollY() - offset - 8);
+            fastSmoothScrollTo({ target: y });
+          }
+
+          // 遷移先のprocedure-itemをハイライト（視覚的に強調）
+          const procedureItem = el.closest && el.closest('.procedure-item');
+          if (procedureItem) {
+            document.querySelectorAll('.procedure-item.highlight-flash').forEach(item => item.classList.remove('highlight-flash'));
+            setTimeout(() => {
+              procedureItem.classList.add('highlight-flash');
+              setTimeout(() => { procedureItem.classList.remove('highlight-flash'); }, 1200);
+            }, 350);
+          }
+
+          // URLのアンカーも更新（置換）
+          if (anchorId) {
+            updateUrlHash(`#${anchorId}`, { replace: true });
+          }
+        });
+      });
     }
 
     return { search: internalSearchAndRender, jumpTo: internalJumpTo, clearSearch: clearAll };
 
     /* ---------- helpers for index/search ---------- */
+    // ひらがなをカタカナに変換する関数
+    function normalizeKana(str) {
+      if (!str) return '';
+      return str.replace(/[\u3041-\u3096]/g, function(match) {
+        return String.fromCharCode(match.charCodeAt(0) + 0x60);
+      });
+    }
+
     function buildIndex(sectionEls, procSelector) {
       const idx = [];
       sectionEls.forEach(section => {
         const secId = section.id;
         const secTitle = (section.querySelector('.step-header h2')?.textContent || '').trim();
+        
+        // セクションのインデックス：タイトルと直下の段落のみ
+        const sectionHeader = section.querySelector('.step-header h2');
+        const directParagraphs = Array.from(section.querySelectorAll('.step-content > p, .step-content > .note-card'));
+        let sectionText = '';
+        if (sectionHeader) {
+          sectionText = sectionHeader.textContent || '';
+        }
+        directParagraphs.forEach(p => {
+          sectionText += ' ' + (p.textContent || '');
+        });
+        
         idx.push({
           id: secId, el: section, anchorId: secId, anchorEl: section,
           title: secTitle, sectionId: secId, sectionTitle: secTitle,
-          type: 'section', text: (section.textContent || '').replace(/\s+/g, ' ').trim()
+          type: 'section', text: sectionText.replace(/\s+/g, ' ').trim()
         });
+        
+        // 手順のインデックス
         const items = Array.from(section.querySelectorAll(procSelector));
         items.forEach((item, i) => {
           const h4 = item.querySelector('h4');
@@ -2414,6 +2513,7 @@
           if (!anchorId) {
             anchorId = `${secId}-proc-${i + 1}`;
             anchorEl.id = anchorId;
+            item.setAttribute('data-anchor-id', anchorId);
           }
           const title = (h4?.textContent || ('手順 ' + (i + 1))).trim();
           idx.push({
@@ -2423,34 +2523,102 @@
           });
         });
       });
+      console.log(`📚 検索インデックス構築完了: ${idx.length}件`);
       return idx;
     }
-    function tokenize(q) { return (q || '').toLowerCase().trim().split(/\s+/).filter(Boolean); }
+    function tokenize(q) {
+      if (!q) return [];
+      const normalized = normalizeKana(q).toLowerCase().trim();
+      const tokens = [];
+      
+      // 全体をトークンに追加
+      tokens.push(normalized);
+      
+      // スペース区切りで分割
+      const words = normalized.split(/\s+/).filter(Boolean);
+      words.forEach(word => {
+        if (word && !tokens.includes(word)) {
+          tokens.push(word);
+        }
+      });
+      
+      // N-gram（2文字）を生成
+      words.forEach(word => {
+        if (word.length >= 2) {
+          for (let i = 0; i <= word.length - 2; i++) {
+            const ngram = word.substr(i, 2);
+            if (!tokens.includes(ngram)) {
+              tokens.push(ngram);
+            }
+          }
+        }
+      });
+      
+      return tokens;
+    }
     function scoreText(text, terms) {
       if (!terms.length) return 0;
-      const hay = (text || '').toLowerCase();
+      const normalizedText = normalizeKana(text || '').toLowerCase();
       let score = 0;
-      for (const t of terms) {
-        const m = hay.match(new RegExp(escapeRegExp(t), 'g'));
-        if (m) score += m.length;
+      let hasStrongHit = false; // 3文字以上の語でヒットしたか
+
+      for (const term of terms) {
+        const normalizedTerm = normalizeKana(term).toLowerCase();
+        if (!normalizedTerm) continue;
+        const escapedTerm = escapeRegExp(normalizedTerm);
+        const isShort = normalizedTerm.length < 3;
+
+        // 完全一致
+        if (normalizedText === normalizedTerm) {
+          score += 100;
+          if (!isShort) hasStrongHit = true;
+        }
+
+        // 前方一致
+        if (normalizedText.startsWith(normalizedTerm)) {
+          score += 50;
+          if (!isShort) hasStrongHit = true;
+        }
+
+        // 部分一致（出現回数×10）
+        const matches = normalizedText.match(new RegExp(escapedTerm, 'g'));
+        if (matches) {
+          score += matches.length * 10;
+          if (!isShort) hasStrongHit = true;
+        }
       }
+
+      // 3文字以上の語でヒットがない場合、2文字以下の語によるスコアは無効化
+      if (!hasStrongHit) {
+        score = 0;
+      }
+
       return score;
     }
     function makeSnippet(text, terms, radius = 60) {
-      const low = (text || '').toLowerCase();
+      const normalizedText = normalizeKana(text || '').toLowerCase();
       let pos = -1;
-      for (const t of terms) {
-        const p = low.indexOf(t);
+
+      // 3文字以上の語のみでマッチ位置を検索
+      const visibleTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 3);
+      for (const t of visibleTerms) {
+        const p = normalizedText.indexOf(t);
         if (p !== -1 && (pos === -1 || p < pos)) pos = p;
       }
+
       if (pos === -1) return (text || '').slice(0, 120) + ((text || '').length > 120 ? '…' : '');
+
+      // 元のテキストでスニペットを作成
       const start = Math.max(0, pos - radius);
       const end = Math.min((text || '').length, pos + radius);
       let snip = (start > 0 ? '…' : '') + (text || '').slice(start, end) + (end < (text || '').length ? '…' : '');
-      terms.forEach(t => {
+
+      // ハイライト処理（3文字以上の語のみ）
+      visibleTerms.forEach(t => {
         const re = new RegExp(`(${escapeRegExp(t)})`, 'ig');
         snip = snip.replace(re, '<mark class="search-hit">$1</mark>');
       });
+
       return snip;
     }
   } // createSearchModule end
@@ -2467,6 +2635,10 @@
   }
   function highlightSectionTerms(sectionEl, terms) {
     if (!sectionEl || !terms || !terms.length) return;
+    // termsを正規化（小文字化も適用）
+    // 3文字未満はハイライト対象から除外
+    const normalizedTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 3);
+
     const targets = sectionEl.querySelectorAll(`
       .step-header h2,
       .step-content h3,
@@ -2474,25 +2646,65 @@
       .procedure-text,
       p, li, dt, dd
     `);
-    const regexes = terms.map(t => new RegExp(`(${escapeRegExp(t)})`, 'ig'));
+
     targets.forEach(el => {
       clearContentHighlights(el);
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
         acceptNode(node) {
-          if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-          const bad = node.parentElement && node.parentElement.closest && node.parentElement.closest('code, pre, style, script');
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          // markタグも除外
+          const parent = node.parentElement;
+          const bad = parent && parent.closest && parent.closest('code, pre, style, script, mark');
           return bad ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
         }
       });
+
       const nodes = [];
       while (walker.nextNode()) nodes.push(walker.currentNode);
+
       nodes.forEach(node => {
-        let text = node.nodeValue;
-        let changed = false;
-        regexes.forEach(re => { if (re.test(text)) changed = true; });
-        if (!changed) return;
-        let html = escapeHtml(text);
-        regexes.forEach(re => { html = html.replace(re, '<mark class="search-hit-live">$1</mark>'); });
+        const originalText = node.nodeValue;
+        const normalizedNodeText = normalizeKana(originalText).toLowerCase();
+
+        // マッチ範囲を収集
+        const ranges = [];
+        normalizedTerms.forEach(term => {
+          if (!term) return;
+          const re = new RegExp(escapeRegExp(term), 'gi');
+          let m;
+          while ((m = re.exec(normalizedNodeText)) !== null) {
+            ranges.push({ start: m.index, end: m.index + m[0].length });
+          }
+        });
+
+        if (!ranges.length) return;
+
+        // 範囲を統合（重複・重なりをマージ）
+        ranges.sort((a, b) => a.start - b.start);
+        const merged = [];
+        let cur = ranges[0];
+        for (let i = 1; i < ranges.length; i++) {
+          const r = ranges[i];
+          if (r.start <= cur.end) {
+            cur.end = Math.max(cur.end, r.end);
+          } else {
+            merged.push(cur);
+            cur = r;
+          }
+        }
+        merged.push(cur);
+
+        // 元テキストを使って安全にHTMLを構築（部分ごとにescape）
+        let pos = 0;
+        let html = '';
+        merged.forEach(({ start, end }) => {
+          if (pos < start) html += escapeHtml(originalText.slice(pos, start));
+          const matched = originalText.slice(start, end);
+          html += `<mark class="search-hit-live">${escapeHtml(matched)}</mark>`;
+          pos = end;
+        });
+        if (pos < originalText.length) html += escapeHtml(originalText.slice(pos));
+
         const span = document.createElement('span');
         span.innerHTML = html;
         node.parentNode.replaceChild(span, node);
