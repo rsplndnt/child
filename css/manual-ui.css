@@ -1109,7 +1109,7 @@ ul.spec-list li{
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3; /* 画像のアスペクト比を維持してレイアウトシフトを防止 */
+  aspect-ratio: 16 / 9; /* 画像のアスペクト比を維持してレイアウトシフトを防止 */
 }
 .procedure-text{ flex: 1 1 auto; min-width: 0; }
 
@@ -1170,7 +1170,7 @@ ul.spec-list li{
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3; /* 画像のアスペクト比を維持してレイアウトシフトを防止 */
+  aspect-ratio: 16 / 9; /* 画像のアスペクト比を維持してレイアウトシフトを防止 */
 }
 
 /* 画面構成セクション（section2）専用のレイアウト - 2カラムレイアウトに変更 */
