@@ -1105,7 +1105,12 @@ ul.spec-list li{
   border: 2px solid var(--outline-variant);
   box-shadow: 0 2px 8px rgba(0,0,0,.1);
 }
-.procedure-image img{ display:block; width:100%; height:auto; }
+.procedure-image img{
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3; /* 画像のアスペクト比を維持してレイアウトシフトを防止 */
+}
 .procedure-text{ flex: 1 1 auto; min-width: 0; }
 
 /* 新しい手順構造 - 各ステップごとに画像 */
@@ -1165,6 +1170,7 @@ ul.spec-list li{
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 4 / 3; /* 画像のアスペクト比を維持してレイアウトシフトを防止 */
 }
 
 /* 画面構成セクション（section2）専用のレイアウト - 2カラムレイアウトに変更 */
