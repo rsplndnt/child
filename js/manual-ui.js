@@ -908,16 +908,7 @@
         e.preventDefault();
         e.stopPropagation();
         // 入力と結果をクリア
-        try {
-          searchModule.clearSearch();
-        } catch (_) {
-          searchInput.value = '';
-          if (searchResults) {
-            searchResults.classList.remove('show');
-            searchResults.innerHTML = '';
-          }
-          searchInput.focus();
-        }
+        searchModule.clearSearch();
         searchCycleIndex = -1;
         clearBtn.style.display = 'none';
       });
@@ -1806,7 +1797,7 @@
           activeSubHash: subHash,
           updateUrl: true
         });
-        setTimeout(() => searchModule.jumpTo(anchorId, sectionTarget), 40);
+        setTimeout(() => searchModule.jumpTo(anchorId, sectionTarget), 60);
       }
     });
 
@@ -1830,13 +1821,18 @@
             const first = items[0];
             const anchorId = first.getAttribute('data-anchor-id');
             const targetSection = first.getAttribute('data-target') || sectionHash;
-            activateSection(targetSection, {
+            const sectionTarget = targetSection || sectionHash;
+            const subHash = anchorId ? `#${anchorId}` : null;
+            activateSection(sectionTarget, {
               scrollToTop: false,
-              parentHasActiveChild: Boolean(anchorId),
-              activeSubHash: anchorId ? `#${anchorId}` : null,
+              parentHasActiveChild: Boolean(subHash),
+              activeSubHash: subHash,
               updateUrl: true
             });
-            setTimeout(() => searchModule.jumpTo(anchorId, targetSection), 40);
+            // ハイライト処理を実行してからジャンプ
+            setTimeout(() => {
+              searchModule.jumpTo(anchorId, sectionTarget);
+            }, 60);
             focusInput();
           }, 20);
         } else {
@@ -1852,13 +1848,18 @@
       if (!target) return;
       const anchorId = target.getAttribute('data-anchor-id');
       const targetSection = target.getAttribute('data-target') || sectionHash;
-      activateSection(targetSection, {
+      const sectionTarget = targetSection || sectionHash;
+      const subHash = anchorId ? `#${anchorId}` : null;
+      activateSection(sectionTarget, {
         scrollToTop: false,
-        parentHasActiveChild: Boolean(anchorId),
-        activeSubHash: anchorId ? `#${anchorId}` : null,
+        parentHasActiveChild: Boolean(subHash),
+        activeSubHash: subHash,
         updateUrl: true
       });
-      setTimeout(() => searchModule.jumpTo(anchorId, targetSection), 40);
+      // ハイライト処理を実行してからジャンプ
+      setTimeout(() => {
+        searchModule.jumpTo(anchorId, sectionTarget);
+      }, 60);
       focusInput();
     };
 
@@ -1868,10 +1869,25 @@
       handleSearchTrigger();
     });
 
+    // 候補リスト上でEnterを押しても「クリック扱い」にせず、検索ボタンと同じサイクル挙動にする
+    if (resultsPanel) {
+      resultsPanel.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSearchTrigger();
+        }
+      });
+    }
+
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
+        e.stopPropagation();
         handleSearchTrigger();
+      } else if (e.key === 'Escape') {
+        searchModule.clearSearch();
+        cycleIndex = -1;
       }
     });
 
@@ -1886,20 +1902,17 @@
       const updateClearVisibility = () => {
         const hasText = (input.value || '').trim().length > 0;
         clearBtn.style.display = hasText ? 'flex' : 'none';
-        if (!hasText) {
-          cycleIndex = -1;
-          lastQueryValue = '';
-        }
       };
       updateClearVisibility();
       input.addEventListener('input', updateClearVisibility);
       clearBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        // 入力と結果をクリア
+        searchModule.clearSearch();
         cycleIndex = -1;
         lastQueryValue = '';
-        searchModule.clearSearch();
-        updateClearVisibility();
+        clearBtn.style.display = 'none';
       });
     }
 
@@ -2342,7 +2355,7 @@
         return;
       }
       const terms = tokenize(q);
-      const visibleTerms = terms.filter(t => normalizeKana(t).length >= 4);
+      const visibleTerms = terms.filter(t => normalizeKana(t).length >= 2);
       const esc = s => escapeHtml(s || '');
       const hl = s => {
         let out = esc(s || '');
@@ -2372,14 +2385,23 @@
 
     function internalJumpTo(anchorId, sectionHash) {
       console.log(`🎯 ジャンプ開始: anchorId="${anchorId}", sectionHash="${sectionHash}"`);
-      
+      console.log(`📝 searchInput.value="${searchInput.value}"`);
+
       const safeSectionHash = (sectionHash && String(sectionHash).trim()) || '#top';
       const sectionEl = document.querySelector(safeSectionHash);
       if (sectionEl) {
         const terms = tokenize(searchInput.value || '');
-        const contentRoot = document.querySelector('.content-panel') || document;
-        clearContentHighlights(contentRoot);
-        if (terms.length) highlightSectionTerms(sectionEl, terms);
+        console.log(`🔍 tokenize結果:`, terms);
+        // セクション内のハイライトのみをクリア
+        clearContentHighlights(sectionEl);
+        if (terms.length) {
+          console.log(`✨ ハイライト実行: terms=${terms.join(', ')}`);
+          highlightSectionTerms(sectionEl, terms);
+        } else {
+          console.log(`⚠️ terms が空のためハイライトスキップ`);
+        }
+      } else {
+        console.log(`❌ sectionEl が見つかりません: ${safeSectionHash}`);
       }
       
       // requestAnimationFrame × 2に変更
@@ -2594,8 +2616,8 @@
       const normalizedText = normalizeKana(text || '').toLowerCase();
       let pos = -1;
 
-      // 4文字以上の語のみでマッチ位置を検索
-      const visibleTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 4);
+      // 2文字以上の語でマッチ位置を検索
+      const visibleTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 2);
       for (const t of visibleTerms) {
         const p = normalizedText.indexOf(t);
         if (p !== -1 && (pos === -1 || p < pos)) pos = p;
@@ -2631,8 +2653,8 @@
   function highlightSectionTerms(sectionEl, terms) {
     if (!sectionEl || !terms || !terms.length) return;
     // termsを正規化（小文字化も適用）
-    // 4文字未満はハイライト対象から除外（誤強調抑止）
-    const normalizedTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 4);
+    // 1文字は除外、2文字以上はハイライト対象
+    const normalizedTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 2);
 
     const targets = sectionEl.querySelectorAll(`
       .step-header h2,
