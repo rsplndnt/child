@@ -1359,6 +1359,11 @@ ul.spec-list li{
   margin-bottom: 4px;
 }
 
+/* マイクの使い方のポイントセクション内の注意事項は左マージン0 */
+#mic-usage-tips .note-card {
+  margin-left: 0 !important;
+}
+
 /* ★ワンポイントアドバイス */
 .step-advice{
   background: #E8F5E9;              /* 薄緑色 */
