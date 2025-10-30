@@ -145,6 +145,9 @@
                     </a></h1>
                 <div class="version-info">
                     <span class="version">v1.0</span>
+                    <button class="whats-new-modal-btn" id="whatsNewModalBtn" aria-label="新着情報を表示" title="新着情報">
+                        <i class="material-icons">new_releases</i>
+                    </button>
                 </div>
                 <!-- モバイル用閉じるボタン -->
                 <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="メニューを閉じる">
@@ -194,6 +197,10 @@
                 </div>
                 <div class="toc-section">
                     <h3><a class="toc-link" href="#product-specs" data-group-id="product-specs-items" aria-label="製品仕様セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-information.svg" alt="" class="toc-icon" width="20" height="20" /><span>7. 製品仕様</span></a></h3>
+                </div>
+                <div class="toc-divider"></div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#whats-new" data-group-id="whats-new-items" aria-label="新着情報セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-information.svg" alt="" class="toc-icon" width="20" height="20" /><span>8. 新着情報</span></a></h3>
                 </div>
             </nav>
         </aside>
@@ -2688,6 +2695,16 @@
                 </div>
                 </section>
 
+                <!-- ========== Section 8 ========== -->
+                <section id="whats-new" class="step-section is-hidden">
+                <header class="step-header">
+                    <h2><span class="step-number">08</span> 新着情報</h2>
+                </header>
+                <div class="step-content">
+                    <iframe src="whats-new.html" class="whats-new-iframe" title="新着情報" style="width: 100%; height: 800px; border: none; border-radius: 8px;"></iframe>
+                </div>
+                </section>
+
             </div>
 
     <!-- 右：中項目 -->
@@ -2751,7 +2768,13 @@
                     <li><a href="#oss-licenses" title="ライセンス">ライセンス</a></li>
                 </ul>
             </div>
-            
+            <div id="whats-new-items" class="sub-items-group">
+                <h4>8. 新着情報</h4>
+                <ul>
+                    <li><a href="#whats-new" title="新着情報">新着情報</a></li>
+                </ul>
+            </div>
+
         </div>
     </aside>
     </main>
@@ -2762,10 +2785,193 @@
         <i class="material-icons">arrow_upward</i>
     </button>
 
+    <!-- 新着情報モーダル -->
+    <div id="whatsNewModal" class="whats-new-modal" aria-hidden="true" role="dialog" aria-labelledby="whatsNewModalTitle">
+        <div class="whats-new-modal-overlay" id="whatsNewModalOverlay"></div>
+        <div class="whats-new-modal-content">
+            <div class="whats-new-modal-header">
+                <h2 id="whatsNewModalTitle">新着情報</h2>
+                <button class="whats-new-modal-close" id="whatsNewModalClose" aria-label="閉じる">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="whats-new-modal-body">
+                <iframe src="whats-new.html" class="whats-new-modal-iframe" title="新着情報"></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- Standard footer includes removed for HTML version -->
 
     <!-- ★JSの読み込みは必ずこの形： -->
     <script defer src="js/manual-ui.js?v=2025010519"></script>
+
+    <!-- 新着情報モーダルのスクリプト -->
+    <style>
+        /* 新着情報モーダルボタン */
+        .whats-new-modal-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            margin-left: 8px;
+            color: #00a0e9;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .whats-new-modal-btn:hover {
+            background-color: rgba(0, 160, 233, 0.1);
+            transform: scale(1.1);
+        }
+
+        .whats-new-modal-btn .material-icons {
+            font-size: 20px;
+        }
+
+        /* モーダル本体 */
+        .whats-new-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+        }
+
+        .whats-new-modal[aria-hidden="false"] {
+            display: block;
+        }
+
+        .whats-new-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .whats-new-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .whats-new-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .whats-new-modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .whats-new-modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: #666;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .whats-new-modal-close:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .whats-new-modal-body {
+            flex: 1;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .whats-new-modal-iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .whats-new-modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .whats-new-modal-header {
+                padding: 16px 20px;
+            }
+
+            .whats-new-modal-header h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+
+    <script>
+        // 新着情報モーダルの制御
+        (function() {
+            const modal = document.getElementById('whatsNewModal');
+            const modalBtn = document.getElementById('whatsNewModalBtn');
+            const closeBtn = document.getElementById('whatsNewModalClose');
+            const overlay = document.getElementById('whatsNewModalOverlay');
+
+            function openModal() {
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            if (modalBtn) {
+                modalBtn.addEventListener('click', openModal);
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeModal);
+            }
+
+            // ESCキーで閉じる
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
 </body>
 
 </html>
