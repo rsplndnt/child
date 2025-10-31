@@ -1,103 +1,84 @@
 <!DOCTYPE html>
-<html lang="ja" dir="ltr">
-
+<html lang="ja">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="format-detection" content="telephone=no">
-    <title>新着情報 | しゃべり描き翻訳™ (Material Design)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新着情報 | しゃべり描き翻訳™</title>
 
-    <!-- Material Design 3 CSS -->
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <!-- Material Design CSS from CDN -->
+    <link href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css" rel="stylesheet">
 
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Noto Sans JP -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            /* Material Design 3 Colors */
-            --md-sys-color-primary: #0071B8;
-            --md-sys-color-on-primary: #FFFFFF;
-            --md-sys-color-primary-container: #D1E4FF;
-            --md-sys-color-on-primary-container: #001D36;
-
-            --md-sys-color-secondary: #535F70;
-            --md-sys-color-on-secondary: #FFFFFF;
-            --md-sys-color-secondary-container: #D7E3F7;
-            --md-sys-color-on-secondary-container: #101C2B;
-
-            --md-sys-color-surface: #FDFCFF;
-            --md-sys-color-on-surface: #1A1C1E;
-            --md-sys-color-surface-variant: #DFE2EB;
-            --md-sys-color-on-surface-variant: #43474E;
-
-            --md-sys-color-success: #28a745;
-            --md-sys-color-warning: #ffc107;
-
-            --md-sys-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Noto Sans JP', Roboto, sans-serif;
-            background-color: var(--md-sys-color-surface);
-            color: var(--md-sys-color-on-surface);
-            line-height: 1.8;
-            padding: 24px;
+        :root {
+            --primary-color: #0071B8;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
         }
 
-        .whats-new-container {
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #F5F5F5;
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        .container {
             max-width: 900px;
             margin: 0 auto;
         }
 
-        .whats-new-header {
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid var(--md-sys-color-primary);
-        }
-
-        .whats-new-header h1 {
-            font-size: 32px;
-            font-weight: 500;
-            color: var(--md-sys-color-primary);
-            margin: 0 0 12px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .whats-new-header p {
-            margin: 0;
-            color: var(--md-sys-color-on-surface-variant);
-            font-size: 14px;
-        }
-
-        /* Material Card for News Items */
-        .news-item {
-            margin-bottom: 24px;
-            padding: 20px;
-            background-color: var(--md-sys-color-surface);
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #005a91 100%);
+            color: white;
+            padding: 40px 24px;
             border-radius: 12px;
-            box-shadow: var(--md-sys-elevation-1);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .news-item {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         .news-item:hover {
-            box-shadow: var(--md-sys-elevation-2);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             transform: translateY(-2px);
         }
 
-        .news-item__header {
+        .news-header {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -105,237 +86,196 @@
             flex-wrap: wrap;
         }
 
-        .news-item__date {
-            display: inline-flex;
+        .news-date {
+            display: flex;
             align-items: center;
             gap: 6px;
+            color: var(--primary-color);
             font-size: 14px;
             font-weight: 500;
-            color: var(--md-sys-color-primary);
         }
 
-        .news-item__date .material-icons {
+        .news-date .material-icons {
             font-size: 18px;
         }
 
-        /* Material Chip-style Badge */
-        .news-item__badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 8px;
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+        .news-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .news-item__badge--update {
-            background-color: var(--md-sys-color-success);
+        .news-badge.new {
+            background: var(--primary-color);
+            color: white;
         }
 
-        .news-item__badge--fix {
-            background-color: var(--md-sys-color-warning);
+        .news-badge.update {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .news-badge.fix {
+            background: var(--warning-color);
             color: #000;
         }
 
-        .news-item__title {
+        .news-title {
             font-size: 20px;
             font-weight: 500;
-            margin: 0 0 12px 0;
-            color: var(--md-sys-color-on-surface);
+            color: #1a1a1a;
+            margin-bottom: 12px;
         }
 
-        .news-item__content {
+        .news-content {
             font-size: 15px;
-            color: var(--md-sys-color-on-surface-variant);
-            line-height: 1.6;
+            color: #666;
+            line-height: 1.7;
         }
 
-        .news-item__content p {
-            margin: 0 0 12px 0;
+        .news-content p {
+            margin-bottom: 12px;
         }
 
-        .news-item__content ul {
+        .news-content ul {
             margin: 12px 0;
             padding-left: 24px;
         }
 
-        .news-item__content li {
+        .news-content li {
             margin-bottom: 8px;
-            position: relative;
+            color: #555;
         }
 
-        .news-item__content li::marker {
-            color: var(--md-sys-color-primary);
+        .news-content li::marker {
+            color: var(--primary-color);
         }
 
-        /* Image Placeholder */
-        .news-item__image {
-            margin: 16px auto;
-            width: 67%;
-            aspect-ratio: 16 / 9;
-            background-color: var(--md-sys-color-surface-variant);
+        .info-card {
+            background: linear-gradient(135deg, #D1E4FF 0%, #E8F4FD 100%);
+            border-left: 4px solid var(--primary-color);
             border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 32px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-sys-color-on-surface-variant);
-            font-size: 14px;
-            box-shadow: var(--md-sys-elevation-1);
+            align-items: start;
+            gap: 12px;
         }
 
-        /* Material Divider */
-        .news-divider {
-            border: none;
-            height: 1px;
-            background-color: var(--md-sys-color-surface-variant);
-            margin: 32px 0;
+        .info-card .material-icons {
+            color: var(--primary-color);
+            font-size: 24px;
         }
 
-        /* Info Box (Material Card variant) */
-        .info-box {
-            background: linear-gradient(135deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-secondary-container) 100%);
-            border-left: 4px solid var(--md-sys-color-primary);
-            border-radius: 8px;
-            padding: 16px;
-            margin: 24px 0;
-        }
-
-        .info-box__title {
+        .info-card-content h3 {
+            font-size: 16px;
             font-weight: 500;
-            color: var(--md-sys-color-on-primary-container);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
         }
 
-        .info-box__content {
-            color: var(--md-sys-color-on-surface-variant);
+        .info-card-content p {
             font-size: 14px;
+            color: #555;
+            line-height: 1.5;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             body {
                 padding: 16px;
             }
 
-            .whats-new-header h1 {
+            .header {
+                padding: 32px 20px;
+            }
+
+            .header h1 {
                 font-size: 24px;
             }
 
-            .news-item {
-                padding: 16px;
+            .header p {
+                font-size: 14px;
             }
 
-            .news-item__title {
+            .news-item {
+                padding: 20px;
+            }
+
+            .news-title {
                 font-size: 18px;
             }
-
-            .news-item__image {
-                width: 100%;
-            }
-        }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Selection Color */
-        ::selection {
-            background-color: var(--md-sys-color-primary-container);
-            color: var(--md-sys-color-on-primary-container);
         }
     </style>
 </head>
-
 <body>
-    <div class="whats-new-container">
-        <div class="whats-new-header">
-            <h1>
-                <span class="material-icons" style="font-size: 36px;">new_releases</span>
-                新着情報
-            </h1>
-            <p>しゃべり描き翻訳™の最新情���をお届けします</p>
+    <div class="container">
+        <div class="header">
+            <div class="material-icons header-icon">new_releases</div>
+            <h1>新着情報</h1>
+            <p>しゃべり描き翻訳™の最新情報をお届けします</p>
         </div>
 
-        <div class="info-box">
-            <div class="info-box__title">
-                <span class="material-icons">info</span>
-                Material Designバージョン
-            </div>
-            <div class="info-box__content">
-                このページは、Googleのマテリアルデザイン3を使用して再構築されたバージョンです。
+        <div class="info-card">
+            <i class="material-icons">info</i>
+            <div class="info-card-content">
+                <h3>Material Designバージョン</h3>
+                <p>このページは、Googleのマテリアルデザインを使用して再構築されたバージョンです。</p>
             </div>
         </div>
 
-        <article class="news-item">
-            <div class="news-item__header">
-                <span class="news-item__date">
-                    <span class="material-icons">event</span>
+        <div class="news-item">
+            <div class="news-header">
+                <span class="news-date">
+                    <i class="material-icons">event</i>
                     2025年1月5日
                 </span>
-                <span class="news-item__badge">NEW</span>
+                <span class="news-badge new">New</span>
             </div>
-            <h2 class="news-item__title">ユーザーマニュアル Ver. 1.0 公開</h2>
-            <div class="news-item__content">
+            <h2 class="news-title">ユーザーマニュアル Ver. 1.0 公開</h2>
+            <div class="news-content">
                 <p>しゃべり描き翻訳™のユーザーマニュアルを公開しました。アカウント設定から基本的な操作方法まで、画像付きで詳しく解説しています。</p>
-                <div class="news-item__image">
-                    <span class="material-icons" style="font-size: 48px; opacity: 0.3;">image</span>
-                </div>
                 <ul>
                     <li>アカウント初期設定の詳細手順</li>
                     <li>しゃべり描き®機能の使い方</li>
                     <li>トランスクリプト機能の活用法</li>
                 </ul>
             </div>
-        </article>
+        </div>
 
-        <hr class="news-divider">
-
-        <article class="news-item">
-            <div class="news-item__header">
-                <span class="news-item__date">
-                    <span class="material-icons">event</span>
+        <div class="news-item">
+            <div class="news-header">
+                <span class="news-date">
+                    <i class="material-icons">event</i>
                     2024年12月20日
                 </span>
-                <span class="news-item__badge news-item__badge--update">UPDATE</span>
+                <span class="news-badge update">Update</span>
             </div>
-            <h2 class="news-item__title">トランスクリプト機能の注意事項を追加</h2>
-            <div class="news-item__content">
+            <h2 class="news-title">トランスクリプト機能の注意事項を追加</h2>
+            <div class="news-content">
                 <p>トランスクリプト機能使用時のシート切り替えに関する注意事項を追加しました。</p>
-                <div class="news-item__image">
-                    <span class="material-icons" style="font-size: 48px; opacity: 0.3;">image</span>
-                </div>
                 <ul>
                     <li>トランスクリプト起動中のシート操作に関する注意点</li>
                     <li>マイクボタンの無効化手順の明記</li>
                     <li>推奨される使用方法の追加</li>
                 </ul>
             </div>
-        </article>
+        </div>
 
-        <hr class="news-divider">
-
-        <article class="news-item">
-            <div class="news-item__header">
-                <span class="news-item__date">
-                    <span class="material-icons">event</span>
+        <div class="news-item">
+            <div class="news-header">
+                <span class="news-date">
+                    <i class="material-icons">event</i>
                     2024年12月15日
                 </span>
-                <span class="news-item__badge news-item__badge--fix">FIX</span>
+                <span class="news-badge fix">Fix</span>
             </div>
-            <h2 class="news-item__title">画像表示の最適化</h2>
-            <div class="news-item__content">
+            <h2 class="news-title">画像表示の最適化</h2>
+            <div class="news-content">
                 <p>マニュアル内の画像表示を最適化し、読み込み速度を改善しました。</p>
-                <div class="news-item__image">
-                    <span class="material-icons" style="font-size: 48px; opacity: 0.3;">image</span>
-                </div>
                 <ul>
                     <li>画像のアスペクト比を16:9に統一</li>
                     <li>HubSpot推奨事項に基づく実装</li>
@@ -343,21 +283,19 @@
                     <li>レスポンシブ対応の強化</li>
                 </ul>
             </div>
-        </article>
+        </div>
 
-        <hr class="news-divider">
-
-        <article class="news-item">
-            <div class="news-item__header">
-                <span class="news-item__date">
-                    <span class="material-icons">event</span>
+        <div class="news-item">
+            <div class="news-header">
+                <span class="news-date">
+                    <i class="material-icons">event</i>
                     2024年12月10日
                 </span>
-                <span class="news-item__badge news-item__badge--update">UPDATE</span>
+                <span class="news-badge update">Update</span>
             </div>
-            <h2 class="news-item__title">Material Designバージョンを追加</h2>
-            <div class="news-item__content">
-                <p>Googleのマテリアルデザイン3を使用した実験的なバージョンを作成しました。</p>
+            <h2 class="news-title">Material Designバージョンを追加</h2>
+            <div class="news-content">
+                <p>Googleのマテリアルデザインを使用した実験的なバージョンを作成しました。</p>
                 <ul>
                     <li>Material Design 3のデザインシステムを適用</li>
                     <li>モダンなUIコンポーネントの使用</li>
@@ -365,14 +303,14 @@
                     <li>レスポンシブデザインの最適化</li>
                 </ul>
             </div>
-        </article>
+        </div>
     </div>
 
-    <!-- Material Components Web JavaScript (optional for this standalone page) -->
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <!-- Material Components Web JS from CDN -->
+    <script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
 
     <script>
-        // Simple animations on scroll
+        // Simple fade-in animation on scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -387,7 +325,6 @@
             });
         }, observerOptions);
 
-        // Observe all news items
         document.querySelectorAll('.news-item').forEach(item => {
             item.style.opacity = '0';
             item.style.transform = 'translateY(20px)';
@@ -395,8 +332,7 @@
             observer.observe(item);
         });
 
-        console.log('✅ What\'s New page initialized with Material Design 3');
+        console.log('What\'s New page initialized successfully!');
     </script>
 </body>
-
 </html>

@@ -1,92 +1,85 @@
 <!DOCTYPE html>
-<html lang="ja" dir="ltr">
+<html lang="ja">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="format-detection" content="telephone=no">
-    <title>しゃべり描き翻訳™ Ver. 1.0 | ユーザーマニュアル (Material Design)</title>
-    <meta name="description" content="三菱電機のしゃべり描き翻訳™アプリの使い方を詳しく解説。Material Designで再構築されたユーザーマニュアル。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しゃべり描き翻訳™ - Material Design</title>
 
-    <!-- Material Design 3 CSS -->
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <!-- Material Design CSS from CDN -->
+    <link href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css" rel="stylesheet">
 
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
     <!-- Noto Sans JP -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Roboto Font (Material Design standard) -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Custom Material Design Styles -->
-    <link rel="stylesheet" href="css/material-custom.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            /* Material Design 3 Color Tokens - Based on #0071B8 primary */
-            --md-sys-color-primary: #0071B8;
-            --md-sys-color-on-primary: #FFFFFF;
-            --md-sys-color-primary-container: #D1E4FF;
-            --md-sys-color-on-primary-container: #001D36;
-
-            --md-sys-color-secondary: #535F70;
-            --md-sys-color-on-secondary: #FFFFFF;
-            --md-sys-color-secondary-container: #D7E3F7;
-            --md-sys-color-on-secondary-container: #101C2B;
-
-            --md-sys-color-tertiary: #6B5778;
-            --md-sys-color-on-tertiary: #FFFFFF;
-            --md-sys-color-tertiary-container: #F2DAFF;
-            --md-sys-color-on-tertiary-container: #251431;
-
-            --md-sys-color-error: #BA1A1A;
-            --md-sys-color-on-error: #FFFFFF;
-            --md-sys-color-error-container: #FFDAD6;
-            --md-sys-color-on-error-container: #410002;
-
-            --md-sys-color-surface: #FDFCFF;
-            --md-sys-color-on-surface: #1A1C1E;
-            --md-sys-color-surface-variant: #DFE2EB;
-            --md-sys-color-on-surface-variant: #43474E;
-            --md-sys-color-outline: #73777F;
-            --md-sys-color-outline-variant: #C3C7CF;
-
-            --md-sys-color-surface-container-lowest: #FFFFFF;
-            --md-sys-color-surface-container-low: #F7F9FF;
-            --md-sys-color-surface-container: #EBEEF6;
-            --md-sys-color-surface-container-high: #E6E8F0;
-            --md-sys-color-surface-container-highest: #E0E2EA;
-
-            /* Material Design Elevation */
-            --md-sys-elevation-0: none;
-            --md-sys-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.3);
-
-            /* Typography */
-            --md-sys-typescale-display-large-font: 'Noto Sans JP', Roboto, sans-serif;
-            --md-sys-typescale-body-large-font: 'Noto Sans JP', Roboto, sans-serif;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Noto Sans JP', Roboto, sans-serif;
-            background-color: var(--md-sys-color-surface);
-            color: var(--md-sys-color-on-surface);
-            line-height: 1.6;
-            overflow: hidden;
+        :root {
+            --primary-color: #0071B8;
+            --primary-dark: #005a91;
+            --secondary-color: #535F70;
+            --surface-color: #FFFFFF;
+            --background-color: #F5F5F5;
         }
 
-        /* Material Design App Layout */
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--background-color);
+            overflow-x: hidden;
+        }
+
+        /* App Bar */
+        .mdc-top-app-bar {
+            background-color: var(--primary-color);
+            position: fixed;
+            z-index: 7;
+        }
+
+        .mdc-top-app-bar__title {
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        /* Drawer */
+        .mdc-drawer {
+            border-right: 1px solid rgba(0,0,0,.12);
+        }
+
+        .drawer-header {
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .drawer-header h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .drawer-header .version {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+            width: fit-content;
+        }
+
+        /* Main Content */
         .mdc-drawer-app-content {
             flex: auto;
             overflow: auto;
@@ -94,713 +87,477 @@
         }
 
         .main-content {
-            overflow: auto;
-            height: 100vh;
+            padding-top: 64px;
+            min-height: 100vh;
         }
 
-        .app-bar {
-            position: absolute;
-            right: 0;
-            left: 0;
-        }
-
-        /* Custom Material Top App Bar */
-        .material-top-bar {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-            height: 64px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            box-shadow: var(--md-sys-elevation-2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .material-top-bar__title {
-            font-size: 20px;
-            font-weight: 500;
-            margin-left: 16px;
-            flex-grow: 1;
-        }
-
-        /* Material Navigation Drawer */
-        .mdc-drawer {
-            width: 320px;
-            border: none;
-        }
-
-        .drawer-header {
-            padding: 24px 16px;
-            background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, #005a91 100%);
-            color: var(--md-sys-color-on-primary);
-        }
-
-        .drawer-header__logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .drawer-header__logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-        }
-
-        .drawer-header__title {
-            font-size: 18px;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .drawer-header__version {
-            display: inline-block;
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 8px;
-        }
-
-        /* Material Search Field */
-        .drawer-search {
-            padding: 16px;
-            background-color: var(--md-sys-color-surface-container-low);
-        }
-
-        .mdc-text-field {
-            width: 100%;
-        }
-
-        /* Material List for Navigation */
-        .mdc-list {
-            padding: 8px 0;
-        }
-
-        .mdc-list-item {
-            padding: 0 16px;
-            height: 56px;
-            border-radius: 0 28px 28px 0;
-            margin-right: 12px;
-            transition: background-color 0.2s ease;
-        }
-
-        .mdc-list-item:hover {
-            background-color: var(--md-sys-color-surface-container-highest);
-        }
-
-        .mdc-list-item--activated {
-            background-color: var(--md-sys-color-secondary-container);
-            color: var(--md-sys-color-on-secondary-container);
-        }
-
-        .mdc-list-item__graphic {
-            margin-right: 16px;
-            color: var(--md-sys-color-on-surface-variant);
-        }
-
-        .mdc-list-item--activated .mdc-list-item__graphic {
-            color: var(--md-sys-color-on-secondary-container);
-        }
-
-        /* Material Cards */
-        .mdc-card {
-            border-radius: 12px;
-            margin: 16px;
-            overflow: hidden;
-        }
-
-        .feature-cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
-            padding: 24px;
-            max-width: 1400px;
+        .content-section {
+            max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .feature-card {
-            background-color: var(--md-sys-color-surface-container-low);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--md-sys-elevation-1);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            box-shadow: var(--md-sys-elevation-3);
-            transform: translateY(-2px);
-        }
-
-        .feature-card__media {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background-color: var(--md-sys-color-surface-variant);
-            overflow: hidden;
-        }
-
-        .feature-card__media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .feature-card__content {
-            padding: 16px;
-        }
-
-        .feature-card__title {
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--md-sys-color-on-surface);
-            margin-bottom: 8px;
-        }
-
-        .feature-card__description {
-            font-size: 14px;
-            color: var(--md-sys-color-on-surface-variant);
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .feature-card__actions {
-            display: flex;
-            justify-content: flex-end;
-            padding: 8px;
-        }
-
-        /* Material Buttons */
-        .mdc-button {
-            border-radius: 20px;
-            font-weight: 500;
-            text-transform: none;
-        }
-
-        .mdc-button--raised {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-            box-shadow: var(--md-sys-elevation-1);
-        }
-
-        .mdc-button--raised:hover {
-            box-shadow: var(--md-sys-elevation-2);
-        }
-
-        .mdc-button--outlined {
-            border-color: var(--md-sys-color-outline);
-            color: var(--md-sys-color-primary);
+            padding: 24px;
         }
 
         /* Hero Section */
-        .hero-section {
+        .hero {
             background: linear-gradient(135deg, rgba(0,113,184,0.95) 0%, rgba(0,90,145,0.95) 100%);
             color: white;
-            padding: 48px 24px;
+            padding: 60px 24px;
             text-align: center;
+            margin: -24px -24px 24px -24px;
         }
 
-        .hero-section__title {
+        .hero h1 {
             font-size: 36px;
             font-weight: 700;
             margin-bottom: 16px;
         }
 
-        .hero-section__subtitle {
-            font-size: 20px;
-            font-weight: 300;
-            opacity: 0.9;
+        .hero p {
+            font-size: 18px;
+            opacity: 0.95;
             margin-bottom: 32px;
         }
 
-        .hero-section__video {
-            max-width: 900px;
+        .hero-video {
+            max-width: 800px;
             margin: 0 auto 32px;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--md-sys-elevation-5);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
         }
 
-        .hero-section__video video {
+        .hero-video video {
             width: 100%;
-            height: auto;
             display: block;
         }
 
-        .hero-section__actions {
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .mdc-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-media {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mdc-card__primary-action {
+            padding: 0;
+        }
+
+        .card-content {
+            padding: 16px;
+        }
+
+        .card-content h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .card-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .mdc-card__actions {
+            padding: 8px;
+        }
+
+        /* Buttons */
+        .mdc-button {
+            text-transform: none;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 500;
+        }
+
+        .mdc-button--raised {
+            background-color: var(--primary-color);
+        }
+
+        .mdc-button--outlined {
+            border-color: white;
+            color: white;
+        }
+
+        .hero-actions {
             display: flex;
             gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        /* Material FAB */
+        /* FAB */
         .mdc-fab {
             position: fixed;
             bottom: 16px;
             right: 16px;
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-            box-shadow: var(--md-sys-elevation-3);
+            background-color: var(--primary-color);
+            display: none;
         }
 
-        .mdc-fab:hover {
-            box-shadow: var(--md-sys-elevation-4);
+        .mdc-fab.visible {
+            display: flex;
         }
 
-        /* Material Chips */
-        .mdc-chip {
-            margin: 4px;
-            background-color: var(--md-sys-color-surface-variant);
+        /* List Items */
+        .mdc-list-item {
+            height: 56px;
         }
 
-        .mdc-chip--selected {
-            background-color: var(--md-sys-color-secondary-container);
-            color: var(--md-sys-color-on-secondary-container);
+        .mdc-list-item__graphic {
+            margin-right: 16px;
         }
 
-        /* Content Container */
-        .content-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* Material Tabs */
-        .mdc-tab-bar {
-            background-color: var(--md-sys-color-surface);
-            box-shadow: var(--md-sys-elevation-1);
-        }
-
-        .mdc-tab {
-            color: var(--md-sys-color-on-surface-variant);
-        }
-
-        .mdc-tab--active {
-            color: var(--md-sys-color-primary);
-        }
-
-        /* Material Dialog */
-        .mdc-dialog .mdc-dialog__surface {
+        /* Dialog */
+        .mdc-dialog__surface {
             border-radius: 28px;
-            max-width: 900px;
-            width: 90%;
-            max-height: 85vh;
+            max-width: 800px;
         }
 
         .mdc-dialog__title {
-            color: var(--md-sys-color-on-surface);
-            font-size: 24px;
             font-weight: 500;
         }
 
-        .mdc-dialog__content {
-            color: var(--md-sys-color-on-surface-variant);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .mdc-drawer {
-                width: 280px;
-            }
-
-            .feature-cards-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* News Items in Dialog */
         .news-item {
-            margin-bottom: 24px;
-            padding: 16px;
-            background-color: var(--md-sys-color-surface-container-low);
-            border-radius: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .news-item__header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+        .news-item:last-child {
+            border-bottom: none;
         }
 
-        .news-item__date {
+        .news-date {
+            color: var(--primary-color);
             font-size: 14px;
             font-weight: 500;
-            color: var(--md-sys-color-primary);
-        }
-
-        .news-item__badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-        }
-
-        .news-item__badge--update {
-            background-color: #28a745;
-        }
-
-        .news-item__badge--fix {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .news-item__title {
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--md-sys-color-on-surface);
             margin-bottom: 8px;
         }
 
-        .news-item__content {
+        .news-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .news-content {
             font-size: 14px;
-            color: var(--md-sys-color-on-surface-variant);
+            color: #666;
             line-height: 1.6;
+        }
+
+        .news-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 8px;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .news-badge.update {
+            background: #28a745;
+        }
+
+        .news-badge.fix {
+            background: #ffc107;
+            color: #000;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 24px;
+            font-weight: 500;
+            margin: 32px 0 16px 0;
+            color: #1a1a1a;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-section {
+                padding: 16px;
+            }
+
+            .hero {
+                padding: 40px 16px;
+            }
         }
     </style>
 </head>
-
 <body>
-    <!-- Material Navigation Drawer -->
+    <!-- Top App Bar -->
+    <header class="mdc-top-app-bar">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menuBtn">menu</button>
+                <span class="mdc-top-app-bar__title">しゃべり描き翻訳™</span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" id="newsBtn">notifications</button>
+            </section>
+        </div>
+    </header>
+
+    <!-- Drawer -->
     <aside class="mdc-drawer mdc-drawer--modal">
         <div class="mdc-drawer__content">
             <div class="drawer-header">
-                <div class="drawer-header__logo">
-                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/logo-header.svg" alt="MelBridge Logo">
-                    <div>
-                        <div class="drawer-header__title">しゃべり描き翻訳™<br>ユーザーマニュアル</div>
-                    </div>
-                </div>
-                <span class="drawer-header__version">v1.0</span>
+                <h1>しゃべり描き翻訳™<br>ユーザーマニュアル</h1>
+                <span class="version">v1.0</span>
             </div>
 
-            <!-- Search Field -->
-            <div class="drawer-search">
-                <label class="mdc-text-field mdc-text-field--filled">
-                    <span class="mdc-text-field__ripple"></span>
-                    <span class="mdc-floating-label" id="search-label">検索</span>
-                    <input class="mdc-text-field__input" type="text" aria-labelledby="search-label">
-                    <span class="mdc-line-ripple"></span>
-                </label>
-            </div>
-
-            <!-- Navigation List -->
             <nav class="mdc-list">
-                <a class="mdc-list-item mdc-list-item--activated" href="#top">
+                <a class="mdc-list-item mdc-list-item--activated" href="#home">
                     <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">home</span>
-                    <span class="mdc-list-item__text">TOP</span>
+                    <i class="material-icons mdc-list-item__graphic">home</i>
+                    <span class="mdc-list-item__text">ホーム</span>
                 </a>
-
-                <div class="mdc-list-divider"></div>
-
-                <a class="mdc-list-item" href="#account-setup">
+                <a class="mdc-list-item" href="#account">
                     <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">account_circle</span>
-                    <span class="mdc-list-item__text">1. アカウントの初期設定</span>
+                    <i class="material-icons mdc-list-item__graphic">account_circle</i>
+                    <span class="mdc-list-item__text">アカウント設定</span>
                 </a>
-
-                <a class="mdc-list-item" href="#screen-layout">
+                <a class="mdc-list-item" href="#screen">
                     <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">dashboard</span>
-                    <span class="mdc-list-item__text">2. 画面構成</span>
+                    <i class="material-icons mdc-list-item__graphic">dashboard</i>
+                    <span class="mdc-list-item__text">画面構成</span>
                 </a>
-
-                <a class="mdc-list-item" href="#operation-guide">
+                <a class="mdc-list-item" href="#operation">
                     <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">touch_app</span>
-                    <span class="mdc-list-item__text">3. アプリを操作する</span>
-                </a>
-
-                <a class="mdc-list-item" href="#mic-usage-tips">
-                    <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">mic</span>
-                    <span class="mdc-list-item__text">4. マイクの使い方のポイント</span>
-                </a>
-
-                <div class="mdc-list-divider"></div>
-
-                <a class="mdc-list-item" href="#terminology">
-                    <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">book</span>
-                    <span class="mdc-list-item__text">5. 用語</span>
-                </a>
-
-                <a class="mdc-list-item" href="#faq">
-                    <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">help_outline</span>
-                    <span class="mdc-list-item__text">6. FAQ</span>
-                </a>
-
-                <a class="mdc-list-item" href="#product-specs">
-                    <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">info</span>
-                    <span class="mdc-list-item__text">7. 製品仕様</span>
-                </a>
-
-                <div class="mdc-list-divider"></div>
-
-                <a class="mdc-list-item" href="#whats-new">
-                    <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__graphic material-icons">new_releases</span>
-                    <span class="mdc-list-item__text">8. 新着情報</span>
+                    <i class="material-icons mdc-list-item__graphic">touch_app</i>
+                    <span class="mdc-list-item__text">操作方法</span>
                 </a>
             </nav>
         </div>
     </aside>
-
     <div class="mdc-drawer-scrim"></div>
 
     <!-- Main Content -->
     <div class="mdc-drawer-app-content">
-        <!-- Top App Bar -->
-        <header class="material-top-bar">
-            <button class="material-icons mdc-icon-button" id="menuButton" style="color: white; font-size: 24px;">menu</button>
-            <h1 class="material-top-bar__title">しゃべり描き翻訳™ ユーザーマニュアル</h1>
-            <button class="material-icons mdc-icon-button" id="whatsNewBtn" style="color: white; font-size: 24px;" title="新着情報">new_releases</button>
-        </header>
-
-        <!-- Main Content Area -->
         <main class="main-content">
-            <!-- Hero Section -->
-            <section class="hero-section">
-                <h2 class="hero-section__title">はじめてのしゃべり描き翻訳™</h2>
-                <p class="hero-section__subtitle">60秒クイックガイド</p>
+            <div class="content-section">
+                <!-- Hero Section -->
+                <section class="hero">
+                    <h1>はじめてのしゃべり描き翻訳™</h1>
+                    <p>60秒クイックガイド</p>
 
-                <div class="hero-section__video">
-                    <video controls autoplay muted loop playsinline>
-                        <source src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/movie-intro-pair-1.mp4" type="video/mp4">
-                        お使いのブラウザは動画タグをサポートしていません。
-                    </video>
-                </div>
-
-                <div class="hero-section__actions">
-                    <button class="mdc-button mdc-button--raised">
-                        <span class="mdc-button__ripple"></span>
-                        <i class="material-icons mdc-button__icon" aria-hidden="true">play_arrow</i>
-                        <span class="mdc-button__label">アカウントの初期設定を行う</span>
-                    </button>
-                    <button class="mdc-button mdc-button--outlined" style="border-color: white; color: white;">
-                        <span class="mdc-button__ripple"></span>
-                        <i class="material-icons mdc-button__icon" aria-hidden="true">note_add</i>
-                        <span class="mdc-button__label">新しいシートを作成する</span>
-                    </button>
-                </div>
-            </section>
-
-            <!-- Feature Introduction -->
-            <div class="content-container">
-                <h3 style="font-size: 24px; font-weight: 500; margin: 32px 0 16px; color: var(--md-sys-color-on-surface);">しゃべり描き翻訳™でできること</h3>
-                <p style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 24px;">しゃべり描き翻訳™は、音声翻訳・手書き・画像貼り付けをひとつの画面で扱えるコミュニケーションツールです。何ができるかを、3つの特徴で素早く把握しましょう。</p>
-            </div>
-
-            <!-- Feature Cards -->
-            <div class="feature-cards-container">
-                <!-- Card 1 -->
-                <div class="feature-card mdc-card">
-                    <div class="feature-card__media">
-                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-1.png" alt="２言語間のコミュニケーション">
+                    <div class="hero-video">
+                        <video controls autoplay muted loop playsinline>
+                            <source src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/movie-intro-pair-1.mp4" type="video/mp4">
+                        </video>
                     </div>
-                    <div class="feature-card__content">
-                        <h3 class="feature-card__title">１対１の会話を翻訳し伝達をアシスト</h3>
-                        <p class="feature-card__description">１対１のコミュニケーションで、互いの言語を翻訳しながら伝達をアシストします。入力言語ごとにマイクボタンが分かれているので、素早く正確な入力・翻訳が可能です。</p>
-                    </div>
-                    <div class="feature-card__actions mdc-card__actions">
-                        <button class="mdc-button mdc-card__action mdc-card__action--button">
+
+                    <div class="hero-actions">
+                        <button class="mdc-button mdc-button--raised">
                             <span class="mdc-button__ripple"></span>
-                            <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_forward</i>
-                            <span class="mdc-button__label">詳しく見る</span>
+                            <i class="material-icons mdc-button__icon">play_arrow</i>
+                            <span class="mdc-button__label">初期設定を始める</span>
+                        </button>
+                        <button class="mdc-button mdc-button--outlined">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">note_add</i>
+                            <span class="mdc-button__label">新しいシートを作成</span>
                         </button>
                     </div>
+                </section>
+
+                <!-- Feature Introduction -->
+                <h2 class="section-header">しゃべり描き翻訳™でできること</h2>
+                <p class="section-description">音声翻訳・手書き・画像貼り付けをひとつの画面で扱えるコミュニケーションツールです。</p>
+
+                <div class="feature-grid">
+                    <!-- Card 1 -->
+                    <div class="mdc-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="card-media">
+                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-1.png" alt="2言語間のコミュニケーション">
+                            </div>
+                            <div class="card-content">
+                                <h3>1対1の会話を翻訳</h3>
+                                <p>互いの言語を翻訳しながら伝達をアシストします。入力言語ごとにマイクボタンが分かれているので、素早く正確な入力・翻訳が可能です。</p>
+                            </div>
+                        </div>
+                        <div class="mdc-card__actions">
+                            <button class="mdc-button mdc-card__action mdc-card__action--button">
+                                <span class="mdc-button__ripple"></span>
+                                <span class="mdc-button__label">詳しく見る</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="mdc-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="card-media">
+                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-3.png" alt="トランスクリプト機能">
+                            </div>
+                            <div class="card-content">
+                                <h3>トランスクリプトで会話の流れが分かる</h3>
+                                <p>話した内容をその場で翻訳して伝えられます。会話は吹き出し形式で保存され、あとから簡単に流れを振り返ることができます。</p>
+                            </div>
+                        </div>
+                        <div class="mdc-card__actions">
+                            <button class="mdc-button mdc-card__action mdc-card__action--button">
+                                <span class="mdc-button__ripple"></span>
+                                <span class="mdc-button__label">詳しく見る</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="mdc-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="card-media">
+                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-2.png" alt="しゃべり描き">
+                            </div>
+                            <div class="card-content">
+                                <h3>しゃべり描き®で視覚的に伝える</h3>
+                                <p>画像に矢印や図を描き込み、その上に音声入力した文字を翻訳して組み合わせられます。複雑な作業指導や図面変更の説明なども直感的に表現できます。</p>
+                            </div>
+                        </div>
+                        <div class="mdc-card__actions">
+                            <button class="mdc-button mdc-card__action mdc-card__action--button">
+                                <span class="mdc-button__ripple"></span>
+                                <span class="mdc-button__label">詳しく見る</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Card 2 -->
-                <div class="feature-card mdc-card">
-                    <div class="feature-card__media">
-                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-3.png" alt="トランスクリプト機能">
-                    </div>
-                    <div class="feature-card__content">
-                        <h3 class="feature-card__title">トランスクリプトで会話の流れが分かる</h3>
-                        <p class="feature-card__description">トランスクリプト機能を使えば、話した内容をその場で翻訳して伝えられます。会話は吹き出し形式で保存され、あとから簡単に流れを振り返ることができます。</p>
-                    </div>
-                    <div class="feature-card__actions mdc-card__actions">
-                        <button class="mdc-button mdc-card__action mdc-card__action--button">
-                            <span class="mdc-button__ripple"></span>
-                            <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_forward</i>
-                            <span class="mdc-button__label">詳しく見る</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="feature-card mdc-card">
-                    <div class="feature-card__media">
-                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-2.png" alt="しゃべり描き®">
-                    </div>
-                    <div class="feature-card__content">
-                        <h3 class="feature-card__title">しゃべり描き®で視覚的に伝える</h3>
-                        <p class="feature-card__description">画像に矢印や図を描き込み、その上に音声入力した文字を翻訳して組み合わせられます。複雑な作業指導や図面変更の説明なども、直感的に表現しながら翻訳して伝えられます。</p>
-                    </div>
-                    <div class="feature-card__actions mdc-card__actions">
-                        <button class="mdc-button mdc-card__action mdc-card__action--button">
-                            <span class="mdc-button__ripple"></span>
-                            <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_forward</i>
-                            <span class="mdc-button__label">詳しく見る</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Content Sections would go here -->
-            <div class="content-container">
-                <h3 style="font-size: 24px; font-weight: 500; margin: 32px 0 16px; color: var(--md-sys-color-on-surface);">アカウントの初期設定</h3>
-                <p style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 24px;">しゃべり描き翻訳™を使い始めるには、まずアカウントの初期設定を行います。</p>
-
-                <!-- More content sections would be added here following Material Design patterns -->
             </div>
         </main>
-
-        <!-- FAB (Floating Action Button) - Back to Top -->
-        <button class="mdc-fab mdc-fab--extended" id="backToTop">
-            <div class="mdc-fab__ripple"></div>
-            <span class="material-icons mdc-fab__icon">arrow_upward</span>
-            <span class="mdc-fab__label">トップへ</span>
-        </button>
     </div>
 
-    <!-- Material Dialog for What's New -->
-    <div class="mdc-dialog" id="whatsNewDialog">
+    <!-- FAB - Back to Top -->
+    <button class="mdc-fab" id="backToTop">
+        <div class="mdc-fab__ripple"></div>
+        <span class="material-icons mdc-fab__icon">arrow_upward</span>
+    </button>
+
+    <!-- Dialog - What's New -->
+    <div class="mdc-dialog" id="newsDialog">
         <div class="mdc-dialog__container">
-            <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-content">
-                <h2 class="mdc-dialog__title" id="dialog-title">新着情報</h2>
-                <div class="mdc-dialog__content" id="dialog-content">
-                    <!-- News Items -->
-                    <article class="news-item">
-                        <div class="news-item__header">
-                            <span class="news-item__date">2025年1月5日</span>
-                            <span class="news-item__badge">NEW</span>
-                        </div>
-                        <h3 class="news-item__title">ユーザーマニュアル Ver. 1.0 公開</h3>
-                        <div class="news-item__content">
-                            <p>しゃべり描き翻訳™のユーザーマニュアルを公開しました。アカウント設定から基本的な操作方法まで、画像付きで詳しく解説しています。</p>
-                        </div>
-                    </article>
-
-                    <article class="news-item">
-                        <div class="news-item__header">
-                            <span class="news-item__date">2024年12月20日</span>
-                            <span class="news-item__badge news-item__badge--update">UPDATE</span>
-                        </div>
-                        <h3 class="news-item__title">トランスクリプト機能の注意事項を追加</h3>
-                        <div class="news-item__content">
-                            <p>トランスクリプト機能使用時のシート切り替えに関する注意事項を追加しました。</p>
-                            <ul>
-                                <li>トランスクリプト起動中のシート操作に関する注意点</li>
-                                <li>マイクボタンの無効化手順の明記</li>
-                            </ul>
-                        </div>
-                    </article>
-
-                    <article class="news-item">
-                        <div class="news-item__header">
-                            <span class="news-item__date">2024年12月15日</span>
-                            <span class="news-item__badge news-item__badge--fix">FIX</span>
-                        </div>
-                        <h3 class="news-item__title">画像表示の最適化</h3>
-                        <div class="news-item__content">
-                            <p>マニュアル内の画像表示を最適化し、読み込み速度を改善しました。</p>
-                            <ul>
-                                <li>画像のアスペクト比を16:9に統一</li>
-                                <li>HubSpot推奨事項に基づく実装</li>
-                            </ul>
-                        </div>
-                    </article>
+            <div class="mdc-dialog__surface">
+                <h2 class="mdc-dialog__title">新着情報</h2>
+                <div class="mdc-dialog__content">
+                    <div class="news-item">
+                        <div class="news-date">2025年1月5日<span class="news-badge">NEW</span></div>
+                        <h3 class="news-title">ユーザーマニュアル Ver. 1.0 公開</h3>
+                        <p class="news-content">しゃべり描き翻訳™のユーザーマニュアルを公開しました。アカウント設定から基本的な操作方法まで、画像付きで詳しく解説しています。</p>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-date">2024年12月20日<span class="news-badge update">UPDATE</span></div>
+                        <h3 class="news-title">トランスクリプト機能の注意事項を追加</h3>
+                        <p class="news-content">トランスクリプト機能使用時のシート切り替えに関する注意事項を追加しました。</p>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-date">2024年12月15日<span class="news-badge fix">FIX</span></div>
+                        <h3 class="news-title">画像表示の最適化</h3>
+                        <p class="news-content">マニュアル内の画像表示を最適化し、読み込み速度を改善しました。</p>
+                    </div>
                 </div>
-                <div class="mdc-dialog__actions">
+                <footer class="mdc-dialog__actions">
                     <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
-                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__ripple"></span>
                         <span class="mdc-button__label">閉じる</span>
                     </button>
-                </div>
+                </footer>
             </div>
         </div>
         <div class="mdc-dialog__scrim"></div>
     </div>
 
-    <!-- Material Components Web JavaScript -->
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-
-    <!-- Custom JavaScript -->
-    <script src="js/material-custom.js"></script>
+    <!-- Material Components Web JS from CDN -->
+    <script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
 
     <script>
-        // Initialize Material Components
-        const drawer = new mdc.drawer.MDCDrawer(document.querySelector('.mdc-drawer'));
-        const topAppBar = document.querySelector('.material-top-bar');
-        const menuButton = document.getElementById('menuButton');
-        const whatsNewBtn = document.getElementById('whatsNewBtn');
-        const dialog = new mdc.dialog.MDCDialog(document.querySelector('.mdc-dialog'));
-        const backToTopFab = document.getElementById('backToTop');
+        // Initialize MDC Components
+        const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+        const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.querySelector('.mdc-top-app-bar'));
+        const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 
-        // Menu button click
-        menuButton.addEventListener('click', () => {
+        // Menu button
+        document.getElementById('menuBtn').addEventListener('click', () => {
             drawer.open = !drawer.open;
         });
 
-        // What's New button click
-        whatsNewBtn.addEventListener('click', () => {
+        // News button
+        document.getElementById('newsBtn').addEventListener('click', () => {
             dialog.open();
         });
 
-        // Back to top FAB
-        backToTopFab.addEventListener('click', () => {
-            document.querySelector('.main-content').scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // Show/hide FAB based on scroll position
-        const mainContent = document.querySelector('.main-content');
-        mainContent.addEventListener('scroll', () => {
-            if (mainContent.scrollTop > 300) {
-                backToTopFab.style.display = 'flex';
-            } else {
-                backToTopFab.style.display = 'none';
-            }
-        });
-
-        // Initialize all buttons
-        const buttons = document.querySelectorAll('.mdc-button');
+        // Initialize all ripples
+        const buttons = document.querySelectorAll('.mdc-button, .mdc-icon-button, .mdc-list-item, .mdc-fab');
         buttons.forEach(button => {
             mdc.ripple.MDCRipple.attachTo(button);
         });
 
-        // Initialize all list items
-        const listItems = document.querySelectorAll('.mdc-list-item');
-        listItems.forEach(item => {
-            mdc.ripple.MDCRipple.attachTo(item);
+        // Back to top FAB
+        const fab = document.getElementById('backToTop');
+        const mainContent = document.querySelector('.main-content');
+
+        mainContent.addEventListener('scroll', () => {
+            if (mainContent.scrollTop > 300) {
+                fab.classList.add('visible');
+            } else {
+                fab.classList.remove('visible');
+            }
         });
 
-        // Initialize text fields
-        const textFields = document.querySelectorAll('.mdc-text-field');
-        textFields.forEach(field => {
-            mdc.textField.MDCTextField.attachTo(field);
+        fab.addEventListener('click', () => {
+            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Initialize icon buttons
-        const iconButtons = document.querySelectorAll('.mdc-icon-button');
-        iconButtons.forEach(button => {
-            mdc.ripple.MDCRipple.attachTo(button);
-            button.classList.add('mdc-ripple-upgraded--unbounded');
+        // Close drawer on link click (mobile)
+        document.querySelectorAll('.mdc-list-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    drawer.open = false;
+                }
+            });
         });
+
+        console.log('Material Design components initialized successfully!');
     </script>
 </body>
 </html>
