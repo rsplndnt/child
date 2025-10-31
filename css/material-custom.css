@@ -1,0 +1,614 @@
+/**
+ * Custom Material Design 3 Styles for しゃべり描き翻訳™
+ * Extends Material Components Web with custom theming
+ */
+
+/* ========================================
+   Material Design 3 Custom Theme
+   ======================================== */
+
+:root {
+    /* Extended Color System */
+    --md-sys-color-success: #28a745;
+    --md-sys-color-on-success: #FFFFFF;
+    --md-sys-color-success-container: #C8E6C9;
+    --md-sys-color-on-success-container: #1B5E20;
+
+    --md-sys-color-warning: #ffc107;
+    --md-sys-color-on-warning: #000000;
+    --md-sys-color-warning-container: #FFF9C4;
+    --md-sys-color-on-warning-container: #F57F17;
+
+    /* Custom Brand Colors */
+    --brand-primary: #0071B8;
+    --brand-primary-dark: #005a91;
+    --brand-secondary: #B1E1FF;
+    --brand-tertiary: #EFF7FC;
+
+    /* Spacing System */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+
+    /* Border Radius */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 28px;
+    --radius-full: 9999px;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   Typography Extensions
+   ======================================== */
+
+.mdc-typography--display-large {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 57px;
+    font-weight: 400;
+    line-height: 64px;
+}
+
+.mdc-typography--display-medium {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 45px;
+    font-weight: 400;
+    line-height: 52px;
+}
+
+.mdc-typography--headline-large {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 40px;
+}
+
+.mdc-typography--headline-medium {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 36px;
+}
+
+.mdc-typography--headline-small {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 32px;
+}
+
+.mdc-typography--title-large {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 28px;
+}
+
+.mdc-typography--body-large {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.mdc-typography--body-medium {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.mdc-typography--label-large {
+    font-family: 'Noto Sans JP', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+/* ========================================
+   Layout Components
+   ======================================== */
+
+/* Drawer Customization */
+.mdc-drawer {
+    background-color: var(--md-sys-color-surface-container-low);
+}
+
+.mdc-drawer .mdc-list-item {
+    margin: 4px 8px;
+    border-radius: var(--radius-xl);
+}
+
+.mdc-drawer .mdc-list-item:hover:not(.mdc-list-item--activated) {
+    background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.mdc-drawer .mdc-list-item--activated {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.mdc-drawer .mdc-list-item--activated .mdc-list-item__graphic {
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+/* List Divider */
+.mdc-list-divider {
+    margin: 8px 0;
+    border-bottom-color: var(--md-sys-color-outline-variant);
+}
+
+/* ========================================
+   Card Components
+   ======================================== */
+
+.mdc-card {
+    background-color: var(--md-sys-color-surface-container-low);
+    border-radius: var(--radius-md);
+    box-shadow: var(--md-sys-elevation-1);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.mdc-card:hover {
+    box-shadow: var(--md-sys-elevation-3);
+    transform: translateY(-2px);
+}
+
+.mdc-card__actions {
+    padding: 8px;
+}
+
+/* Info Card (Note/Warning) */
+.material-info-card {
+    background-color: var(--md-sys-color-tertiary-container);
+    border-left: 4px solid var(--md-sys-color-tertiary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+}
+
+.material-info-card--warning {
+    background-color: var(--md-sys-color-warning-container);
+    border-left-color: var(--md-sys-color-warning);
+}
+
+.material-info-card--success {
+    background-color: var(--md-sys-color-success-container);
+    border-left-color: var(--md-sys-color-success);
+}
+
+.material-info-card--error {
+    background-color: var(--md-sys-color-error-container);
+    border-left-color: var(--md-sys-color-error);
+}
+
+.material-info-card__title {
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.material-info-card__content {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ========================================
+   Button Components
+   ======================================== */
+
+.mdc-button {
+    text-transform: none;
+    font-weight: 500;
+    border-radius: var(--radius-lg);
+    letter-spacing: 0.01em;
+}
+
+.mdc-button--raised {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    box-shadow: var(--md-sys-elevation-1);
+    transition: box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.mdc-button--raised:hover {
+    background-color: var(--brand-primary-dark);
+    box-shadow: var(--md-sys-elevation-2);
+}
+
+.mdc-button--outlined {
+    border-color: var(--md-sys-color-outline);
+    color: var(--md-sys-color-primary);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.mdc-button--outlined:hover {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-color: var(--md-sys-color-primary);
+}
+
+.mdc-button--text {
+    color: var(--md-sys-color-primary);
+}
+
+.mdc-button__icon {
+    margin-right: 8px;
+}
+
+/* Icon Button */
+.mdc-icon-button {
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color var(--transition-fast);
+}
+
+.mdc-icon-button:hover {
+    background-color: var(--md-sys-color-surface-container-highest);
+}
+
+/* ========================================
+   FAB (Floating Action Button)
+   ======================================== */
+
+.mdc-fab {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    box-shadow: var(--md-sys-elevation-3);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+    display: none; /* Initially hidden */
+}
+
+.mdc-fab:hover {
+    box-shadow: var(--md-sys-elevation-4);
+    transform: scale(1.05);
+}
+
+.mdc-fab--extended {
+    border-radius: var(--radius-md);
+}
+
+/* ========================================
+   Chip Components
+   ======================================== */
+
+.mdc-chip-set {
+    padding: 8px 0;
+}
+
+.mdc-chip {
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: var(--radius-sm);
+    margin: 4px;
+    transition: background-color var(--transition-fast);
+}
+
+.mdc-chip:hover {
+    background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.mdc-chip--selected {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+/* ========================================
+   Dialog Components
+   ======================================== */
+
+.mdc-dialog .mdc-dialog__surface {
+    background-color: var(--md-sys-color-surface-container-low);
+    border-radius: var(--radius-xl);
+    max-width: 900px;
+    max-height: 85vh;
+}
+
+.mdc-dialog__title {
+    color: var(--md-sys-color-on-surface);
+    font-size: 24px;
+    font-weight: 500;
+    padding: var(--spacing-lg);
+}
+
+.mdc-dialog__content {
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 0 var(--spacing-lg);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.mdc-dialog__actions {
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+/* Custom Scrollbar for Dialog Content */
+.mdc-dialog__content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.mdc-dialog__content::-webkit-scrollbar-track {
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 4px;
+}
+
+.mdc-dialog__content::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 4px;
+}
+
+.mdc-dialog__content::-webkit-scrollbar-thumb:hover {
+    background: var(--md-sys-color-on-surface-variant);
+}
+
+/* ========================================
+   Text Field Components
+   ======================================== */
+
+.mdc-text-field {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+}
+
+.mdc-text-field--filled {
+    background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    color: var(--md-sys-color-on-surface);
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: var(--md-sys-color-primary);
+}
+
+/* ========================================
+   Tab Components
+   ======================================== */
+
+.mdc-tab-bar {
+    background-color: var(--md-sys-color-surface);
+    box-shadow: var(--md-sys-elevation-1);
+}
+
+.mdc-tab {
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 500;
+    text-transform: none;
+}
+
+.mdc-tab--active {
+    color: var(--md-sys-color-primary);
+}
+
+.mdc-tab-indicator__content--underline {
+    border-color: var(--md-sys-color-primary);
+    border-top-width: 3px;
+}
+
+/* ========================================
+   Custom Components for Manual
+   ======================================== */
+
+/* Procedure Steps */
+.procedure-section {
+    background-color: var(--md-sys-color-surface-container-low);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--md-sys-elevation-1);
+}
+
+.procedure-section__title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.procedure-step {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.procedure-step__image {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--md-sys-elevation-1);
+}
+
+.procedure-step__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.procedure-step__text {
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.6;
+}
+
+.procedure-step__text ol,
+.procedure-step__text ul {
+    padding-left: 24px;
+}
+
+.procedure-step__text li {
+    margin-bottom: 8px;
+}
+
+/* Version Badge */
+.version-badge {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Material Divider */
+.material-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--md-sys-color-outline-variant);
+    margin: var(--spacing-lg) 0;
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .procedure-step {
+        grid-template-columns: 1fr;
+    }
+
+    .mdc-drawer {
+        width: 280px;
+    }
+
+    .hero-section__title {
+        font-size: 28px;
+    }
+
+    .hero-section__subtitle {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --spacing-lg: 16px;
+        --spacing-xl: 24px;
+        --spacing-2xl: 32px;
+    }
+
+    .material-top-bar {
+        height: 56px;
+    }
+
+    .material-top-bar__title {
+        font-size: 18px;
+    }
+
+    .content-container {
+        padding: 16px;
+    }
+
+    .hero-section {
+        padding: 32px 16px;
+    }
+
+    .feature-cards-container {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section__title {
+        font-size: 24px;
+    }
+
+    .hero-section__subtitle {
+        font-size: 14px;
+    }
+
+    .hero-section__actions {
+        flex-direction: column;
+    }
+
+    .mdc-button {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+}
+
+/* Skip to content link */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 var(--radius-sm) 0;
+    z-index: 1000;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .mdc-button--outlined {
+        border-width: 2px;
+    }
+
+    .material-info-card {
+        border-left-width: 6px;
+    }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+    .mdc-drawer,
+    .material-top-bar,
+    .mdc-fab,
+    .mdc-button {
+        display: none !important;
+    }
+
+    .mdc-drawer-app-content {
+        margin-left: 0 !important;
+    }
+
+    .mdc-card {
+        box-shadow: none;
+        border: 1px solid var(--md-sys-color-outline-variant);
+        page-break-inside: avoid;
+    }
+}
