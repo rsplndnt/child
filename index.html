@@ -2901,6 +2901,35 @@
             overflow-y: auto;
         }
 
+        /* モーダル内のスクロールバーカスタマイズ */
+        .whats-new-modal-body-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .whats-new-modal-body-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .whats-new-modal-body-content::-webkit-scrollbar-thumb {
+            background: #d4d7d8;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .whats-new-modal-body-content::-webkit-scrollbar-thumb:hover {
+            background: #b8bfc3;
+        }
+
+        .whats-new-modal-body-content::-webkit-scrollbar-thumb:active {
+            background: #9ea5a9;
+        }
+
+        /* Firefox用のスクロールバースタイル */
+        .whats-new-modal-body-content {
+            scrollbar-width: thin;
+            scrollbar-color: #d4d7d8 transparent;
+        }
+
         .whats-new-modal-iframe {
             width: 100%;
             height: 100%;
