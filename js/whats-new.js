@@ -41,7 +41,6 @@ class WhatsNewManager {
             <p>${content.text}</p>
             ${this.renderImage(content.image)}
             ${content.list ? this.renderList(content.list) : ''}
-            ${item.contents.length > 1 ? '<button class="news-item-more-btn">続きを読む</button>' : ''}
           </div>
         </article>
       `;
@@ -109,15 +108,6 @@ class WhatsNewManager {
   }
 
   setupMainPageEvents() {
-    // 続きを読むボタン
-    document.querySelectorAll('.news-item-more-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const newsItem = e.target.closest('.news-item');
-        const index = parseInt(newsItem.dataset.index);
-        this.openModal(index);
-      });
-    });
-
     // ページネーションボタン
     document.querySelectorAll('[data-action="prev"]').forEach(btn => {
       btn.addEventListener('click', () => {

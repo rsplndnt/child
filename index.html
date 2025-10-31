@@ -2697,6 +2697,9 @@
 
                 <!-- ========== Section 8 ========== -->
                 <section id="whats-new" class="step-section is-hidden">
+                    <header class="step-header">
+                        <h2><span class="step-number">08</span> 新着情報</h2>
+                    </header>
                     <div class="step-content">
                         <div class="whats-new-container" id="whatsNewContainer">
                             <!-- JavaScriptで動的に生成されます -->
@@ -2908,14 +2911,15 @@
         .whats-new-modal-body {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .whats-new-modal-body-content {
             flex: 1;
-            min-height: 0;
+            padding: 24px;
+            overflow-y: auto;
         }
 
         .whats-new-modal-iframe {
