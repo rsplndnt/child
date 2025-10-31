@@ -2958,12 +2958,30 @@
             box-shadow: 0 2px 8px rgba(0,0,0,.08);
         }
 
+        .news-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .news-item-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .news-item-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .news-item-date {
             display: inline-block;
             font-size: 14px;
             font-weight: 500;
             color: var(--color-primary);
-            margin-bottom: 8px;
         }
 
         .news-item-badge {
@@ -3056,6 +3074,52 @@
 
         .news-item-more-btn:hover {
             background-color: #005a8f;
+        }
+
+        /* インラインコンテンツページネーション */
+        .news-item-content-pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item-pagination-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            background-color: #fff;
+            color: var(--color-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .news-item-pagination-btn:hover:not(.disabled) {
+            background-color: var(--color-primary);
+            color: #fff;
+            border-color: var(--color-primary);
+        }
+
+        .news-item-pagination-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .news-item-pagination-btn .material-icons {
+            font-size: 16px;
+        }
+
+        .news-item-pagination-indicator {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            min-width: 40px;
+            text-align: center;
         }
 
         /* ページネーション */

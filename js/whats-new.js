@@ -30,11 +30,18 @@ class WhatsNewManager {
       const content = item.contents[0]; // 最初のコンテンツを表示
 
       html += `
-        <article class="news-item" data-index="${globalIndex}">
-          <div>
-            <span class="news-item-date">${item.date}</span>
-            <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
-            ${item.contents.length > 1 ? `<span class="news-item-multi-badge">${item.contents.length}件</span>` : ''}
+        <article class="news-item" data-index="${globalIndex}" data-content-index="0">
+          <div class="news-item-header">
+            <div class="news-item-header-left">
+              <span class="news-item-date">${item.date}</span>
+              <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
+            </div>
+            ${item.contents.length > 1 ? `
+              <div class="news-item-header-right">
+                <span class="news-item-multi-badge">${item.contents.length}件</span>
+                ${this.renderInlineContentPagination(0, item.contents.length)}
+              </div>
+            ` : ''}
           </div>
           <h2 class="news-item-title">${item.title}</h2>
           <div class="news-item-content">
@@ -55,6 +62,7 @@ class WhatsNewManager {
 
     // イベントリスナー設定
     this.setupMainPageEvents();
+    this.setupInlineContentPagination();
   }
 
   renderImage(imageUrl) {
@@ -69,6 +77,22 @@ class WhatsNewManager {
       <ul>
         ${list.map(item => `<li>${item}</li>`).join('')}
       </ul>
+    `;
+  }
+
+  renderInlineContentPagination(currentIndex, totalContents) {
+    return `
+      <div class="news-item-content-pagination">
+        <button class="news-item-pagination-btn ${currentIndex === 0 ? 'disabled' : ''}"
+                data-action="inline-prev" ${currentIndex === 0 ? 'disabled' : ''}>
+          <i class="material-icons">chevron_left</i>
+        </button>
+        <span class="news-item-pagination-indicator">${currentIndex + 1} / ${totalContents}</span>
+        <button class="news-item-pagination-btn ${currentIndex === totalContents - 1 ? 'disabled' : ''}"
+                data-action="inline-next" ${currentIndex === totalContents - 1 ? 'disabled' : ''}>
+          <i class="material-icons">chevron_right</i>
+        </button>
+      </div>
     `;
   }
 
@@ -138,6 +162,77 @@ class WhatsNewManager {
         this.scrollToTop();
       });
     });
+  }
+
+  setupInlineContentPagination() {
+    document.querySelectorAll('[data-action="inline-prev"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const newsItem = e.target.closest('.news-item');
+        const currentContentIndex = parseInt(newsItem.dataset.contentIndex);
+
+        if (currentContentIndex > 0) {
+          this.updateNewsItemContent(newsItem, currentContentIndex - 1);
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-action="inline-next"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const newsItem = e.target.closest('.news-item');
+        const currentContentIndex = parseInt(newsItem.dataset.contentIndex);
+        const itemIndex = parseInt(newsItem.dataset.index);
+        const item = whatsNewData[itemIndex];
+
+        if (currentContentIndex < item.contents.length - 1) {
+          this.updateNewsItemContent(newsItem, currentContentIndex + 1);
+        }
+      });
+    });
+  }
+
+  updateNewsItemContent(newsItem, newContentIndex) {
+    const itemIndex = parseInt(newsItem.dataset.index);
+    const item = whatsNewData[itemIndex];
+    const content = item.contents[newContentIndex];
+
+    // コンテンツ部分を更新
+    const contentDiv = newsItem.querySelector('.news-item-content');
+    contentDiv.innerHTML = `
+      <p>${content.text}</p>
+      ${this.renderImage(content.image)}
+      ${content.list ? this.renderList(content.list) : ''}
+    `;
+
+    // ヘッダーのページネーション部分を更新
+    const paginationDiv = newsItem.querySelector('.news-item-content-pagination');
+    if (paginationDiv) {
+      const prevBtn = paginationDiv.querySelector('[data-action="inline-prev"]');
+      const nextBtn = paginationDiv.querySelector('[data-action="inline-next"]');
+      const indicator = paginationDiv.querySelector('.news-item-pagination-indicator');
+
+      // ボタンの状態を更新
+      if (newContentIndex === 0) {
+        prevBtn.classList.add('disabled');
+        prevBtn.disabled = true;
+      } else {
+        prevBtn.classList.remove('disabled');
+        prevBtn.disabled = false;
+      }
+
+      if (newContentIndex === item.contents.length - 1) {
+        nextBtn.classList.add('disabled');
+        nextBtn.disabled = true;
+      } else {
+        nextBtn.classList.remove('disabled');
+        nextBtn.disabled = false;
+      }
+
+      // インジケーターを更新
+      indicator.textContent = `${newContentIndex + 1} / ${item.contents.length}`;
+    }
+
+    // data-content-index を更新
+    newsItem.dataset.contentIndex = newContentIndex;
   }
 
   scrollToTop() {
