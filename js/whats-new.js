@@ -170,25 +170,27 @@ class WhatsNewManager {
     const item = whatsNewData[index];
     const content = item.contents[contentIndex];
 
-    let html = `
-      <div class="modal-news-header">
-        <span class="news-item-date">${item.date}</span>
-        <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
-      </div>
-      <h2 class="modal-news-title">${item.title}</h2>
-      <div class="modal-news-content">
-        <p>${content.text}</p>
-        ${this.renderImage(content.image)}
-        ${content.list ? this.renderList(content.list) : ''}
+    let contentHtml = `
+      <div class="whats-new-modal-body-content">
+        <div class="modal-news-header">
+          <span class="news-item-date">${item.date}</span>
+          <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
+        </div>
+        <h2 class="modal-news-title">${item.title}</h2>
+        <div class="modal-news-content">
+          <p>${content.text}</p>
+          ${this.renderImage(content.image)}
+          ${content.list ? this.renderList(content.list) : ''}
+        </div>
       </div>
     `;
 
     // コンテンツページネーション
     if (item.contents.length > 1) {
-      html += this.renderContentPagination(item.contents.length);
+      contentHtml += this.renderContentPagination(item.contents.length);
     }
 
-    modalBody.innerHTML = html;
+    modalBody.innerHTML = contentHtml;
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
