@@ -2793,9 +2793,6 @@
         <div class="whats-new-modal-content">
             <div class="whats-new-modal-header">
                 <h2 id="whatsNewModalTitle">新着情報</h2>
-                <button class="whats-new-modal-close" id="whatsNewModalClose" aria-label="閉じる">
-                    <i class="material-icons">close</i>
-                </button>
             </div>
             <div class="whats-new-modal-body">
                 <iframe src="whats-new.html" class="whats-new-modal-iframe" title="新着情報"></iframe>
@@ -2876,7 +2873,7 @@
 
         .whats-new-modal-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 20px 24px;
             border-bottom: 1px solid #e0e0e0;
@@ -2887,24 +2884,6 @@
             margin: 0;
             font-size: 24px;
             font-weight: 700;
-            color: #333;
-        }
-
-        .whats-new-modal-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            color: #666;
-            transition: all 0.2s ease;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .whats-new-modal-close:hover {
-            background-color: rgba(0, 0, 0, 0.05);
             color: #333;
         }
 
@@ -3227,6 +3206,7 @@
             border-top: 1px solid #e0e0e0;
             flex-shrink: 0;
             background-color: #fff;
+            border-radius: 0 0 12px 12px;
         }
 
         .modal-pagination-btn {
@@ -3258,6 +3238,98 @@
             font-size: 14px;
             font-weight: 500;
             color: #666;
+        }
+
+        .modal-close-btn {
+            margin-left: auto;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--color-primary);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-close-btn .material-icons {
+            font-size: 20px;
+        }
+
+        /* テスト用: 日付選択リスト */
+        .modal-date-list-title {
+            margin: 0 0 24px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+        }
+
+        .modal-date-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-date-list-item {
+            width: 100%;
+            padding: 16px 20px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .modal-date-list-item:hover {
+            background-color: #f8f9fa;
+            border-color: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .modal-date-list-item-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .modal-date-list-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .modal-date-list-item-count {
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .modal-date-list-title {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            .modal-date-list-item {
+                padding: 14px 16px;
+            }
+
+            .modal-date-list-item-title {
+                font-size: 15px;
+            }
         }
     </style>
 

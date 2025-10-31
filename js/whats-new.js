@@ -270,9 +270,12 @@ class WhatsNewManager {
       </div>
     `;
 
-    // コンテンツページネーション
+    // コンテンツページネーションまたは閉じるボタン
     if (item.contents.length > 1) {
       contentHtml += this.renderContentPagination(item.contents.length);
+    } else {
+      // コンテンツが1件の場合も閉じるボタンを表示
+      contentHtml += this.renderSingleContentFooter();
     }
 
     modalBody.innerHTML = contentHtml;
@@ -282,7 +285,69 @@ class WhatsNewManager {
     this.setupContentPagination();
   }
 
+  renderSingleContentFooter() {
+    return `
+      <div class="modal-content-pagination">
+        <div style="flex: 1;"></div>
+        <button class="modal-close-btn" data-action="close-modal">
+          <i class="material-icons">check_circle</i>
+          <span>閉じる</span>
+        </button>
+      </div>
+    `;
+  }
+
+  // テスト用: 日付選択リストを表示
+  showDateList() {
+    const modal = document.getElementById('whatsNewModal');
+    const modalBody = document.querySelector('.whats-new-modal-body');
+
+    if (!modal || !modalBody) return;
+
+    let listHtml = `
+      <div class="whats-new-modal-body-content">
+        <h2 class="modal-date-list-title">新着情報を選択してください</h2>
+        <div class="modal-date-list">
+    `;
+
+    whatsNewData.forEach((item, index) => {
+      listHtml += `
+        <button class="modal-date-list-item" data-index="${index}">
+          <div class="modal-date-list-item-header">
+            <span class="news-item-date">${item.date}</span>
+            <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
+          </div>
+          <div class="modal-date-list-item-title">${item.title}</div>
+          ${item.contents.length > 1 ? `<span class="modal-date-list-item-count">${item.contents.length}件のコンテンツ</span>` : ''}
+        </button>
+      `;
+    });
+
+    listHtml += `
+        </div>
+      </div>
+    `;
+
+    modalBody.innerHTML = listHtml;
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // 日付リストのイベントリスナー設定
+    this.setupDateListEvents();
+  }
+
+  setupDateListEvents() {
+    document.querySelectorAll('.modal-date-list-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const index = parseInt(e.currentTarget.dataset.index);
+        this.openModal(index, 0);
+      });
+    });
+  }
+
   renderContentPagination(totalContents) {
+    const isLastPage = this.currentContentIndex === totalContents - 1;
+
     return `
       <div class="modal-content-pagination">
         <button class="modal-pagination-btn ${this.currentContentIndex === 0 ? 'disabled' : ''}"
@@ -290,10 +355,16 @@ class WhatsNewManager {
           <i class="material-icons">chevron_left</i>
         </button>
         <span class="modal-pagination-indicator">${this.currentContentIndex + 1} / ${totalContents}</span>
-        <button class="modal-pagination-btn ${this.currentContentIndex === totalContents - 1 ? 'disabled' : ''}"
-                data-action="content-next" ${this.currentContentIndex === totalContents - 1 ? 'disabled' : ''}>
+        <button class="modal-pagination-btn ${isLastPage ? 'disabled' : ''}"
+                data-action="content-next" ${isLastPage ? 'disabled' : ''}>
           <i class="material-icons">chevron_right</i>
         </button>
+        ${isLastPage ? `
+          <button class="modal-close-btn" data-action="close-modal">
+            <i class="material-icons">check_circle</i>
+            <span>閉じる</span>
+          </button>
+        ` : ''}
       </div>
     `;
   }
@@ -301,6 +372,7 @@ class WhatsNewManager {
   setupContentPagination() {
     const prevBtn = document.querySelector('[data-action="content-prev"]');
     const nextBtn = document.querySelector('[data-action="content-next"]');
+    const closeBtn = document.querySelector('[data-action="close-modal"]');
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
@@ -320,40 +392,32 @@ class WhatsNewManager {
         }
       });
     }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+  }
+
+  closeModal() {
+    const modal = document.getElementById('whatsNewModal');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
   }
 
   setupModalEvents() {
-    const modal = document.getElementById('whatsNewModal');
     const modalBtn = document.getElementById('whatsNewModalBtn');
-    const closeBtn = document.getElementById('whatsNewModalClose');
-    const overlay = document.getElementById('whatsNewModalOverlay');
-
-    const closeModal = () => {
-      modal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    };
 
     if (modalBtn) {
       modalBtn.addEventListener('click', () => {
-        // 最新の新着情報をモーダルで開く
-        this.openModal(0);
+        // テスト用: 日付選択リストを表示
+        this.showDateList();
       });
     }
 
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeModal);
-    }
-
-    if (overlay) {
-      overlay.addEventListener('click', closeModal);
-    }
-
-    // ESCキーで閉じる
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
-        closeModal();
-      }
-    });
+    // オーバーレイクリックとESCキーは無効化
+    // 右上の×ボタンも後で削除予定
   }
 }
 
