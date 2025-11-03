@@ -3,20 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>しゃべり描き翻訳™ Ver. 1.0 | ユーザーマニュアル (Material Design完全版)</title>
-    <meta name="description" content="三菱電機のしゃべり描き翻訳™アプリの使い方を詳しく解説。Material Designで再構築された完全版ユーザーマニュアル。">
+    <title>しゃべり描き翻訳™ ユーザーマニュアル | Material Design</title>
+    <meta name="description" content="Material Design 3で再構築された、使いやすいユーザーマニュアル">
 
-    <!-- Material Design CSS from CDN -->
+    <!-- Material Design 3 CSS -->
     <link href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css" rel="stylesheet">
-
-    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Noto Sans JP -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Custom Material Styles -->
-    <link rel="stylesheet" href="css/material-custom.css">
 
     <style>
         * {
@@ -26,161 +19,96 @@
         }
 
         :root {
-            /* Material Design 3 - 標準カラーテーマ（Blue基調）*/
-
-            /* Primary - Material Blue */
+            /* Material Design 3 Colors */
             --md-sys-color-primary: #1976D2;
             --md-sys-color-on-primary: #FFFFFF;
             --md-sys-color-primary-container: #BBDEFB;
-            --md-sys-color-on-primary-container: #0D47A1;
-
-            /* Secondary - Material Light Blue */
             --md-sys-color-secondary: #0288D1;
-            --md-sys-color-on-secondary: #FFFFFF;
-            --md-sys-color-secondary-container: #B3E5FC;
-            --md-sys-color-on-secondary-container: #01579B;
-
-            /* Tertiary - Material Cyan */
             --md-sys-color-tertiary: #00ACC1;
-            --md-sys-color-on-tertiary: #FFFFFF;
-            --md-sys-color-tertiary-container: #B2EBF2;
-            --md-sys-color-on-tertiary-container: #006064;
-
-            /* Surface & Background */
             --md-sys-color-surface: #FFFFFF;
             --md-sys-color-on-surface: #1C1B1F;
-            --md-sys-color-surface-variant: #E7E0EC;
-            --md-sys-color-on-surface-variant: #49454F;
             --md-sys-color-background: #FDFBFF;
-            --md-sys-color-on-background: #1C1B1F;
-
-            /* Outline */
-            --md-sys-color-outline: #79747E;
-            --md-sys-color-outline-variant: #CAC4D0;
-
-            /* Error */
             --md-sys-color-error: #B3261E;
-            --md-sys-color-on-error: #FFFFFF;
-            --md-sys-color-error-container: #F9DEDC;
-            --md-sys-color-on-error-container: #410E0B;
-
-            /* Warning */
             --md-sys-color-warning: #F9A825;
-            --md-sys-color-on-warning: #000000;
-            --md-sys-color-warning-container: #FFF9C4;
-            --md-sys-color-on-warning-container: #F57F17;
-
-            /* Success */
             --md-sys-color-success: #66BB6A;
-            --md-sys-color-on-success: #FFFFFF;
-            --md-sys-color-success-container: #C8E6C9;
-            --md-sys-color-on-success-container: #1B5E20;
-
-            /* Elevation & Shadow - Material Design 3 Standard */
-            --md-sys-elevation-0: none;
-            --md-sys-elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-            --md-sys-elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
-            --md-sys-elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
-            --md-sys-elevation-4: 0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
-            --md-sys-elevation-5: 0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
         }
 
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: var(--md-sys-color-background);
-            color: var(--md-sys-color-on-background);
-            overflow-x: hidden;
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-surface);
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* App Bar */
+        /* Top App Bar */
         .mdc-top-app-bar {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            background: var(--md-sys-color-primary);
             position: fixed;
-            z-index: 7;
-        }
-
-        .mdc-top-app-bar__title {
-            padding-left: 20px;
-            font-weight: 500;
+            z-index: 100;
         }
 
         /* Drawer */
         .mdc-drawer {
-            border-right: 1px solid rgba(0,0,0,.12);
+            width: 280px;
         }
 
         .drawer-header {
-            height: 150px;
-            background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-on-primary-container) 100%);
-            color: var(--md-sys-color-on-primary);
-            padding: 20px;
+            background: linear-gradient(135deg, var(--md-sys-color-primary), #0D47A1);
+            color: white;
+            padding: 24px 16px;
+            min-height: 120px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
         }
 
         .drawer-header h1 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin: 0;
+            margin: 0 0 4px 0;
             line-height: 1.3;
         }
 
         .drawer-header .version {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 12px;
             font-size: 12px;
-            margin-top: 8px;
-            width: fit-content;
+            opacity: 0.9;
         }
 
         /* Main Content */
-        .mdc-drawer-app-content {
-            flex: auto;
-            overflow: auto;
-            position: relative;
-        }
-
         .main-content {
             padding-top: 64px;
-            min-height: 100vh;
-        }
-
-        .content-section {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
+            padding-left: 24px;
+            padding-right: 24px;
         }
 
-        /* Hero Section */
+        /* Hero Section - Material Design Style */
         .hero {
-            background: linear-gradient(135deg, rgba(0,113,184,0.95) 0%, rgba(0,90,145,0.95) 100%);
+            background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-secondary) 100%);
             color: white;
-            padding: 60px 24px;
+            border-radius: 16px;
+            padding: 48px 32px;
+            margin: 24px 0;
             text-align: center;
-            margin: -24px -24px 24px -24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
         .hero h1 {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
-        .hero p {
-            font-size: 18px;
+        .hero-subtitle {
+            font-size: 16px;
             opacity: 0.95;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .hero-video {
             max-width: 800px;
-            margin: 0 auto 32px;
+            margin: 24px auto;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
@@ -191,115 +119,148 @@
             display: block;
         }
 
-        /* Section */
-        .section {
-            margin-bottom: 48px;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-            padding: 16px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .section-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            background: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-            border-radius: 50%;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 500;
-            color: #1a1a1a;
-        }
-
         /* Material Cards */
-        .feature-grid {
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
             margin: 32px 0;
         }
 
-        .mdc-card {
+        .material-card {
+            background: white;
             border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .card-media {
+        .material-card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+        }
+
+        .material-card-media {
             width: 100%;
             aspect-ratio: 16/9;
-            background: #e0e0e0;
-            overflow: hidden;
+            background: #f0f0f0;
         }
 
-        .card-media img {
+        .material-card-media img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .card-content {
-            padding: 16px;
+        .material-card-content {
+            padding: 20px;
         }
 
-        .card-content h3 {
+        .material-card-title {
             font-size: 18px;
             font-weight: 500;
             margin-bottom: 8px;
-            color: #1a1a1a;
+            color: var(--md-sys-color-primary);
         }
 
-        .card-content p {
+        .material-card-text {
             font-size: 14px;
+            line-height: 1.6;
             color: #666;
-            line-height: 1.5;
         }
 
-        .mdc-card__actions {
-            padding: 8px;
+        /* Expansion Panels (Accordion) */
+        .expansion-panel {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* Procedure Items */
-        .procedure-item {
+        .expansion-header {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .expansion-header:hover {
+            background: #f5f5f5;
+        }
+
+        .expansion-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .expansion-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .expansion-indicator {
+            transition: transform 0.3s;
+        }
+
+        .expansion-panel.active .expansion-indicator {
+            transform: rotate(180deg);
+        }
+
+        .expansion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .expansion-panel.active .expansion-content {
+            max-height: 5000px;
+        }
+
+        .expansion-body {
+            padding: 0 24px 24px 88px;
+        }
+
+        /* Step-by-Step Guide */
+        .step-guide {
             background: white;
             border-radius: 12px;
             padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .procedure-title {
-            font-size: 20px;
-            font-weight: 500;
-            color: var(--md-sys-color-primary);
-            margin-bottom: 20px;
-        }
-
-        .step-with-image {
+        .step-item {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 300px 1fr;
             gap: 24px;
             margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         .step-image {
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .step-image img {
@@ -307,89 +268,79 @@
             display: block;
         }
 
-        .step-text ol, .step-text ul {
-            padding-left: 24px;
-            line-height: 1.7;
+        .step-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .step-text li {
+        .step-text h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--md-sys-color-primary);
             margin-bottom: 12px;
+        }
+
+        .step-text p {
+            line-height: 1.7;
             color: #444;
         }
 
-        /* Note Card */
-        .note-card {
-            background: var(--md-sys-color-warning-container);
-            border-left: 4px solid var(--md-sys-color-on-warning-container);
+        /* Info Banners */
+        .info-banner {
             border-radius: 8px;
-            padding: 16px;
+            padding: 16px 20px;
             margin: 16px 0;
-        }
-
-        .note-card h5 {
-            font-weight: 500;
-            margin-bottom: 8px;
             display: flex;
-            align-items: center;
-            gap: 8px;
+            align-items: start;
+            gap: 12px;
         }
 
-        .note-card ul {
-            padding-left: 20px;
+        .info-banner.warning {
+            background: #FFF9C4;
+            border-left: 4px solid var(--md-sys-color-warning);
         }
 
-        .note-card li {
+        .info-banner.success {
+            background: #C8E6C9;
+            border-left: 4px solid var(--md-sys-color-success);
+        }
+
+        .info-banner.error {
+            background: #FFCDD2;
+            border-left: 4px solid var(--md-sys-color-error);
+        }
+
+        .info-banner-icon {
+            font-size: 24px;
+        }
+
+        .info-banner-content h5 {
+            font-weight: 500;
             margin-bottom: 4px;
-        }
-
-        /* Advice Section */
-        .advice-section {
-            background: var(--md-sys-color-success);
-            border-left: 4px solid var(--md-sys-color-success-container);
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        .advice-section h5 {
-            font-weight: 500;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         /* Buttons */
         .mdc-button {
             text-transform: none;
             font-family: 'Noto Sans JP', sans-serif;
-            font-weight: 500;
+            border-radius: 8px;
         }
 
-        .mdc-button--raised {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-        }
-
-        .mdc-button--outlined {
-            border-color: white;
-            color: white;
-        }
-
-        .hero-actions {
+        .button-group {
             display: flex;
-            gap: 16px;
-            justify-content: center;
+            gap: 12px;
             flex-wrap: wrap;
+            justify-content: center;
+            margin: 24px 0;
         }
 
         /* FAB */
         .mdc-fab {
             position: fixed;
-            bottom: 16px;
-            right: 16px;
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            bottom: 24px;
+            right: 24px;
+            background: var(--md-sys-color-primary);
             display: none;
         }
 
@@ -397,56 +348,91 @@
             display: flex;
         }
 
-        /* List Items */
-        .mdc-list-item {
-            height: 56px;
+        /* Section Headers */
+        .section-header {
+            margin: 48px 0 24px 0;
         }
 
-        .mdc-list-item__graphic {
-            margin-right: 16px;
-        }
-
-        /* Dialog */
-        .mdc-dialog__surface {
-            border-radius: 28px;
-            max-width: 800px;
-        }
-
-        .mdc-dialog__title {
+        .section-header h2 {
+            font-size: 28px;
             font-weight: 500;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Chips */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 16px;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-primary);
+            font-size: 14px;
+            font-weight: 500;
+            margin: 4px;
+        }
+
+        /* List with Icons */
+        .icon-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .icon-list li {
+            display: flex;
+            align-items: start;
+            padding: 12px 0;
+            gap: 12px;
+        }
+
+        .icon-list li .material-icons {
+            color: var(--md-sys-color-primary);
+            font-size: 20px;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 28px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .content-section {
+            .main-content {
                 padding: 16px;
+                padding-top: 64px;
             }
 
             .hero {
-                padding: 40px 16px;
+                padding: 32px 20px;
             }
 
-            .step-with-image {
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .card-grid {
                 grid-template-columns: 1fr;
             }
+
+            .step-item {
+                grid-template-columns: 1fr;
+            }
+
+            .expansion-body {
+                padding: 0 24px 24px 24px;
+            }
+        }
+
+        /* Smooth Animations */
+        * {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
     <!-- Top App Bar -->
-    <header class="mdc-top-app-bar">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menuBtn">menu</button>
@@ -462,56 +448,41 @@
     <aside class="mdc-drawer mdc-drawer--modal">
         <div class="mdc-drawer__content">
             <div class="drawer-header">
-                <h1>しゃべり描き翻訳™<br>ユーザーマニュアル</h1>
-                <span class="version">v1.0 Material Design完全版</span>
+                <h1>しゃべり描き翻訳™</h1>
+                <div class="version">ユーザーマニュアル v1.0</div>
             </div>
 
             <nav class="mdc-list">
-                <a class="mdc-list-item mdc-list-item--activated" href="#top">
+                <a class="mdc-list-item mdc-list-item--activated" href="#home">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic">home</i>
                     <span class="mdc-list-item__text">ホーム</span>
                 </a>
-                <a class="mdc-list-item" href="#account-setup">
+                <a class="mdc-list-item" href="#getting-started">
                     <span class="mdc-list-item__ripple"></span>
-                    <i class="material-icons mdc-list-item__graphic">account_circle</i>
-                    <span class="mdc-list-item__text">1. アカウント初期設定</span>
+                    <i class="material-icons mdc-list-item__graphic">rocket_launch</i>
+                    <span class="mdc-list-item__text">はじめに</span>
                 </a>
-                <a class="mdc-list-item" href="#screen-layout">
+                <a class="mdc-list-item" href="#features">
                     <span class="mdc-list-item__ripple"></span>
-                    <i class="material-icons mdc-list-item__graphic">dashboard</i>
-                    <span class="mdc-list-item__text">2. 画面構成</span>
+                    <i class="material-icons mdc-list-item__graphic">star</i>
+                    <span class="mdc-list-item__text">主要機能</span>
                 </a>
-                <a class="mdc-list-item" href="#operation-guide">
+                <a class="mdc-list-item" href="#guides">
                     <span class="mdc-list-item__ripple"></span>
-                    <i class="material-icons mdc-list-item__graphic">touch_app</i>
-                    <span class="mdc-list-item__text">3. アプリを操作する</span>
-                </a>
-                <a class="mdc-list-item" href="#mic-usage-tips">
-                    <span class="mdc-list-item__ripple"></span>
-                    <i class="material-icons mdc-list-item__graphic">mic</i>
-                    <span class="mdc-list-item__text">4. マイクの使い方</span>
+                    <i class="material-icons mdc-list-item__graphic">menu_book</i>
+                    <span class="mdc-list-item__text">使い方ガイド</span>
                 </a>
                 <div class="mdc-list-divider"></div>
-                <a class="mdc-list-item" href="#terminology">
-                    <span class="mdc-list-item__ripple"></span>
-                    <i class="material-icons mdc-list-item__graphic">book</i>
-                    <span class="mdc-list-item__text">5. 用語</span>
-                </a>
                 <a class="mdc-list-item" href="#faq">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic">help_outline</i>
-                    <span class="mdc-list-item__text">6. FAQ</span>
+                    <span class="mdc-list-item__text">よくある質問</span>
                 </a>
-                <a class="mdc-list-item" href="#product-specs">
+                <a class="mdc-list-item" href="#specs">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic">info</i>
-                    <span class="mdc-list-item__text">7. 製品仕様</span>
-                </a>
-                <a class="mdc-list-item" href="#whats-new">
-                    <span class="mdc-list-item__ripple"></span>
-                    <i class="material-icons mdc-list-item__graphic">new_releases</i>
-                    <span class="mdc-list-item__text">8. 新着情報</span>
+                    <span class="mdc-list-item__text">製品仕様</span>
                 </a>
             </nav>
         </div>
@@ -520,481 +491,311 @@
 
     <!-- Main Content -->
     <div class="mdc-drawer-app-content">
-        <main class="main-content">
-            <div class="content-section">
-                <!-- Hero Section -->
-                <section id="top" class="hero">
-                    <h1>はじめてのしゃべり描き翻訳™</h1>
-                    <p>60秒クイックガイド</p>
+        <main class="main-content mdc-top-app-bar--fixed-adjust">
+            <!-- Hero Section -->
+            <section id="home" class="hero">
+                <h1>はじめてのしゃべり描き翻訳™</h1>
+                <p class="hero-subtitle">60秒でわかるクイックガイド</p>
 
-                    <div class="hero-video">
-                        <video controls autoplay muted loop playsinline>
-                            <source src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/movie-intro-pair-1.mp4" type="video/mp4">
-                        </video>
-                    </div>
+                <div class="hero-video">
+                    <video controls autoplay muted loop playsinline>
+                        <source src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/movie-intro-pair-1.mp4" type="video/mp4">
+                    </video>
+                </div>
 
-                    <div class="hero-actions">
-                        <button class="mdc-button mdc-button--raised">
-                            <span class="mdc-button__ripple"></span>
-                            <i class="material-icons mdc-button__icon">play_arrow</i>
-                            <span class="mdc-button__label">初期設定を始める</span>
-                        </button>
-                        <button class="mdc-button mdc-button--outlined">
-                            <span class="mdc-button__ripple"></span>
-                            <i class="material-icons mdc-button__icon">note_add</i>
-                            <span class="mdc-button__label">新しいシートを作成</span>
-                        </button>
-                    </div>
-                </section>
+                <div class="button-group">
+                    <button class="mdc-button mdc-button--raised">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">play_arrow</i>
+                        <span class="mdc-button__label">今すぐ始める</span>
+                    </button>
+                    <button class="mdc-button mdc-button--outlined" style="border-color: white; color: white;">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">download</i>
+                        <span class="mdc-button__label">アプリをダウンロード</span>
+                    </button>
+                </div>
+            </section>
 
-                <!-- Feature Cards -->
-                <h2 style="font-size: 24px; font-weight: 500; margin: 32px 0 16px; color: #1a1a1a;">しゃべり描き翻訳™でできること</h2>
-                <p style="color: #666; margin-bottom: 24px;">音声翻訳・手書き・画像貼り付けをひとつの画面で扱えるコミュニケーションツールです。</p>
+            <!-- Features Section -->
+            <section id="features">
+                <div class="section-header">
+                    <h2>主要機能</h2>
+                    <p>しゃべり描き翻訳™でできる3つのこと</p>
+                </div>
 
-                <div class="feature-grid">
-                    <div class="mdc-card">
-                        <div class="mdc-card__primary-action">
-                            <div class="card-media">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-1.png" alt="2言語間のコミュニケーション">
-                            </div>
-                            <div class="card-content">
-                                <h3>1対1の会話を翻訳</h3>
-                                <p>互いの言語を翻訳しながら伝達をアシストします。入力言語ごとにマイクボタンが分かれているので、素早く正確な入力・翻訳が可能です。</p>
-                            </div>
+                <div class="card-grid">
+                    <div class="material-card">
+                        <div class="material-card-media">
+                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-1.png" alt="音声翻訳">
                         </div>
-                        <div class="mdc-card__actions">
-                            <button class="mdc-button mdc-card__action">
-                                <span class="mdc-button__ripple"></span>
-                                <span class="mdc-button__label">詳しく見る</span>
-                            </button>
+                        <div class="material-card-content">
+                            <h3 class="material-card-title">リアルタイム音声翻訳</h3>
+                            <p class="material-card-text">話すだけで、その場で翻訳。30以上の言語に対応し、スムーズなコミュニケーションを実現します。</p>
                         </div>
                     </div>
 
-                    <div class="mdc-card">
-                        <div class="mdc-card__primary-action">
-                            <div class="card-media">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-3.png" alt="トランスクリプト機能">
-                            </div>
-                            <div class="card-content">
-                                <h3>トランスクリプトで会話の流れが分かる</h3>
-                                <p>話した内容をその場で翻訳して伝えられます。会話は吹き出し形式で保存され、あとから簡単に流れを振り返ることができます。</p>
-                            </div>
+                    <div class="material-card">
+                        <div class="material-card-media">
+                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-3.png" alt="会話履歴">
                         </div>
-                        <div class="mdc-card__actions">
-                            <button class="mdc-button mdc-card__action">
-                                <span class="mdc-button__ripple"></span>
-                                <span class="mdc-button__label">詳しく見る</span>
-                            </button>
+                        <div class="material-card-content">
+                            <h3 class="material-card-title">会話履歴の記録</h3>
+                            <p class="material-card-text">トランスクリプト機能で会話をすべて記録。後から見返して、重要な情報を確認できます。</p>
                         </div>
                     </div>
 
-                    <div class="mdc-card">
-                        <div class="mdc-card__primary-action">
-                            <div class="card-media">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-2.png" alt="しゃべり描き">
-                            </div>
-                            <div class="card-content">
-                                <h3>しゃべり描き®で視覚的に伝える</h3>
-                                <p>画像に矢印や図を描き込み、その上に音声入力した文字を翻訳して組み合わせられます。複雑な作業指導や図面変更の説明なども直感的に表現できます。</p>
+                    <div class="material-card">
+                        <div class="material-card-media">
+                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-2.png" alt="視覚的な説明">
+                        </div>
+                        <div class="material-card-content">
+                            <h3 class="material-card-title">視覚的な説明</h3>
+                            <p class="material-card-text">画像に描き込んで、音声と組み合わせて説明。複雑な内容も直感的に伝えられます。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Getting Started Section -->
+            <section id="getting-started">
+                <div class="section-header">
+                    <h2>はじめに</h2>
+                    <p>アカウント設定から使い始めるまで</p>
+                </div>
+
+                <div class="step-guide">
+                    <div class="step-item">
+                        <div class="step-image">
+                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-1.png" alt="サインイン">
+                        </div>
+                        <div class="step-text">
+                            <h4>ステップ 1：サインイン</h4>
+                            <p>ブラウザでswipetalk.melbridge.comにアクセスし、事務局から送られたアカウント情報でサインインします。</p>
+                            <div class="info-banner warning" style="margin-top: 12px;">
+                                <span class="material-icons info-banner-icon">info</span>
+                                <div class="info-banner-content">
+                                    <h5>アカウント情報について</h5>
+                                    <p>アカウント名と仮パスワードは、MelBridge®事務局からのメールに記載されています。</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="mdc-card__actions">
-                            <button class="mdc-button mdc-card__action">
-                                <span class="mdc-button__ripple"></span>
-                                <span class="mdc-button__label">詳しく見る</span>
-                            </button>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-image">
+                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-1.png" alt="二段階認証">
+                        </div>
+                        <div class="step-text">
+                            <h4>ステップ 2：二段階認証を設定</h4>
+                            <p>Microsoft Authenticatorアプリをスマートフォンにインストールし、QRコードを読み取って認証を設定します。</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-image">
+                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-3.png" alt="認証完了">
+                        </div>
+                        <div class="step-text">
+                            <h4>ステップ 3：認証完了</h4>
+                            <p>認証が完了すれば、すぐに使い始められます。シートを作成して、早速翻訳を試してみましょう！</p>
+                            <div class="info-banner success" style="margin-top: 12px;">
+                                <span class="material-icons info-banner-icon">check_circle</span>
+                                <div class="info-banner-content">
+                                    <h5>設定完了！</h5>
+                                    <p>これで準備は完了です。さっそく使ってみましょう。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Guides Section (Accordion Style) -->
+            <section id="guides">
+                <div class="section-header">
+                    <h2>使い方ガイド</h2>
+                    <p>機能別の詳しい使い方</p>
+                </div>
+
+                <!-- Accordion Item 1 -->
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-icon">01</div>
+                        <div class="expansion-title">言語を選択する</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
+                    </div>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p>使用する2つの言語を選択します。日本語、英語、中国語など、30以上の言語から選べます。</p>
+                            <ul class="icon-list">
+                                <li><span class="material-icons">check</span><span>画面上部の言語選択ボタンをクリック</span></li>
+                                <li><span class="material-icons">check</span><span>リストから使いたい言語を選択</span></li>
+                                <li><span class="material-icons">check</span><span>選択した言語に応じてマイクボタンが表示されます</span></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 1: Account Setup -->
-                <section id="account-setup" class="section">
-                    <div class="section-header">
-                        <span class="section-number">01</span>
-                        <h2 class="section-title">アカウントの初期設定を行う</h2>
+                <!-- Accordion Item 2 -->
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-icon">02</div>
+                        <div class="expansion-title">音声翻訳を使う</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
                     </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">1. サインインする</h4>
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-1.png" alt="サインイン手順1" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol>
-                                    <li>ブラウザで <a href="https://swipetalk.melbridge.com" target="_blank" rel="noopener">https://swipetalk.melbridge.com</a> にアクセスします。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-2.png" alt="サインイン手順2" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="2">
-                                    <li>[サインイン]画面で アカウント名を入力し[次へ]を押します。</li>
-                                </ol>
-                                <aside class="note-card" role="note">
-                                    <h5>⚠ 注意</h5>
-                                    <ul>
-                                        <li>アカウント名および仮パスワードは、MelBridge®事務局からあなた宛てにメールでお送りしています。</li>
-                                        <li>件名：しゃべり描き翻訳™_アカウント発行のご連絡</li>
-                                    </ul>
-                                </aside>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-3.png" alt="サインイン手順3" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="3">
-                                    <li>[パスワード]画面で 仮パスワードを入力し[サインイン]を押します。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-4.png" alt="サインイン手順4" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="4">
-                                    <li>[パスワードの更新] 画面が表示されます。現在の仮パスワードと新しいパスワードを入力し、 [サインイン] を押します。</li>
-                                </ol>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p>マイクボタンをクリックして話すだけで、自動的に翻訳されます。</p>
+                            <div class="info-banner warning">
+                                <span class="material-icons info-banner-icon">mic</span>
+                                <div class="info-banner-content">
+                                    <h5>マイクの使い方のコツ</h5>
+                                    <p>できるだけ静かな場所で、マイクに向かってはっきりと話しましょう。ゆっくり話すと認識精度が上がります。</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">2. 二段階認証を設定する</h4>
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-1.png" alt="Authenticator設定手順1" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol>
-                                    <li>【Microsoft Authenticator】アプリに関する案内が表示されます。<br>[QRコードをスキャンします]の画面が表示されるまで[次へ]を押します。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-2.png" alt="Authenticator設定手順2" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="2">
-                                    <li>手元にスマートフォンを用意します。<br>スマートフォンで【Microsoft Authenticator】アプリを起動します。</li>
-                                </ol>
-                                <aside class="note-card" role="note">
-                                    <h5>⚠ 注意</h5>
-                                    <ul>
-                                        <li>アプリをお持ちでない場合は、お使いのスマートフォンのアプリストアからMicrosoft Authenticatorを入手してください</li>
-                                    </ul>
-                                </aside>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-3.png" alt="Authenticator設定手順3" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="3">
-                                    <li>[QRアイコン]から、QRをスキャンする画面に移動します。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-4.png" alt="Authenticator設定手順4" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="4">
-                                    <li>PCのブラウザに表示されたQRコードを、スマートフォンで読み取ります。</li>
-                                </ol>
-                                <aside class="note-card" role="note">
-                                    <h5>⚠ 注意</h5>
-                                    <ul>
-                                        <li>スマートフォンのカメラアプリ/コードスキャンアプリからQRコードを読み取っても認証されません。必ず【Microsoft Authenticator】アプリを使用してください。</li>
-                                    </ul>
-                                </aside>
+                <!-- Accordion Item 3 -->
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-icon">03</div>
+                        <div class="expansion-title">トランスクリプト機能</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
+                    </div>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p>会話の履歴を吹き出し形式で表示。後から見返すことができます。</p>
+                            <div class="info-banner error">
+                                <span class="material-icons info-banner-icon">warning</span>
+                                <div class="info-banner-content">
+                                    <h5>注意事項</h5>
+                                    <p>トランスクリプト起動中は、シートを切り替えないでください。マイクボタンを無効化してから切り替えてください。</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">3. 二段階認証する</h4>
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-1.png" alt="Authenticator認証手順1" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol>
-                                    <li>スマートフォンでQRコードを読み取ったら、PCのブラウザの[次へ]を押します。次の画面で2桁の番号が表示されます。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-2.png" alt="Authenticator認証手順2" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="2">
-                                    <li>PCのブラウザに表示された2桁の番号を、スマートフォンのアプリ画面で入力し[はい]を押します。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-3.png" alt="Authenticator認証手順3" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="3">
-                                    <li>認証が完了します。スマートフォンのアプリ画面に、登録したアカウントが表示されたことを確認します。</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="step-with-image">
-                            <div class="step-image">
-                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-4.png" alt="Authenticator認証手順4" loading="lazy">
-                            </div>
-                            <div class="step-text">
-                                <ol start="4">
-                                    <li>PCのブラウザで[通知が承認されました]と表示されます。[次へ]を押し、[成功]画面で[完了]を押すと、ログインが完了します。</li>
-                                </ol>
-                                <aside class="note-card" role="note">
-                                    <h5>⚠ 注意</h5>
-                                    <ul>
-                                        <li>今後パスワードを入力せずにアクセスしたい場合、[サインインの状態を維持しますか？]の画面で[今後このメッセージを表示しない]をチェックし[はい]を押します。</li>
-                                    </ul>
-                                </aside>
-                            </div>
-                        </div>
+                <!-- Accordion Item 4 -->
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-icon">04</div>
+                        <div class="expansion-title">しゃべり描き®で視覚的に説明</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
                     </div>
-                </section>
-
-                <!-- Section 2: Screen Layout -->
-                <section id="screen-layout" class="section">
-                    <div class="section-header">
-                        <span class="section-number">02</span>
-                        <h2 class="section-title">画面構成</h2>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">1. シート管理エリア</h4>
-                        <p style="color: #666; margin-bottom: 16px;">画面上部のシート管理エリアでは、シートの作成・選択・削除などの操作を行います。</p>
-                        <div class="advice-section">
-                            <h5>💡 シートとは</h5>
-                            <p>キャンバスエリアとトランス���リプトエリアを一つのまとまりとして管理する単位です。テーマや用途ごとにシートを分けて使うと便利です。</p>
-                        </div>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">2. キャンバスエリア</h4>
-                        <p style="color: #666; margin-bottom: 16px;">キャンバスエリアでは、画像の貼り付けや描画、音声入力によるテキスト追加などの操作を行います。</p>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">3. トランスクリプトエリア</h4>
-                        <p style="color: #666; margin-bottom: 16px;">トランスクリプトエリアでは、音声入力した内容が吹き出し形式で表示され、会話の履歴を確認できます。</p>
-                    </div>
-                </section>
-
-                <!-- Section 3: Operation Guide -->
-                <section id="operation-guide" class="section">
-                    <div class="section-header">
-                        <span class="section-number">03</span>
-                        <h2 class="section-title">アプリを操作する</h2>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">新しいシートを作成する</h4>
-                        <p style="color: #666; line-height: 1.7;">画面上部の「+新しいシート」ボタンをクリックすると、新しいシートが作成されます。シート名は後から変更することもできます。</p>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">使用する言語を選ぶ</h4>
-                        <p style="color: #666; line-height: 1.7;">言語選択ボタンから、使用する2つの言語を選択します。選択した言語に応じて、マイクボタンが2つ表示されます。</p>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">しゃべり描き®を使う</h4>
-                        <p style="color: #666; line-height: 1.7;">画像を貼り付けた後、描画ツールで図形や矢印を描き込み、音声入力でテキストを追加できます。入力されたテキストは自動的に翻訳されます。</p>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">トランスクリプトを使う</h4>
-                        <p style="color: #666; line-height: 1.7;">トランスクリプトボタンをクリックすると、音声入力した内容が吹き出し形式で表示されます。会話の履歴を確認しながらコミュニケーションできます。</p>
-                        <aside class="note-card" role="note">
-                            <h5>⚠ 注意</h5>
-                            <ul>
-                                <li>トランスクリプト起動中は、シートを切り替えないでください。</li>
-                                <li>シートを切り替える前に、必ずマイクボタンを無効化してください。</li>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p>画像に図形や矢印を描き込んで、音声と組み合わせて説明できます。</p>
+                            <ul class="icon-list">
+                                <li><span class="material-icons">check</span><span>画像をアップロードまたはカメラで撮影</span></li>
+                                <li><span class="material-icons">check</span><span>描画ツールで図形や矢印を描く</span></li>
+                                <li><span class="material-icons">check</span><span>音声入力でテキストを追加</span></li>
+                                <li><span class="material-icons">check</span><span>自動的に翻訳されて表示</span></li>
                             </ul>
-                        </aside>
+                        </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- Section 4: Mic Usage Tips -->
-                <section id="mic-usage-tips" class="section">
-                    <div class="section-header">
-                        <span class="section-number">04</span>
-                        <h2 class="section-title">マイクの使い方のポイント</h2>
+            <!-- FAQ Section -->
+            <section id="faq">
+                <div class="section-header">
+                    <h2>よくある質問</h2>
+                    <p>困ったときはここをチェック</p>
+                </div>
+
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-title">Q. パスワードを忘れてしまいました</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
                     </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">マイクの許可設定</h4>
-                        <p style="color: #666; line-height: 1.7;">初めて使用する際は、ブラウザのマイク許可設定が必要です。許可のポップアップが表示されたら、「許可」をクリックしてください。</p>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p><strong>A.</strong> MelBridge®事務局にお問い合わせください。パスワードのリセット手続きをご案内いたします。</p>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">音声入力のラグについて</h4>
-                        <p style="color: #666; line-height: 1.7;">音声入力後、翻訳が表示されるまで数秒かかる場合があります。焦らずにお待ちください。</p>
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-title">Q. マイクが反応しません</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
                     </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">複数ウィンドウでの使用制限</h4>
-                        <p style="color: #666; line-height: 1.7;">同時に複数のウィンドウでマイクを使用することはできません。1つのウィンドウでのみご使用ください。</p>
-                        <aside class="note-card" role="note">
-                            <h5>⚠ 注意</h5>
-                            <ul>
-                                <li>複数のウィンドウで同時にマイクを使用すると、正常に動作しない場合があります。</li>
-                            </ul>
-                        </aside>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p><strong>A.</strong> ブラウザのマイク許可設定を確認してください。ブラウザの設定からマイクのアクセスを許可する必要があります。</p>
+                        </div>
                     </div>
-                </section>
+                </div>
 
-                <!-- Section 5: Terminology -->
-                <section id="terminology" class="section">
-                    <div class="section-header">
-                        <span class="section-number">05</span>
-                        <h2 class="section-title">用語</h2>
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-title">Q. 対応している言語は？</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
                     </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">主要な用語集</h4>
-                        <dl style="line-height: 2;">
-                            <dt style="font-weight: 700; color: var(--primary-color); margin-top: 16px;">しゃべり描き翻訳™</dt>
-                            <dd style="margin-left: 20px; color: #666;">音声翻訳・手書き・画像貼り付けを一つの画面で扱えるコミュニケーションツールの総称。</dd>
-
-                            <dt style="font-weight: 700; color: var(--primary-color); margin-top: 16px;">シート</dt>
-                            <dd style="margin-left: 20px; color: #666;">キャンバスエリアとトランスクリプトエリアを一つのまとまりとして管理する単位。</dd>
-
-                            <dt style="font-weight: 700; color: var(--primary-color); margin-top: 16px;">キャンバスエリア</dt>
-                            <dd style="margin-left: 20px; color: #666;">画像の貼り付けや描画、テキスト追加などを行うエリア。</dd>
-
-                            <dt style="font-weight: 700; color: var(--primary-color); margin-top: 16px;">トランスクリプトエリア</dt>
-                            <dd style="margin-left: 20px; color: #666;">音声入力した内容が吹き出し形式で表示されるエリア。</dd>
-
-                            <dt style="font-weight: 700; color: var(--primary-color); margin-top: 16px;">しゃべり描き®</dt>
-                            <dd style="margin-left: 20px; color: #666;">画像に図形を描き込み、音声入力でテキストを追加・翻訳できる機能。</dd>
-                        </dl>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p><strong>A.</strong> 日本語、英語、中国語、韓国語など、30以上の言語に対応しています。詳細は製品仕様をご確認ください。</p>
+                        </div>
                     </div>
-                </section>
+                </div>
 
-                <!-- Section 6: FAQ -->
-                <section id="faq" class="section">
-                    <div class="section-header">
-                        <span class="section-number">06</span>
-                        <h2 class="section-title">FAQ（よくある質問）</h2>
+                <div class="expansion-panel">
+                    <div class="expansion-header" onclick="togglePanel(this)">
+                        <div class="expansion-title">Q. 音声入力の精度を上げるには？</div>
+                        <span class="material-icons expansion-indicator">expand_more</span>
                     </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">Q. パスワードを忘れてしまいました</h4>
-                        <p style="color: #666; line-height: 1.7; margin-top: 8px;">A. MelBridge®事務局にお問い合わせください。パスワードのリセット手続きをご案内いたします。</p>
+                    <div class="expansion-content">
+                        <div class="expansion-body">
+                            <p><strong>A.</strong> できるだけ静かな環境で、マイクに向かってはっきりと話してください。ゆっくり話すことも精度向上に効果的です。</p>
+                        </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">Q. マイクが反応しません</h4>
-                        <p style="color: #666; line-height: 1.7; margin-top: 8px;">A. ブラウザのマイク許可設定を確認してください。許可されていない場合は、ブラウザの設定から許可してください。</p>
-                    </div>
+            <!-- Specs Section -->
+            <section id="specs" style="margin-bottom: 80px;">
+                <div class="section-header">
+                    <h2>製品仕様</h2>
+                    <p>動作環境と対応言語</p>
+                </div>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">Q. 音声入力の精度を上げるには？</h4>
-                        <p style="color: #666; line-height: 1.7; margin-top: 8px;">A. できるだけ静かな環境で、マイクに向かってはっきりと話してください。また、ゆっくり話すことも精度向上に効果的です。</p>
-                    </div>
+                <div class="material-card">
+                    <div class="material-card-content" style="padding: 24px;">
+                        <h3 style="font-size: 18px; font-weight: 500; margin-bottom: 16px; color: var(--md-sys-color-primary);">対応ブラウザ</h3>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <span class="chip">Chrome（最新版）</span>
+                            <span class="chip">Edge（最新版）</span>
+                            <span class="chip">Safari（最新版）</span>
+                            <span class="chip">Firefox（最新版）</span>
+                        </div>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">Q. シートを削除するには？</h4>
-                        <p style="color: #666; line-height: 1.7; margin-top: 8px;">A. シート選択メニューから削除したいシートを選択し、ゴミ箱アイコンをクリックしてください。</p>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">Q. 対応している言語は？</h4>
-                        <p style="color: #666; line-height: 1.7; margin-top: 8px;">A. 日本語、英語、中国語、韓国語など、30以上の言語に対応しています。詳細は製品仕様をご確認ください。</p>
-                    </div>
-                </section>
-
-                <!-- Section 7: Product Specs -->
-                <section id="product-specs" class="section">
-                    <div class="section-header">
-                        <span class="section-number">07</span>
-                        <h2 class="section-title">製品仕様</h2>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">対応ブラウザ</h4>
-                        <ul style="line-height: 2; color: #666; padding-left: 20px;">
-                            <li>Google Chrome（最新版）</li>
-                            <li>Microsoft Edge（最新版）</li>
-                            <li>Safari（最新版）</li>
-                            <li>Firefox（最新版）</li>
-                        </ul>
-                    </div>
-
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">対応言語</h4>
+                        <h3 style="font-size: 18px; font-weight: 500; margin: 24px 0 16px 0; color: var(--md-sys-color-primary);">対応言語</h3>
                         <p style="color: #666; line-height: 1.7;">日本語、英語、中国語（簡体字・繁体字）、韓国語、タイ語、ベトナム語、インドネシア語、マレー語、タガログ語、スペイン語、ポルトガル語、フランス語、ドイツ語、イタリア語、ロシア語、アラビア語など、30以上の言語に対応。</p>
-                    </div>
 
-                    <div class="procedure-item">
-                        <h4 class="procedure-title">推奨環境</h4>
-                        <ul style="line-height: 2; color: #666; padding-left: 20px;">
-                            <li>OS: Windows 10以降、macOS 10.15以降</li>
-                            <li>メモリ: 4GB以上推奨</li>
-                            <li>インターネット接続: 必須</li>
-                            <li>マイク: 内蔵または外付けマイク</li>
+                        <h3 style="font-size: 18px; font-weight: 500; margin: 24px 0 16px 0; color: var(--md-sys-color-primary);">推奨環境</h3>
+                        <ul class="icon-list">
+                            <li><span class="material-icons">check</span><span>OS: Windows 10以降、macOS 10.15以降</span></li>
+                            <li><span class="material-icons">check</span><span>メモリ: 4GB以上推奨</span></li>
+                            <li><span class="material-icons">check</span><span>インターネット接続: 必須</span></li>
+                            <li><span class="material-icons">check</span><span>マイク: 内蔵または外付けマイク</span></li>
                         </ul>
                     </div>
-                </section>
-
-                <!-- Section 8: What's New -->
-                <section id="whats-new" class="section">
-                    <div class="section-header">
-                        <span class="section-number">08</span>
-                        <h2 class="section-title">新着情報</h2>
-                    </div>
-
-                    <div class="procedure-item">
-                        <p style="color: #666; line-height: 1.7;">しゃべり描き翻訳™の最新情報については、画面右上の通知ボタンをクリックしてご確認ください。</p>
-                        <div style="text-align: center; margin-top: 24px;">
-                            <button class="mdc-button mdc-button--raised" onclick="document.getElementById('newsBtn').click()">
-                                <span class="mdc-button__ripple"></span>
-                                <i class="material-icons mdc-button__icon">new_releases</i>
-                                <span class="mdc-button__label">新着情報を見る</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>
-            </div>
+                </div>
+            </section>
         </main>
     </div>
 
-    <!-- FAB - Back to Top -->
+    <!-- FAB -->
     <button class="mdc-fab" id="backToTop">
         <div class="mdc-fab__ripple"></div>
         <span class="material-icons mdc-fab__icon">arrow_upward</span>
     </button>
 
-    <!-- Dialog - What's New -->
+    <!-- Dialog -->
     <div class="mdc-dialog" id="newsDialog">
         <div class="mdc-dialog__container">
             <div class="mdc-dialog__surface">
@@ -1013,7 +814,7 @@
         <div class="mdc-dialog__scrim"></div>
     </div>
 
-    <!-- Material Components Web JS from CDN -->
+    <!-- Material Components JS -->
     <script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
 
     <script>
@@ -1032,18 +833,33 @@
             dialog.open();
         });
 
-        // Initialize all ripples
-        const buttons = document.querySelectorAll('.mdc-button, .mdc-icon-button, .mdc-list-item, .mdc-fab');
-        buttons.forEach(button => {
-            mdc.ripple.MDCRipple.attachTo(button);
+        // Initialize ripples
+        document.querySelectorAll('.mdc-button, .mdc-icon-button, .mdc-list-item, .mdc-fab').forEach(el => {
+            mdc.ripple.MDCRipple.attachTo(el);
         });
+
+        // Expansion Panel Toggle
+        function togglePanel(header) {
+            const panel = header.parentElement;
+            const wasActive = panel.classList.contains('active');
+
+            // Close all panels
+            document.querySelectorAll('.expansion-panel').forEach(p => {
+                p.classList.remove('active');
+            });
+
+            // Open clicked panel if it wasn't active
+            if (!wasActive) {
+                panel.classList.add('active');
+            }
+        }
 
         // Back to top FAB
         const fab = document.getElementById('backToTop');
-        const mainContent = document.querySelector('.main-content');
+        const mainContent = document.querySelector('.mdc-drawer-app-content');
 
-        mainContent.addEventListener('scroll', () => {
-            if (mainContent.scrollTop > 300) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
                 fab.classList.add('visible');
             } else {
                 fab.classList.remove('visible');
@@ -1051,53 +867,25 @@
         });
 
         fab.addEventListener('click', () => {
-            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         // Smooth scroll for navigation
-        document.querySelectorAll('.mdc-list-item').forEach(item => {
-            item.addEventListener('click', (e) => {
+        document.querySelectorAll('.mdc-list-item[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const href = item.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    const targetId = href.substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        if (window.innerWidth < 768) {
-                            drawer.open = false;
-                        }
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (window.innerWidth < 768) {
+                        drawer.open = false;
                     }
                 }
             });
         });
 
-        // Update active navigation item on scroll
-        const observerOptions = {
-            root: null,
-            rootMargin: '-100px 0px -66%',
-            threshold: 0
-        };
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    document.querySelectorAll('.mdc-list-item').forEach(link => {
-                        const href = link.getAttribute('href');
-                        link.classList.remove('mdc-list-item--activated');
-                        if (href === `#${id}`) {
-                            link.classList.add('mdc-list-item--activated');
-                        }
-                    });
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-        document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
-
-        console.log('Material Design Full Manual initialized successfully!');
+        console.log('✨ Material Design Manual loaded successfully!');
     </script>
 </body>
 </html>
