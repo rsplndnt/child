@@ -307,6 +307,7 @@ class WhatsNewManager {
     let listHtml = `
       <div class="whats-new-modal-body-content">
         <h2 class="modal-date-list-title">新着情報を選択してください</h2>
+        <p class="modal-date-list-description">※ この画面はテスト用です。実際の運用では最新の新着情報が自動的に表示されます。</p>
         <div class="modal-date-list">
     `;
 
