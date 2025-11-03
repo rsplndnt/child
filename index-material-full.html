@@ -50,15 +50,24 @@
         /* Drawer */
         .mdc-drawer {
             width: 280px;
-            z-index: 6;
         }
 
         .mdc-drawer--modal {
-            display: none;
+            z-index: 7;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-100%);
+            transition: transform 0.225s cubic-bezier(0.4, 0, 0.6, 1);
         }
 
         .mdc-drawer--modal.mdc-drawer--open {
-            display: flex;
+            transform: translateX(0);
+        }
+
+        .mdc-drawer--modal.mdc-drawer--opening,
+        .mdc-drawer--modal.mdc-drawer--closing {
+            transition: transform 0.225s cubic-bezier(0.4, 0, 0.6, 1);
         }
 
         .drawer-header {
@@ -115,9 +124,30 @@
 
         .mdc-drawer-scrim {
             background-color: rgba(0, 0, 0, 0.4);
+            z-index: 6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.225s cubic-bezier(0.4, 0, 0.6, 1),
+                        visibility 0s linear 0.225s;
+        }
+
+        .mdc-drawer--modal.mdc-drawer--open ~ .mdc-drawer-scrim {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.225s cubic-bezier(0.4, 0, 0.6, 1);
         }
 
         /* Main Content */
+        .mdc-drawer-app-content {
+            position: relative;
+            z-index: 1;
+        }
+
         .main-content {
             padding-top: 64px;
             max-width: 1200px;
@@ -872,9 +902,17 @@
             const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.querySelector('.mdc-top-app-bar'));
             const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 
+            // Ensure drawer is closed on init
+            drawer.open = false;
+
             // Menu button
             document.getElementById('menuBtn').addEventListener('click', () => {
                 drawer.open = !drawer.open;
+            });
+
+            // Close drawer when clicking scrim
+            document.querySelector('.mdc-drawer-scrim').addEventListener('click', () => {
+                drawer.open = false;
             });
 
             // News button
