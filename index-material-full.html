@@ -26,11 +26,66 @@
         }
 
         :root {
+            /* Material Design 3 - しゃべり描き翻訳™ カラーテーマ */
+            /* Primary - オリジナルのブランドブルー */
+            --md-sys-color-primary: #0071B8;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #D1E4FF;
+            --md-sys-color-on-primary-container: #001D36;
+            --color-primary-700: #005a91;
+
+            /* Secondary - オリジナルのセカンダリー */
+            --md-sys-color-secondary: #B1E1FF;
+            --md-sys-color-on-secondary: #003548;
+            --md-sys-color-secondary-container: #B1E1FF;
+            --md-sys-color-on-secondary-container: #001D29;
+
+            /* Tertiary - オリジナルのターシャリー */
+            --md-sys-color-tertiary: #EFF7FC;
+            --md-sys-color-on-tertiary: #0f172a;
+            --md-sys-color-tertiary-container: #EFF7FC;
+            --md-sys-color-on-tertiary-container: #1a2332;
+
+            /* Surface Colors */
+            --md-sys-color-surface: #FFFFFF;
+            --md-sys-color-on-surface: #0f172a;
+            --md-sys-color-surface-variant: #DFE2EB;
+            --md-sys-color-on-surface-variant: #6B777D;
+            --md-sys-color-background: #f5f7fa;
+            --md-sys-color-on-background: #1a1c1e;
+
+            /* Outline */
+            --md-sys-color-outline: #D4D7D8;
+            --md-sys-color-outline-variant: #D4D7D8;
+
+            /* Warning/Caution - オリジナルの注意色 */
+            --md-sys-color-warning: #FFD76B;
+            --md-sys-color-on-warning: #000000;
+            --md-sys-color-warning-container: #FFD76B;
+            --md-sys-color-on-warning-container: #3d2800;
+
+            /* Success/Advice */
+            --md-sys-color-success: #E8F5E9;
+            --md-sys-color-on-success: #1B5E20;
+            --md-sys-color-success-container: #C8E6C9;
+
+            /* Error */
+            --md-sys-color-error: #BA1A1A;
+            --md-sys-color-on-error: #FFFFFF;
+            --md-sys-color-error-container: #FFDAD6;
+            --md-sys-color-on-error-container: #410002;
+
+            /* Elevation & Shadow */
+            --md-sys-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0px rgba(0, 0, 0, 0.3);
+            --md-sys-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.15), 0 1px 2px 0px rgba(0, 0, 0, 0.3);
+            --md-sys-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0px rgba(0, 0, 0, 0.3);
+
+            /* Legacy support */
             --primary-color: #0071B8;
             --primary-dark: #005a91;
-            --secondary-color: #535F70;
+            --secondary-color: #B1E1FF;
             --surface-color: #FFFFFF;
-            --background-color: #F5F5F5;
+            --background-color: #f5f7fa;
             --warning-color: #FFD76B;
             --success-color: #E8F5E9;
             --success-border: #C8E6C9;
@@ -38,13 +93,17 @@
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: var(--background-color);
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* App Bar */
         .mdc-top-app-bar {
-            background-color: var(--primary-color);
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
             position: fixed;
             z-index: 7;
         }
@@ -61,8 +120,8 @@
 
         .drawer-header {
             height: 150px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--color-primary-700) 100%);
+            color: var(--md-sys-color-on-primary);
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -160,8 +219,8 @@
             justify-content: center;
             width: 48px;
             height: 48px;
-            background: var(--primary-color);
-            color: white;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
             border-radius: 50%;
             font-size: 20px;
             font-weight: 700;
@@ -232,7 +291,7 @@
         .procedure-title {
             font-size: 20px;
             font-weight: 500;
-            color: var(--primary-color);
+            color: var(--md-sys-color-primary);
             margin-bottom: 20px;
         }
 
@@ -266,8 +325,8 @@
 
         /* Note Card */
         .note-card {
-            background: var(--warning-color);
-            border-left: 4px solid #f57f17;
+            background: var(--md-sys-color-warning-container);
+            border-left: 4px solid var(--md-sys-color-on-warning-container);
             border-radius: 8px;
             padding: 16px;
             margin: 16px 0;
@@ -291,8 +350,8 @@
 
         /* Advice Section */
         .advice-section {
-            background: var(--success-color);
-            border-left: 4px solid var(--success-border);
+            background: var(--md-sys-color-success);
+            border-left: 4px solid var(--md-sys-color-success-container);
             border-radius: 8px;
             padding: 16px;
             margin: 16px 0;
@@ -314,7 +373,8 @@
         }
 
         .mdc-button--raised {
-            background-color: var(--primary-color);
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
         }
 
         .mdc-button--outlined {
@@ -334,7 +394,8 @@
             position: fixed;
             bottom: 16px;
             right: 16px;
-            background-color: var(--primary-color);
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
             display: none;
         }
 
