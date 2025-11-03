@@ -26,69 +26,63 @@
         }
 
         :root {
-            /* Material Design 3 - しゃべり描き翻訳™ カラーテーマ */
-            /* Primary - オリジナルのブランドブルー */
-            --md-sys-color-primary: #0071B8;
+            /* Material Design 3 - 標準カラーテーマ（Blue基調）*/
+
+            /* Primary - Material Blue */
+            --md-sys-color-primary: #1976D2;
             --md-sys-color-on-primary: #FFFFFF;
-            --md-sys-color-primary-container: #D1E4FF;
-            --md-sys-color-on-primary-container: #001D36;
-            --color-primary-700: #005a91;
+            --md-sys-color-primary-container: #BBDEFB;
+            --md-sys-color-on-primary-container: #0D47A1;
 
-            /* Secondary - オリジナルのセカンダリー */
-            --md-sys-color-secondary: #B1E1FF;
-            --md-sys-color-on-secondary: #003548;
-            --md-sys-color-secondary-container: #B1E1FF;
-            --md-sys-color-on-secondary-container: #001D29;
+            /* Secondary - Material Light Blue */
+            --md-sys-color-secondary: #0288D1;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #B3E5FC;
+            --md-sys-color-on-secondary-container: #01579B;
 
-            /* Tertiary - オリジナルのターシャリー */
-            --md-sys-color-tertiary: #EFF7FC;
-            --md-sys-color-on-tertiary: #0f172a;
-            --md-sys-color-tertiary-container: #EFF7FC;
-            --md-sys-color-on-tertiary-container: #1a2332;
+            /* Tertiary - Material Cyan */
+            --md-sys-color-tertiary: #00ACC1;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-tertiary-container: #B2EBF2;
+            --md-sys-color-on-tertiary-container: #006064;
 
-            /* Surface Colors */
+            /* Surface & Background */
             --md-sys-color-surface: #FFFFFF;
-            --md-sys-color-on-surface: #0f172a;
-            --md-sys-color-surface-variant: #DFE2EB;
-            --md-sys-color-on-surface-variant: #6B777D;
-            --md-sys-color-background: #f5f7fa;
-            --md-sys-color-on-background: #1a1c1e;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            --md-sys-color-background: #FDFBFF;
+            --md-sys-color-on-background: #1C1B1F;
 
             /* Outline */
-            --md-sys-color-outline: #D4D7D8;
-            --md-sys-color-outline-variant: #D4D7D8;
-
-            /* Warning/Caution - オリジナルの注意色 */
-            --md-sys-color-warning: #FFD76B;
-            --md-sys-color-on-warning: #000000;
-            --md-sys-color-warning-container: #FFD76B;
-            --md-sys-color-on-warning-container: #3d2800;
-
-            /* Success/Advice */
-            --md-sys-color-success: #E8F5E9;
-            --md-sys-color-on-success: #1B5E20;
-            --md-sys-color-success-container: #C8E6C9;
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-outline-variant: #CAC4D0;
 
             /* Error */
-            --md-sys-color-error: #BA1A1A;
+            --md-sys-color-error: #B3261E;
             --md-sys-color-on-error: #FFFFFF;
-            --md-sys-color-error-container: #FFDAD6;
-            --md-sys-color-on-error-container: #410002;
+            --md-sys-color-error-container: #F9DEDC;
+            --md-sys-color-on-error-container: #410E0B;
 
-            /* Elevation & Shadow */
-            --md-sys-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.15), 0 1px 2px 0px rgba(0, 0, 0, 0.3);
-            --md-sys-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0px rgba(0, 0, 0, 0.3);
+            /* Warning */
+            --md-sys-color-warning: #F9A825;
+            --md-sys-color-on-warning: #000000;
+            --md-sys-color-warning-container: #FFF9C4;
+            --md-sys-color-on-warning-container: #F57F17;
 
-            /* Legacy support */
-            --primary-color: #0071B8;
-            --primary-dark: #005a91;
-            --secondary-color: #B1E1FF;
-            --surface-color: #FFFFFF;
-            --background-color: #f5f7fa;
-            --warning-color: #FFD76B;
-            --success-color: #E8F5E9;
-            --success-border: #C8E6C9;
+            /* Success */
+            --md-sys-color-success: #66BB6A;
+            --md-sys-color-on-success: #FFFFFF;
+            --md-sys-color-success-container: #C8E6C9;
+            --md-sys-color-on-success-container: #1B5E20;
+
+            /* Elevation & Shadow - Material Design 3 Standard */
+            --md-sys-elevation-0: none;
+            --md-sys-elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+            --md-sys-elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+            --md-sys-elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+            --md-sys-elevation-4: 0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+            --md-sys-elevation-5: 0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
         }
 
         body {
@@ -120,7 +114,7 @@
 
         .drawer-header {
             height: 150px;
-            background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--color-primary-700) 100%);
+            background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-on-primary-container) 100%);
             color: var(--md-sys-color-on-primary);
             padding: 20px;
             display: flex;
