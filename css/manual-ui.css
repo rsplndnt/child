@@ -314,6 +314,9 @@ ul.spec-list li{
 .sidebar-header .version-info{ 
   margin-top: 8px; 
   text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 .sidebar-header .version-info .version{
   font-size: var(--sd-font-size-md); /* sm → md */ /* xs → sm */
