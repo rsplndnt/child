@@ -50,6 +50,15 @@
         /* Drawer */
         .mdc-drawer {
             width: 280px;
+            z-index: 6;
+        }
+
+        .mdc-drawer--modal {
+            display: none;
+        }
+
+        .mdc-drawer--modal.mdc-drawer--open {
+            display: flex;
         }
 
         .drawer-header {
@@ -72,6 +81,40 @@
         .drawer-header .version {
             font-size: 12px;
             opacity: 0.9;
+        }
+
+        /* Drawer Navigation */
+        .mdc-drawer .mdc-list {
+            padding: 8px 0;
+        }
+
+        .mdc-drawer .mdc-list-item {
+            height: 48px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mdc-drawer .mdc-list-item__graphic {
+            margin-right: 16px;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .mdc-drawer .mdc-list-item--activated {
+            color: var(--md-sys-color-primary);
+            background-color: rgba(25, 118, 210, 0.08);
+        }
+
+        .mdc-drawer .mdc-list-item--activated .mdc-list-item__graphic {
+            color: var(--md-sys-color-primary);
+        }
+
+        .mdc-drawer .mdc-list-divider {
+            margin: 8px 0;
+        }
+
+        .mdc-drawer-scrim {
+            background-color: rgba(0, 0, 0, 0.4);
         }
 
         /* Main Content */
@@ -341,11 +384,15 @@
             bottom: 24px;
             right: 24px;
             background: var(--md-sys-color-primary);
+            z-index: 5;
             display: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .mdc-fab.visible {
             display: flex;
+            opacity: 1;
+            transform: scale(1);
         }
 
         /* Section Headers */
@@ -818,74 +865,77 @@
     <script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
 
     <script>
-        // Initialize MDC Components
-        const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
-        const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.querySelector('.mdc-top-app-bar'));
-        const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
+        // Wait for MDC to load
+        window.addEventListener('load', function() {
+            // Initialize MDC Components
+            const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+            const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.querySelector('.mdc-top-app-bar'));
+            const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 
-        // Menu button
-        document.getElementById('menuBtn').addEventListener('click', () => {
-            drawer.open = !drawer.open;
-        });
-
-        // News button
-        document.getElementById('newsBtn').addEventListener('click', () => {
-            dialog.open();
-        });
-
-        // Initialize ripples
-        document.querySelectorAll('.mdc-button, .mdc-icon-button, .mdc-list-item, .mdc-fab').forEach(el => {
-            mdc.ripple.MDCRipple.attachTo(el);
-        });
-
-        // Expansion Panel Toggle
-        function togglePanel(header) {
-            const panel = header.parentElement;
-            const wasActive = panel.classList.contains('active');
-
-            // Close all panels
-            document.querySelectorAll('.expansion-panel').forEach(p => {
-                p.classList.remove('active');
+            // Menu button
+            document.getElementById('menuBtn').addEventListener('click', () => {
+                drawer.open = !drawer.open;
             });
 
-            // Open clicked panel if it wasn't active
-            if (!wasActive) {
-                panel.classList.add('active');
-            }
-        }
+            // News button
+            document.getElementById('newsBtn').addEventListener('click', () => {
+                dialog.open();
+            });
 
-        // Back to top FAB
-        const fab = document.getElementById('backToTop');
-        const mainContent = document.querySelector('.mdc-drawer-app-content');
+            // Initialize ripples
+            document.querySelectorAll('.mdc-button, .mdc-icon-button, .mdc-list-item, .mdc-fab').forEach(el => {
+                mdc.ripple.MDCRipple.attachTo(el);
+            });
 
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                fab.classList.add('visible');
-            } else {
-                fab.classList.remove('visible');
-            }
-        });
+            // Expansion Panel Toggle
+            window.togglePanel = function(header) {
+                const panel = header.parentElement;
+                const wasActive = panel.classList.contains('active');
 
-        fab.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+                // Close all panels
+                document.querySelectorAll('.expansion-panel').forEach(p => {
+                    p.classList.remove('active');
+                });
 
-        // Smooth scroll for navigation
-        document.querySelectorAll('.mdc-list-item[href^="#"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const href = link.getAttribute('href');
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    if (window.innerWidth < 768) {
-                        drawer.open = false;
-                    }
+                // Open clicked panel if it wasn't active
+                if (!wasActive) {
+                    panel.classList.add('active');
+                }
+            };
+
+            // Back to top FAB
+            const fab = document.getElementById('backToTop');
+            const mainContent = document.querySelector('.mdc-drawer-app-content');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    fab.classList.add('visible');
+                } else {
+                    fab.classList.remove('visible');
                 }
             });
-        });
 
-        console.log('✨ Material Design Manual loaded successfully!');
+            fab.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Smooth scroll for navigation
+            document.querySelectorAll('.mdc-list-item[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        if (window.innerWidth < 768) {
+                            drawer.open = false;
+                        }
+                    }
+                });
+            });
+
+            console.log('✨ Material Design Manual loaded successfully!');
+        });
     </script>
 </body>
 </html>
