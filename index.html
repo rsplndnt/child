@@ -200,7 +200,7 @@
                 </div>
                 <div class="toc-divider"></div>
                 <div class="toc-section">
-                    <h3><a class="toc-link" href="#whats-new" data-group-id="whats-new-items" aria-label="新着情報セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-information.svg" alt="" class="toc-icon" width="20" height="20" /><span>8. 新着情報</span></a></h3>
+                    <h3><a class="toc-link" href="#whats-new" data-group-id="whats-new-items" aria-label="新着情報セクション"><i class="material-icons toc-icon">new_releases</i><span>8. 新着情報</span></a></h3>
                 </div>
             </nav>
         </aside>
@@ -2795,7 +2795,7 @@
                 <h2 id="whatsNewModalTitle">新着情報</h2>
             </div>
             <div class="whats-new-modal-body">
-                <iframe src="whats-new.html" class="whats-new-modal-iframe" title="新着情報"></iframe>
+                <!-- JavaScriptで動的に生成されます -->
             </div>
         </div>
     </div>
@@ -3356,6 +3356,39 @@
         .modal-date-list-item-count {
             font-size: 12px;
             color: #666;
+        }
+
+        .modal-date-list-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal-date-list-cancel {
+            padding: 10px 24px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-date-list-cancel:hover {
+            background-color: #f5f5f5;
+            border-color: #999;
+            color: #333;
+        }
+
+        .modal-date-list-cancel .material-icons {
+            font-size: 20px;
         }
 
         @media (max-width: 768px) {

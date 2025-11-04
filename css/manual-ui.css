@@ -1816,11 +1816,25 @@ ul.spec-list li{
   flex-shrink: 0;
   margin-right: 10px;
 }
+/* Material Icons用のスタイル */
+.toc .toc-section h3 .toc-link .toc-icon.material-icons {
+  width: 28px;
+  height: 28px;
+  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
 .toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
 .toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
 .toc .toc-section h3 .toc-link.active i,
-.toc .toc-section h3 .toc-link.active .toc-icon { 
-  color:#fff; 
+.toc .toc-section h3 .toc-link.active .toc-icon {
+  color:#fff;
+}
+/* SVG画像のみにfilterを適用 */
+.toc .toc-section h3 .toc-link.active img.toc-icon {
   filter: brightness(0) invert(1); /* SVG画像を白色に変更 */
 }
 /* 中項目が選択されている時の大項目のスタイル */

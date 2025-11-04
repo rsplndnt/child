@@ -326,6 +326,12 @@ class WhatsNewManager {
 
     listHtml += `
         </div>
+        <div class="modal-date-list-footer">
+          <button class="modal-date-list-cancel" data-action="cancel-date-list">
+            <i class="material-icons">close</i>
+            <span>キャンセル</span>
+          </button>
+        </div>
       </div>
     `;
 
@@ -344,6 +350,13 @@ class WhatsNewManager {
         this.openModal(index, 0);
       });
     });
+
+    const cancelBtn = document.querySelector('[data-action="cancel-date-list"]');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
   }
 
   renderContentPagination(totalContents) {
