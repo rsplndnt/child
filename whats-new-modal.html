@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新バージョンのお知らせ</title>
+
+  <!-- Noto Sans JP -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.8;
+    }
+
+    .modal-container {
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-content-wrapper {
+      padding: 40px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* スクロールバーのスタイリング（Webkit系ブラウザ） */
+    .modal-content-wrapper::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal-content-wrapper::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .modal-content-wrapper::-webkit-scrollbar-thumb {
+      background: #d4d7d8;
+      border-radius: 10px;
+    }
+
+    .modal-content-wrapper::-webkit-scrollbar-thumb:hover {
+      background: #b8bfc3;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: #333;
+      text-align: left;
+    }
+
+    .content {
+      margin-bottom: 32px;
+    }
+
+    .content ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .content li {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 16px;
+      padding-left: 1.2em;
+      position: relative;
+    }
+
+    .content li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .image-container {
+      margin: 24px 0;
+      text-align: center;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-outline {
+      background-color: white;
+      color: #333;
+      border: 2px solid #ddd;
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #999;
+    }
+
+    .btn-primary {
+      background-color: #333;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #555;
+    }
+
+    .external-link-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      flex-shrink: 0;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 16px;
+      }
+
+      .modal-content-wrapper {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 24px;
+      }
+
+      .content li {
+        font-size: 15px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        padding: 14px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-container">
+    <div class="modal-content-wrapper">
+      <h1 id="newsTitle">新バージョンのお知らせ</h1>
+
+      <div class="content">
+        <ul id="newsContent">
+          <!-- JavaScriptで生成 -->
+        </ul>
+      </div>
+
+      <div class="image-container" id="newsImage">
+        <!-- 画像があればここに表示 -->
+      </div>
+
+      <div class="buttons">
+        <a href="https://lp.melbridge.mitsubishielectric.co.jp/manual-swipetalk"
+           class="btn btn-outline"
+           target="_blank">
+          詳細を見る
+          <i class="material-icons" style="font-size: 18px;">open_in_new</i>
+        </a>
+        <button class="btn btn-primary" onclick="window.parent.postMessage('closeModal', '*')">
+          使いはじめる
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/whats-new-data.js"></script>
+  <script>
+    // 最新の新着情報を表示
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof whatsNewData === 'undefined' || whatsNewData.length === 0) {
+        document.getElementById('newsTitle').textContent = '新着情報はありません';
+        return;
+      }
+
+      // 最新（0番目）のデータを取得
+      const latest = whatsNewData[0];
+
+      // タイトルを設定
+      document.getElementById('newsTitle').textContent = latest.title || '新バージョンのお知らせ';
+
+      // コンテンツを生成
+      const contentList = document.getElementById('newsContent');
+      contentList.innerHTML = '';
+
+      if (latest.contents && latest.contents.length > 0) {
+        latest.contents.forEach(content => {
+          const li = document.createElement('li');
+          li.textContent = content.text;
+          contentList.appendChild(li);
+
+          // リストがあれば追加
+          if (content.list && content.list.length > 0) {
+            content.list.forEach(item => {
+              const subLi = document.createElement('li');
+              subLi.textContent = item;
+              subLi.style.paddingLeft = '2em';
+              contentList.appendChild(subLi);
+            });
+          }
+        });
+
+        // 画像があれば表示
+        const firstContentWithImage = latest.contents.find(c => c.image);
+        if (firstContentWithImage && firstContentWithImage.image) {
+          const imageContainer = document.getElementById('newsImage');
+          const img = document.createElement('img');
+          img.src = firstContentWithImage.image;
+          img.alt = latest.title;
+          imageContainer.appendChild(img);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

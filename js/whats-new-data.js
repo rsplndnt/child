@@ -8,7 +8,7 @@ const whatsNewData = [
     contents: [
       {
         text: "しゃべり描き翻訳™のユーザーマニュアルを公開しました。アカウント設定から基本的な操作方法まで、画像付きで詳しく解説しています。",
-        image: null
+        image: "https://placehold.co/800x450/0071B8/ffffff?text=User+Manual+Ver.1.0"
       },
       {
         text: "初期設定から日常的な操作まで、ステップバイステップで分かりやすく説明。二段階認証の設定方法も含まれています。",
