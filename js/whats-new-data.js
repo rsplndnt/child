@@ -1,3 +1,4 @@
+
 // 新着情報データ
 const whatsNewData = [
   {
