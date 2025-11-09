@@ -3074,7 +3074,7 @@ ul.spec-list li{
 .app-modal-btn-outline {
   background-color: white;
   color: #333;
-  border: 2px solid #ddd;
+  border: 2px solid #D4D7D8;
 }
 
 .app-modal-btn-outline:hover {
@@ -3083,7 +3083,7 @@ ul.spec-list li{
 }
 
 .app-modal-btn-primary {
-  background-color: #333;
+  background-color: #6B777D;
   color: white;
 }
 
