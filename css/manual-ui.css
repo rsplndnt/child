@@ -2804,4 +2804,318 @@ ul.spec-list li{
   }
 }
 
+/* ===== メイン画面右上のモーダル表示ボタン ===== */
+.main-modal-sample-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+  background: linear-gradient(135deg, #0071B8 0%, #005a91 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 113, 184, 0.3);
+  transition: all 0.3s ease;
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+.main-modal-sample-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 113, 184, 0.4);
+  background: linear-gradient(135deg, #005a91 0%, #004770 100%);
+}
+
+.main-modal-sample-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 113, 184, 0.3);
+}
+
+.main-modal-sample-btn .material-icons {
+  font-size: 28px;
+}
+
+@media (max-width: 768px) {
+  .main-modal-sample-btn {
+    top: 16px;
+    right: 16px;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+
+  .main-modal-sample-btn .material-icons {
+    font-size: 24px;
+  }
+}
+
+@media print {
+  .main-modal-sample-btn {
+    display: none !important;
+  }
+}
+
+/* ===== 更新履歴メインページ ===== */
+.news-item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+}
+
+.news-item-list li {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 12px;
+  padding-left: 1.2em;
+  position: relative;
+  line-height: 1.8;
+}
+
+.news-item-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #333;
+  font-weight: bold;
+}
+
+/* 更新履歴の画像 */
+.news-item-image,
+.news-item-image-real {
+  width: 100%;
+  max-width: 800px;
+  margin: 24px auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.news-item-image-real {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.news-item-image {
+  aspect-ratio: 16 / 9;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* ===== アプリスタイルモーダル (whats-new-modal.html スタイル) ===== */
+
+/* モーダルボディ本体 */
+.whats-new-modal-body {
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* モーダルボディのスクロールバースタイル */
+.whats-new-modal-body::-webkit-scrollbar {
+  width: 14px;
+}
+
+.whats-new-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.whats-new-modal-body::-webkit-scrollbar-thumb {
+  background: #d4d7d8;
+  border-radius: 10px;
+  border: 4px solid white;
+  background-clip: padding-box;
+}
+
+.whats-new-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #b8bfc3;
+  border: 4px solid white;
+  background-clip: padding-box;
+}
+
+.app-style-modal {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-modal-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  margin-top: 0;
+  padding-top: 0;
+  color: #333;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.app-modal-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 24px;
+  padding-right: 8px;
+}
+
+.app-modal-scrollable::-webkit-scrollbar {
+  width: 14px;
+}
+
+.app-modal-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.app-modal-scrollable::-webkit-scrollbar-thumb {
+  background: #d4d7d8;
+  border-radius: 10px;
+  border: 4px solid white;
+  background-clip: padding-box;
+}
+
+.app-modal-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #b8bfc3;
+  border: 4px solid white;
+  background-clip: padding-box;
+}
+
+.app-modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.app-modal-list li {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 16px;
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.app-modal-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #333;
+  font-weight: bold;
+}
+
+.app-modal-image {
+  margin: 24px 0;
+  text-align: center;
+}
+
+.app-modal-image img,
+.app-modal-image .news-item-image-real {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 auto;
+}
+
+.app-modal-image .news-item-image {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+
+.app-modal-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.app-modal-btn {
+  flex: 1;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+.app-modal-btn-outline {
+  background-color: white;
+  color: #333;
+  border: 2px solid #ddd;
+}
+
+.app-modal-btn-outline:hover {
+  background-color: #f8f9fa;
+  border-color: #999;
+}
+
+.app-modal-btn-primary {
+  background-color: #333;
+  color: white;
+}
+
+.app-modal-btn-primary:hover {
+  background-color: #555;
+}
+
+.app-modal-btn .material-icons {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .app-style-modal {
+    padding: 0;
+  }
+
+  .app-modal-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .app-modal-list li {
+    font-size: 15px;
+  }
+
+  .app-modal-buttons {
+    flex-direction: column;
+  }
+
+  .app-modal-btn {
+    padding: 14px 20px;
+  }
+}
+
 /* (end of file) */

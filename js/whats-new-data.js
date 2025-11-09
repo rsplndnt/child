@@ -5,23 +5,15 @@ const whatsNewData = [
     date: "2025年1月5日",
     badge: "NEW",
     badgeClass: "",
-    title: "ユーザーマニュアル Ver. 1.0 公開",
+    title: "リアルタイム翻訳機能を強化",
     contents: [
       {
-        text: "しゃべり描き翻訳™のユーザーマニュアルを公開しました。アカウント設定から基本的な操作方法まで、画像付きで詳しく解説しています。",
-        image: "https://placehold.co/800x450/0071B8/ffffff?text=User+Manual+Ver.1.0"
-      },
-      {
-        text: "初期設定から日常的な操作まで、ステップバイステップで分かりやすく説明。二段階認証の設定方法も含まれています。",
-        image: null
-      },
-      {
-        text: "画面構成の詳細な説明により、各エリアの役割と使い方を理解できます。キャンバスエリア、トランスクリプトエリア、ツールパレットの使い分けを習得しましょう。",
-        image: null,
+        text: "音声認識の精度が向上し、より自然な会話が可能になりました。翻訳スピードも改善され、スムーズなコミュニケーションを実現します。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
         list: [
-          "キャンバスエリアでの描画と翻訳",
-          "トランスクリプトでの会話記録",
-          "画像の貼り付けと編集"
+          "AI音声認識エンジンのアップデート",
+          "ノイズキャンセリング機能の強化",
+          "翻訳処理速度の30%向上"
         ]
       }
     ]
@@ -30,19 +22,16 @@ const whatsNewData = [
     date: "2024年12月20日",
     badge: "UPDATE",
     badgeClass: "news-item-badge-update",
-    title: "トランスクリプト機能の注意事項を追加",
+    title: "トランスクリプト機能の安定性向上",
     contents: [
       {
-        text: "トランスクリプト機能使用時のシート切り替えに関する注意事項を追加しました。",
-        image: null,
+        text: "会話記録機能の安定性を向上させ、長時間の使用でもスムーズに動作するようになりました。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
         list: [
-          "トランスクリプト起動中のシート操作に関する注意点",
-          "マイクボタンの無効化手順の明記"
+          "メモリ使用量の最適化",
+          "自動保存機能の追加",
+          "テキストエクスポート機能の改善"
         ]
-      },
-      {
-        text: "トランスクリプトを安全に使用するためのベストプラクティスをまとめました。複数ウィンドウでの使用制限についても説明しています。",
-        image: null
       }
     ]
   },
@@ -50,14 +39,15 @@ const whatsNewData = [
     date: "2024年12月15日",
     badge: "FIX",
     badgeClass: "news-item-badge-fix",
-    title: "画像表示の最適化",
+    title: "描画ツールの不具合を修正",
     contents: [
       {
-        text: "マニュアル内の画像表示を最適化し、読み込み速度を改善しました。",
-        image: null,
+        text: "ペンツールやキャンバス機能の細かな不具合を修正しました。より快適に描画できるようになりました。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
         list: [
-          "画像のアスペクト比を16:9に統一",
-          "HubSpot推奨事項に基づく実装"
+          "ペンツールの描画遅延を解消",
+          "カラーパレットの表示改善",
+          "タッチ操作の精度向上"
         ]
       }
     ]
@@ -66,19 +56,15 @@ const whatsNewData = [
     date: "2024年12月10日",
     badge: "NEW",
     badgeClass: "",
-    title: "マイク使用のポイントガイド追加",
+    title: "多言語対応を拡充",
     contents: [
       {
-        text: "音声入力をより快適に使用するためのガイドを追加しました。マイクの許可設定から、複数ウィンドウでの使用制限まで詳しく解説しています。",
-        image: null
-      },
-      {
-        text: "マイクボタンを押してから音声認識が開始されるまでのラグについて説明。青色になるのを確認してから話すことで、正確な音声入力が可能になります。",
-        image: null,
+        text: "新たに5つの言語に対応し、より多くの方とのコミュニケーションが可能になりました。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
         list: [
-          "マイク許可の設定方法",
-          "音声入力時の注意点",
-          "最適な使用環境"
+          "韓国語、タイ語、ベトナム語を追加",
+          "ポルトガル語、イタリア語を追加",
+          "各言語の翻訳精度を最適化"
         ]
       }
     ]
@@ -87,19 +73,15 @@ const whatsNewData = [
     date: "2024年12月5日",
     badge: "UPDATE",
     badgeClass: "news-item-badge-update",
-    title: "FAQ セクションを拡充",
+    title: "ユーザーインターフェースを改善",
     contents: [
       {
-        text: "よくある質問セクションに新しい項目を追加しました。ユーザーからのフィードバックを基に、より実用的な内容を充実させています。",
-        image: null
-      },
-      {
-        text: "音声認識の精度向上のコツや、翻訳結果の確認方法について詳しく説明しています。",
-        image: null,
+        text: "より直感的に操作できるよう、画面レイアウトとボタン配置を見直しました。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
         list: [
-          "音声認識が正しく動作しない場合の対処法",
-          "翻訳の精度を高める話し方のコツ",
-          "ペンツールの色とサイズの変更方法"
+          "メニュー構成の最適化",
+          "アイコンデザインの刷新",
+          "ダークモード対応"
         ]
       }
     ]
@@ -108,19 +90,15 @@ const whatsNewData = [
     date: "2024年11月28日",
     badge: "NEW",
     badgeClass: "",
-    title: "用語集を公開",
+    title: "画像共有機能を追加",
     contents: [
       {
-        text: "しゃべり描き翻訳™で使用される専門用語をまとめた用語集を公開しました。各機能の理解を深めるのに役立ちます。",
-        image: null
-      },
-      {
-        text: "主要な用語の定義と使用例を掲載。初めての方でも安心して使い始められます。",
-        image: null,
+        text: "会話中に画像を簡単に共有できる新機能を追加しました。写真やイラストでより豊かなコミュニケーションが可能です。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
         list: [
-          "しゃべり描き®とは",
-          "トランスクリプトとは",
-          "折り返し翻訳とは"
+          "カメラロールから画像を選択",
+          "ドラッグ&ドロップで簡単共有",
+          "画像の拡大・縮小・回転に対応"
         ]
       }
     ]
@@ -129,11 +107,16 @@ const whatsNewData = [
     date: "2024年11月20日",
     badge: "FIX",
     badgeClass: "news-item-badge-fix",
-    title: "検索機能の改善",
+    title: "接続安定性の向上",
     contents: [
       {
-        text: "マニュアル内の検索機能を改善しました。より素早く目的の情報にアクセスできます。",
-        image: null
+        text: "ネットワーク接続の安定性を向上させ、通信エラーを大幅に削減しました。",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/DummyImage.png",
+        list: [
+          "自動再接続機能の追加",
+          "オフライン時の一時保存機能",
+          "通信エラー時の分かりやすい通知"
+        ]
       }
     ]
   }

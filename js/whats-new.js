@@ -27,7 +27,6 @@ class WhatsNewManager {
 
     pageData.forEach((item, index) => {
       const globalIndex = start + index;
-      const content = item.contents[0]; // 最初のコンテンツを表示
 
       html += `
         <article class="news-item" data-index="${globalIndex}" data-content-index="0">
@@ -36,18 +35,35 @@ class WhatsNewManager {
               <span class="news-item-date">${item.date}</span>
               <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
             </div>
-            ${item.contents.length > 1 ? `
-              <div class="news-item-header-right">
-                <span class="news-item-multi-badge">${item.contents.length}件</span>
-                ${this.renderInlineContentPagination(0, item.contents.length)}
-              </div>
-            ` : ''}
           </div>
           <h2 class="news-item-title">${item.title}</h2>
           <div class="news-item-content">
-            <p>${content.text}</p>
-            ${this.renderImage(content.image)}
-            ${content.list ? this.renderList(content.list) : ''}
+      `;
+
+      // 全てのコンテンツを1ページにまとめて表示
+      if (item.contents && item.contents.length > 0) {
+        html += `<ul class="news-item-list">`;
+
+        // 最初のコンテンツのテキスト
+        html += `<li>${item.contents[0].text}</li>`;
+
+        // 全てのリストを同じ階層で表示
+        item.contents.forEach(content => {
+          if (content.list && content.list.length > 0) {
+            content.list.forEach(listItem => {
+              html += `<li>${listItem}</li>`;
+            });
+          }
+        });
+
+        html += `</ul>`;
+
+        // 画像を1枚表示（nullの場合はダミー画像）
+        const firstContent = item.contents[0];
+        html += this.renderImage(firstContent.image);
+      }
+
+      html += `
           </div>
         </article>
       `;
@@ -69,7 +85,7 @@ class WhatsNewManager {
     if (imageUrl) {
       return `<img src="${imageUrl}" alt="画像" class="news-item-image-real" loading="lazy">`;
     }
-    return '<div class="news-item-image">16:9 画像</div>';
+    return '<div class="news-item-image">Dummy Image</div>';
   }
 
   renderList(list) {
@@ -297,6 +313,79 @@ class WhatsNewManager {
     `;
   }
 
+  // whats-new-modal.html スタイルのモーダル（最新1件のみ、2つのボタン）
+  openAppStyleModal() {
+    const modal = document.getElementById('whatsNewModal');
+    const modalBody = document.querySelector('.whats-new-modal-body');
+
+    if (!modal || !modalBody) return;
+    if (!whatsNewData || whatsNewData.length === 0) return;
+
+    // 最新（0番目）のデータを取得
+    const latest = whatsNewData[0];
+
+    let contentHtml = `
+      <div class="whats-new-modal-body-content app-style-modal">
+        <h1 class="app-modal-title">${latest.title || '新バージョンのお知らせ'}</h1>
+        <div class="app-modal-scrollable">
+    `;
+
+    // 全てのコンテンツのテキストを箇条書きで表示（全て同じ階層）
+    if (latest.contents && latest.contents.length > 0) {
+      contentHtml += `<ul class="app-modal-list">`;
+
+      // 最初のコンテンツのテキスト
+      contentHtml += `<li>${latest.contents[0].text}</li>`;
+
+      // リストがあれば全て同じ階層で表示
+      latest.contents.forEach(content => {
+        if (content.list && content.list.length > 0) {
+          content.list.forEach(item => {
+            contentHtml += `<li>${item}</li>`;
+          });
+        }
+      });
+
+      contentHtml += `</ul>`;
+
+      // 画像を1枚表示（nullの場合はダミー画像）
+      const firstContent = latest.contents[0];
+      contentHtml += `
+        <div class="app-modal-image">
+          ${this.renderImage(firstContent.image)}
+        </div>
+      `;
+    }
+
+    contentHtml += `
+        </div>
+        <div class="app-modal-buttons">
+          <a href="https://lp.melbridge.mitsubishielectric.co.jp/manual-swipetalk"
+             class="app-modal-btn app-modal-btn-outline"
+             target="_blank">
+            詳細を見る
+            <i class="material-icons">open_in_new</i>
+          </a>
+          <button class="app-modal-btn app-modal-btn-primary" data-action="close-app-modal">
+            使いはじめる
+          </button>
+        </div>
+      </div>
+    `;
+
+    modalBody.innerHTML = contentHtml;
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // 閉じるボタンのイベント
+    const closeBtn = modalBody.querySelector('[data-action="close-app-modal"]');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+  }
+
   // テスト用: 日付選択リストを表示
   showDateList() {
     const modal = document.getElementById('whatsNewModal');
@@ -421,12 +510,13 @@ class WhatsNewManager {
   }
 
   setupModalEvents() {
-    const modalBtn = document.getElementById('whatsNewModalBtn');
+    const mainModalBtn = document.getElementById('mainModalBtn');
 
-    if (modalBtn) {
-      modalBtn.addEventListener('click', () => {
-        // テスト用: 日付選択リストを表示
-        this.showDateList();
+    // メイン画面右上のモーダル表示ボタン
+    if (mainModalBtn) {
+      mainModalBtn.addEventListener('click', () => {
+        // whats-new-modal.html スタイルのモーダルを表示
+        this.openAppStyleModal();
       });
     }
 
