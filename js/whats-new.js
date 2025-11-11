@@ -7,7 +7,11 @@ let ITEMS_PER_PAGE = 5;
 // データ読み込み関数
 async function loadWhatsNewData() {
   try {
-    const response = await fetch('js/whats-new-data.json');
+    // グローバル変数から取得(HubSpotでは {{ get_asset_url() }} で設定される)
+    // なければデフォルトのパスを使用
+    const jsonUrl = window.WHATS_NEW_DATA_URL || 'js/whats-new-data.json';
+
+    const response = await fetch(jsonUrl);
     const data = await response.json();
     whatsNewData = data;
     return true;
