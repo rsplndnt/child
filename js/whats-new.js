@@ -1,5 +1,22 @@
 // 新着情報のページネーションとモーダル制御
 
+// JSONデータを読み込む
+let whatsNewData = [];
+let ITEMS_PER_PAGE = 5;
+
+// データ読み込み関数
+async function loadWhatsNewData() {
+  try {
+    const response = await fetch('js/whats-new-data.json');
+    const data = await response.json();
+    whatsNewData = data;
+    return true;
+  } catch (error) {
+    console.error('新着情報データの読み込みに失敗しました:', error);
+    return false;
+  }
+}
+
 class WhatsNewManager {
   constructor() {
     this.currentPage = 1;
@@ -525,7 +542,12 @@ class WhatsNewManager {
   }
 }
 
-// DOMContentLoaded後に初期化
-document.addEventListener('DOMContentLoaded', () => {
-  new WhatsNewManager();
+// DOMContentLoaded後にデータ読み込みと初期化
+document.addEventListener('DOMContentLoaded', async () => {
+  const loaded = await loadWhatsNewData();
+  if (loaded) {
+    new WhatsNewManager();
+  } else {
+    console.error('新着情報の初期化に失敗しました');
+  }
 });

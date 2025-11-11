@@ -248,7 +248,7 @@
       // JSONデータを読み込む
       let whatsNewData = [];
       try {
-        const response = await fetch('https://lp.melbridge.mitsubishielectric.co.jp/hubfs/manual/whats-new-data.json');
+        const response = await fetch('js/whats-new-data.json');
         whatsNewData = await response.json();
       } catch (error) {
         console.error('データ読み込みエラー:', error);
