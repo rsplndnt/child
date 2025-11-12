@@ -3420,7 +3420,8 @@
 
     <script>
         // HubSpot用: JSONデータのURLをグローバル変数として定義
-        // HubSpotテンプレートでは {{ get_asset_url('/child/js/whats-new-data.json') }} に置き換える
+        // HubSpotテンプレートでは {{ get_asset_url('child/js/whats-new-data.json') }} に置き換える
+        // 注意: パスの先頭にスラッシュ / は不要
         window.WHATS_NEW_DATA_URL = 'js/whats-new-data.json';
     </script>
     <script defer src="js/whats-new.js"></script>
