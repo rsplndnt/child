@@ -47,43 +47,67 @@
     });
   }
 
-  /* ===== 02) URL & hash helpers ===== */
-  function updateUrlHash(hash, { replace = false } = {}) {
-    if (!hash) return;
-    const value = hash.startsWith('#') ? hash : `#${hash}`;
+  /* ===== 02) URL & path helpers (updated for path-based routing) ===== */
+  function updateUrlPath(path, { replace = false } = {}) {
+    if (!path) return;
+    // パスベースのルーティング: "/" から始まるパスに変換
+    const value = path.startsWith('/') ? path : `/${path}`;
     try {
-      if (window.location.hash === value && !replace) return;
+      if (window.location.pathname === value && !replace) return;
       if (typeof history !== 'undefined' && history.pushState) {
-        if (replace || window.location.hash === value) {
+        if (replace) {
           history.replaceState(null, '', value);
         } else {
           history.pushState(null, '', value);
         }
+        // GA4/Clarity用にページビューイベントを送信
+        sendPageView(value);
       } else {
-        window.location.hash = value;
+        window.location.pathname = value;
       }
     } catch (_) {
       try {
-        window.location.hash = value;
+        window.location.pathname = value;
       } catch (__) {}
     }
   }
 
-  function replaceUrlWithoutQuery(hash) {
-    const value = hash && hash.startsWith('#') ? hash : `#${hash || ''}`;
+  function replaceUrlWithoutQuery(path) {
+    const value = path && path.startsWith('/') ? path : `/${path || ''}`;
     try {
-      const base = window.location.href.split('#')[0].split('?')[0];
+      const base = window.location.origin;
       if (typeof history !== 'undefined' && history.replaceState) {
         history.replaceState(null, '', `${base}${value}`);
+        sendPageView(value);
       } else {
-        window.location.hash = value;
+        window.location.pathname = value;
       }
     } catch (_) {
       try {
-        window.location.hash = value;
+        window.location.pathname = value;
       } catch (__) {}
     }
   }
+
+  // GA4/Clarity用のページビュー送信関数
+  function sendPageView(path) {
+    // GA4
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'page_view', {
+        page_location: window.location.origin + path,
+        page_path: path,
+        page_title: document.title
+      });
+    }
+
+    // Microsoft Clarity
+    if (typeof clarity !== 'undefined') {
+      clarity('set', 'page', path);
+    }
+  }
+
+  // 後方互換性のため、古い関数名も残す
+  const updateUrlHash = updateUrlPath;
 
   /* ===== 03) smooth scroll engine ===== */
   const DEFAULT_SCROLL_DURATION = 315;
@@ -641,43 +665,47 @@
     // resizer
     if (resizer && sidebar) setupSidebarResizer(sidebar, resizer);
 
-    // 内部リンクの処理
+    // 内部リンクの処理（パスベース対応）
     document.addEventListener('click', function(e) {
-      const link = e.target.closest('a[href="#"], a[href^="#"]');
+      const link = e.target.closest('a[href^="/"]');
       if (!link) return;
-      
+
       // 左TOC（大項目/サブ項目）は個別ハンドラで処理するため除外
       if (link.closest('.toc-sublist') || link.closest('.toc-section')) {
         return;
       }
-      
-      const href = link.getAttribute('href');
-      if (!href || href === '#') return;
 
-      const isQueryTarget = href.startsWith('?target=');
-      const normalizedHash = isQueryTarget ? `#${href.split('=')[1]}` : href;
+      const href = link.getAttribute('href');
+      if (!href || href === '/') {
+        // ルートの場合は最初のセクションに遷移
+        e.preventDefault();
+        activateSection('#top', { scrollToTop: true });
+        updateUrlPath('/', { replace: false });
+        return;
+      }
 
       // target="_blank"の場合は新しいタブで開く
       if (link.getAttribute('target') === '_blank') {
         e.preventDefault();
-        const baseUrl = window.location.href.split('#')[0].split('?')[0];
-        const newUrl = isQueryTarget ? `${baseUrl}${href}` : `${baseUrl}${href}`;
+        const baseUrl = window.location.origin;
+        const newUrl = `${baseUrl}${href}`;
         const newWindow = window.open(newUrl, '_blank');
 
-        // 新しいウィンドウが読み込まれた後に表示処理を実行（スクロールなしで瞬時表示）
+        // 新しいウィンドウが読み込まれた後に表示処理を実行
         if (newWindow) {
           newWindow.addEventListener('load', function() {
             setTimeout(() => {
-              const targetElement = newWindow.document.querySelector(normalizedHash);
+              const targetId = href.slice(1); // "/" を除去
+              const targetElement = newWindow.document.getElementById(targetId);
               if (targetElement) {
-                const sectionElement = targetElement.closest('.step-section');
+                const sectionElement = targetElement.closest('.step-section') || targetElement;
                 if (sectionElement) {
                   // セクションを表示（直接DOM操作）
                   const allSections = newWindow.document.querySelectorAll('.step-section');
                   allSections.forEach(section => { section.classList.add('is-hidden'); });
                   sectionElement.classList.remove('is-hidden');
                   // 目的位置へ瞬時に移動
-                  scrollToElementNoAnim(normalizedHash, newWindow.document);
+                  scrollToElementNoAnim(`#${targetId}`, newWindow.document);
                 }
               }
             }, 300);
@@ -687,34 +715,60 @@
       }
 
       // 内部リンクの場合
-      if (normalizedHash.startsWith('#') && normalizedHash !== '#top') {
-        e.preventDefault();
+      e.preventDefault();
+      const targetId = href.slice(1); // "/" を除去してIDに変換
+      const targetElement = document.getElementById(targetId);
+      if (!targetElement) return;
 
-        const targetElement = document.querySelector(normalizedHash);
-        if (!targetElement) return;
+      // 対象要素が属するセクションを特定
+      const sectionElement = targetElement.closest('.step-section') || targetElement;
+      if (sectionElement) {
+        const sectionId = sectionElement.id;
+        if (sectionId) {
+          // まずセクションを表示
+          activateSection(`#${sectionId}`, { scrollToTop: false });
 
-        // 対象要素が属するセクションを特定
-        const sectionElement = targetElement.closest('.step-section');
-        if (sectionElement) {
-          const sectionId = sectionElement.id;
-          if (sectionId) {
-            // まずセクションを表示
-            activateSection(`#${sectionId}`, { scrollToTop: false });
+          // URLを更新（GA4/Clarityに通知）
+          updateUrlPath(href, { replace: false });
 
-            // 画像読み込みを待ってからスクロール
-            setTimeout(() => {
-              scrollToElementNoAnim(normalizedHash);
-            }, 100);
-          }
+          // 画像読み込みを待ってからスクロール
+          setTimeout(() => {
+            scrollToElementNoAnim(`#${targetId}`);
+          }, 100);
         }
       }
     });
 
-    const initialHandledByTarget = handleInitialTargetRequest();
+    // パスベースルーティングの初期化
+    const initialHandledByPath = handleInitialPath();
+    const initialHandledByTarget = !initialHandledByPath && handleInitialTargetRequest();
     const initialHandledByHash = initialHandledByTarget ? true : handleInitialHash();
-    if (!initialHandledByTarget && !initialHandledByHash) {
+    if (!initialHandledByPath && !initialHandledByTarget && !initialHandledByHash) {
       activateSection('#top', { scrollToTop: false, updateUrl: false });
     }
+
+    // ブラウザの戻る/進むボタン対応（popstateイベント）
+    window.addEventListener('popstate', function(e) {
+      const path = window.location.pathname;
+      if (path === '/' || path === '') {
+        activateSection('#top', { scrollToTop: true, updateUrl: false });
+      } else {
+        const targetId = path.slice(1); // "/" を除去
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          const sectionElement = targetElement.closest('.step-section') || targetElement;
+          if (sectionElement) {
+            const sectionId = sectionElement.id;
+            activateSection(`#${sectionId}`, { scrollToTop: false, updateUrl: false });
+            setTimeout(() => {
+              scrollToElementNoAnim(`#${targetId}`);
+            }, 100);
+          }
+        }
+      }
+      // popstateの場合もページビューを送信
+      sendPageView(path);
+    });
 
     // スクロール連動機能
     setupScrollSync();
@@ -813,6 +867,66 @@
         setScrollSyncManual(false);
         triggerScrollSyncUpdate();
       }, 800);
+
+      return true;
+    }
+
+    // パスベースルーティングの初期処理
+    function handleInitialPath() {
+      // リダイレクトパラメータをチェック（404.htmlから来た場合）
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectPath = urlParams.get('redirect');
+
+      let path = window.location.pathname;
+
+      // リダイレクトパラメータがある場合はそれを使用
+      if (redirectPath) {
+        path = redirectPath;
+        // URLをクリーンアップ（リダイレクトパラメータを削除）
+        const cleanUrl = window.location.origin + window.location.pathname + path;
+        history.replaceState(null, '', cleanUrl);
+      }
+
+      if (!path || path === '/' || path === '') return false;
+
+      const targetId = path.slice(1); // "/" を除去
+      const targetEl = document.getElementById(targetId);
+      if (!targetEl) return false;
+
+      let sectionEl = targetEl.classList.contains('step-section') ? targetEl : targetEl.closest('.step-section');
+      if (!sectionEl) return false;
+
+      const sectionHash = `#${sectionEl.id}`;
+      const isSectionAnchor = sectionEl.id === targetId;
+      const subHash = isSectionAnchor ? null : `#${targetId}`;
+
+      if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+      forcedTocState.sectionHash = sectionHash;
+      forcedTocState.subHash = subHash;
+      setScrollSyncManual(true);
+
+      activateSection(sectionHash, {
+        scrollToTop: false,
+        parentHasActiveChild: Boolean(subHash),
+        activeSubHash: subHash,
+        updateUrl: false
+      });
+
+      // 画像読み込みを待ってからスクロール
+      const targetHash = subHash || sectionHash;
+      setTimeout(() => {
+        scrollToElementNoAnim(targetHash);
+      }, 150);
+
+      forcedTocState.timer = setTimeout(() => {
+        forcedTocState.sectionHash = null;
+        forcedTocState.subHash = null;
+        setScrollSyncManual(false);
+        triggerScrollSyncUpdate();
+      }, 800);
+
+      // 初回ページビューを送信
+      sendPageView(path);
 
       return true;
     }

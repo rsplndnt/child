@@ -15,11 +15,34 @@
     a.btn{display:inline-block; padding:10px 16px; border-radius:10px; background:#0071B8; color:#fff; text-decoration:none;}
   </style>
   <script>
-    // GitHub Pagesルーティング: 可能ならトップに戻す
+    // GitHub Pages SPAルーティング: パスを保持してindex.htmlにリダイレクト
     (function(){
       try{
-        var to = (location.origin + location.pathname).replace(/\/404\.html$/, '/');
-        setTimeout(function(){ location.replace(to); }, 1500);
+        var path = location.pathname;
+        // GitHub Pagesのベースパス（リポジトリ名）を考慮
+        var base = '/child'; // リポジトリ名に応じて変更
+
+        // 404.htmlを除去して正規化
+        if (path.endsWith('/404.html')) {
+          path = path.replace(/\/404\.html$/, '');
+        }
+
+        // ベースパスを除去
+        if (path.startsWith(base)) {
+          path = path.slice(base.length);
+        }
+
+        // ルートまたは空の場合
+        if (!path || path === '/') {
+          setTimeout(function(){
+            location.replace(location.origin + base + '/');
+          }, 1500);
+        } else {
+          // パスを保持してindex.htmlにリダイレクト
+          setTimeout(function(){
+            location.replace(location.origin + base + '/' + '?redirect=' + encodeURIComponent(path));
+          }, 0);
+        }
       }catch(_){}
     })();
   </script>
