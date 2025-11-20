@@ -456,11 +456,18 @@
             border-top: 1px solid #e0e0e0;
             margin: 24px 0;
         }
+
+        @media (max-width: 768px) {
+            .app-modal-buttons {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+        }
     </style>
 
-    <!-- データとスクリプトの読み込み -->
-    <script src="js/whats-new-data.js"></script>
+    <!-- データとスクリプトの読み込み（JSON方式） -->
     <script src="js/whats-new.js"></script>
+    <script src="js/whats-new-loader.js"></script>
 
     <script>
         // 少ないコンテンツ用のテストデータ
@@ -528,19 +535,42 @@
             }
         }
 
+        // JSONデータの読み込み完了を待つ
+        let isDataLoaded = false;
+
+        window.addEventListener('whatsNewDataLoaded', () => {
+            isDataLoaded = true;
+            console.log('✓ Test page: Data loaded and ready');
+        });
+
+        // データが読み込まれているか確認するヘルパー関数
+        function checkDataLoaded() {
+            if (!isDataLoaded || !window.whatsNewData) {
+                alert('データの読み込み中です。しばらくお待ちください。');
+                return false;
+            }
+            return true;
+        }
+
         // モーダル表示サンプルボタン → 選択ポップアップを表示
         document.getElementById('testButton').addEventListener('click', () => {
-            showSelectionPopup();
+            if (checkDataLoaded()) {
+                showSelectionPopup();
+            }
         });
 
         // 全コンテンツボタン
         document.getElementById('selectFullContent').addEventListener('click', () => {
-            showFullContentModal();
+            if (checkDataLoaded()) {
+                showFullContentModal();
+            }
         });
 
         // コンテンツ少ないボタン
         document.getElementById('selectMinimalContent').addEventListener('click', () => {
-            showMinimalContentModal();
+            if (checkDataLoaded()) {
+                showMinimalContentModal();
+            }
         });
 
         // キャンセルボタン
@@ -552,22 +582,6 @@
         document.querySelector('.selection-popup-overlay').addEventListener('click', () => {
             hideSelectionPopup();
         });
-
-        // WhatsNewManagerのインスタンスをグローバルに保存
-        const originalDOMContentLoaded = document.addEventListener;
-        document.addEventListener = function(type, listener, ...args) {
-            if (type === 'DOMContentLoaded') {
-                const wrappedListener = function(...eventArgs) {
-                    const result = listener.apply(this, eventArgs);
-                    if (window.WhatsNewManager) {
-                        console.log('WhatsNewManager found, attempting to get instance...');
-                    }
-                    return result;
-                };
-                return originalDOMContentLoaded.call(this, type, wrappedListener, ...args);
-            }
-            return originalDOMContentLoaded.call(this, type, listener, ...args);
-        };
     </script>
 </body>
 </html>

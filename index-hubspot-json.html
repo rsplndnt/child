@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSpot Template Example - JSON Loader</title>
+
+    <!-- スタイルシートの読み込み -->
+    <link href="{{ get_asset_url('css/manual-ui.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>SwipeTalk 操作マニュアル</h1>
+
+        <!-- マニュアルコンテンツ -->
+        <div id="manualContent">
+            <!-- マニュアルの内容がここに表示されます -->
+        </div>
+    </div>
+
+    <!-- 新着情報モーダル -->
+    <div id="whatsNewModal" class="whats-new-modal" aria-hidden="true" role="dialog">
+        <div class="whats-new-modal-overlay"></div>
+        <div class="whats-new-modal-content">
+            <div class="whats-new-modal-header">
+                <h2>新着情報</h2>
+            </div>
+            <div class="whats-new-modal-body">
+                <!-- JavaScriptで動的に生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- スクリプトの読み込み（JSON方式）         -->
+    <!-- ===================================== -->
+
+    <!-- 1. WhatsNewManagerクラスの定義 -->
+    <script src="{{ get_asset_url('js/whats-new.js') }}"></script>
+
+    <!-- 2. JSONローダー（HubSpot用にパスを修正） -->
+    <script>
+        /**
+         * HubSpot環境用のJSONローダー
+         * get_asset_url()を使用してJSONファイルを読み込みます
+         */
+        (function() {
+            'use strict';
+
+            // HubSpotのget_asset_url()でJSONファイルのパスを取得
+            const JSON_PATH = '{{ get_asset_url("js/whats-new-data.json") }}';
+
+            // JSONデータを読み込む
+            fetch(JSON_PATH)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // グローバル変数に設定
+                    window.whatsNewData = data;
+                    window.ITEMS_PER_PAGE = 5;
+
+                    console.log('✓ whats-new data loaded:', data.length, 'version(s)');
+
+                    // WhatsNewManagerを初期化
+                    if (typeof WhatsNewManager !== 'undefined') {
+                        window.whatsNewManager = new WhatsNewManager();
+                        console.log('✓ WhatsNewManager initialized');
+                    } else {
+                        console.warn('WhatsNewManager is not defined yet.');
+                    }
+
+                    // カスタムイベントを発火
+                    window.dispatchEvent(new CustomEvent('whatsNewDataLoaded', { detail: data }));
+                })
+                .catch(error => {
+                    console.error('✗ Failed to load whats-new data:', error);
+                    // フォールバック: 空のデータを設定
+                    window.whatsNewData = [];
+                    window.ITEMS_PER_PAGE = 5;
+                });
+        })();
+    </script>
+
+    <!-- 3. マニュアルUIの初期化 -->
+    <script src="{{ get_asset_url('js/manual-ui.js') }}"></script>
+
+    <!-- 4. ページ固有のスクリプト -->
+    <script>
+        // データ読み込み完了を待ってから処理を実行
+        window.addEventListener('whatsNewDataLoaded', function(event) {
+            console.log('✓ Page: whats-new data loaded', event.detail);
+
+            // ここにデータ読み込み後の処理を記述
+            // 例: 初回訪問時にモーダルを自動表示
+            // if (window.whatsNewManager && !localStorage.getItem('whatsNewShown_v1.1')) {
+            //     window.whatsNewManager.openAppStyleModal();
+            //     localStorage.setItem('whatsNewShown_v1.1', 'true');
+            // }
+        });
+    </script>
+</body>
+</html>
