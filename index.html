@@ -57,8 +57,8 @@
     <link rel="stylesheet" href="css/manual-base.css?v=2025010519">
 
     <!-- このページ専用CSS -->
-    <link rel="stylesheet" href="css/manual-ui.css?v=2025010519">
-    <link rel="stylesheet" media="print" href="css/print.css?v=2025010519">
+    <link rel="stylesheet" href="css/manual-ui.css?v=2025010521">
+    <link rel="stylesheet" media="print" href="css/print.css?v=2025010520">
     <link rel="stylesheet" media="print" href="css/manual-print.css?v=2025010519">
     <style>
         .only-print {
@@ -196,8 +196,11 @@
                     <h3><a class="toc-link" href="/product-specs" data-group-id="product-specs-items" aria-label="製品仕様セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-information.svg" alt="" class="toc-icon" width="20" height="20" /><span>7. 製品仕様</span></a></h3>
                 </div>
                 <div class="toc-divider"></div>
-                <div class="toc-section">
-                    <h3><a class="toc-link" href="/whats-new" data-group-id="whats-new-items" aria-label="更新履歴セクション"><i class="material-icons toc-icon">new_releases</i><span>8. 更新履歴</span></a></h3>
+                <div class="toc-section toc-section-with-subitems">
+                    <h3><button class="toc-link toc-toggle" aria-label="更新履歴セクション" aria-expanded="false"><i class="material-icons toc-icon">new_releases</i><span>8. 更新履歴</span><i class="material-icons toc-chevron">expand_more</i></button></h3>
+                    <ul class="toc-subitems">
+                        <li><a class="toc-sublink" href="#whats-new" data-group-id="whats-new-items">v1.1</a></li>
+                    </ul>
                 </div>
             </nav>
         </aside>
@@ -2790,13 +2793,29 @@
         <i class="material-icons">arrow_upward</i>
     </button>
 
+    <!-- 選択ポップアップ -->
+    <div id="selectionPopup" class="selection-popup" style="display: none;">
+        <div class="selection-popup-overlay"></div>
+        <div class="selection-popup-content">
+            <h2 class="selection-popup-title">表示するコンテンツを選択</h2>
+            <div class="selection-popup-buttons">
+                <button id="selectFullContent" class="selection-popup-btn selection-popup-btn-full">
+                    全コンテンツ<br>
+                    <small>(16項目、画像5つ)</small>
+                </button>
+                <button id="selectMinimalContent" class="selection-popup-btn selection-popup-btn-minimal">
+                    コンテンツ少ない<br>
+                    <small>(1項目のみ)</small>
+                </button>
+            </div>
+            <button id="closeSelectionPopup" class="selection-popup-close">キャンセル</button>
+        </div>
+    </div>
+
     <!-- 更新履歴モーダル -->
     <div id="whatsNewModal" class="whats-new-modal" aria-hidden="true" role="dialog" aria-labelledby="whatsNewModalTitle">
         <div class="whats-new-modal-overlay" id="whatsNewModalOverlay"></div>
         <div class="whats-new-modal-content">
-            <div class="whats-new-modal-header">
-                <h2 id="whatsNewModalTitle">更新履歴</h2>
-            </div>
             <div class="whats-new-modal-body">
                 <!-- JavaScriptで動的に生成されます -->
             </div>
@@ -2806,7 +2825,7 @@
     <!-- Standard footer includes removed for HTML version -->
 
     <!-- ★JSの読み込みは必ずこの形： -->
-    <script defer src="js/manual-ui.js?v=2025010519"></script>
+    <script defer src="js/manual-ui.js?v=2025010520"></script>
 
     <!-- 更新履歴モーダルのスクリプト -->
     <style>
@@ -2847,6 +2866,10 @@
 
         .whats-new-modal[aria-hidden="false"] {
             display: block;
+            background-image: url('https://lp.melbridge.mitsubishielectric.co.jp/hubfs/top_transcript.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .whats-new-modal-overlay {
@@ -2855,8 +2878,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.32);
-            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .whats-new-modal-content {
@@ -2865,11 +2887,12 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             background-color: #fff;
-            border-radius: 4px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.20);
             width: 90%;
             max-width: 900px;
-            height: 85vh;
+            height: auto;
+            max-height: 85vh;
             display: flex;
             flex-direction: column;
             transition: transform 0ms cubic-bezier(0, 0, 0.2, 1);
@@ -2969,8 +2992,11 @@
             margin: 0 auto;
         }
 
-        .news-item {
+        .news-item-wrapper {
             margin-bottom: 40px;
+        }
+
+        .news-item {
             padding: 24px;
             background-color: #fff;
             border-radius: 12px;
@@ -3026,7 +3052,7 @@
         .news-item-title {
             font-size: 18px;
             font-weight: 700;
-            margin: 0 0 12px 0;
+            margin: 0 0 16px 0;
             color: var(--color-primary);
         }
 
@@ -3416,15 +3442,346 @@
                 font-size: 15px;
             }
         }
+
+        /* マニュアルページ用のコンテンツスタイル */
+        .news-content-section {
+            margin-bottom: 40px;
+        }
+
+        .news-content-heading {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 12px 0;
+        }
+
+        .news-content-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            margin: 0 0 12px 0;
+        }
+
+        .news-content-link {
+            margin: 0;
+            text-align: right;
+        }
+
+        .news-content-link a {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .news-content-link a:hover {
+            text-decoration: underline;
+            gap: 6px;
+        }
+
+        .news-content-link .material-icons {
+            font-size: 18px;
+        }
+
+        /* マニュアルページ用の画像グリッド */
+        .news-item-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .news-item-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+
+        /* モーダル用の代表画像 */
+        .app-modal-image {
+            margin-top: 24px;
+        }
+
+        .modal-representative-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+
+        @media (max-width: 768px) {
+            .news-item-images {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 選択ポップアップ */
+        .selection-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selection-popup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .selection-popup-content {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .selection-popup-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 24px 0;
+            text-align: center;
+            color: #333;
+        }
+
+        .selection-popup-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .selection-popup-btn {
+            padding: 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .selection-popup-btn:hover {
+            background: #f5f5f5;
+            border-color: #0071B8;
+        }
+
+        .selection-popup-btn small {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .selection-popup-btn-full {
+            color: #0071B8;
+        }
+
+        .selection-popup-btn-minimal {
+            color: #28a745;
+        }
+
+        .selection-popup-close {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .selection-popup-close:hover {
+            background: #f5f5f5;
+        }
     </style>
 
+    <!-- 更新履歴データとスクリプトの読み込み -->
+    <script src="js/whats-new-data.js?v=1.1.7"></script>
+    <script src="js/whats-new.js?v=1.1.7"></script>
+
+    <!-- TOCトグル機能 -->
     <script>
-        // HubSpot用: JSONデータのURLをグローバル変数として定義
-        // HubSpotテンプレートでは {{ get_asset_url('child/js/whats-new-data.json') }} に置き換える
-        // 注意: パスの先頭にスラッシュ / は不要
-        window.WHATS_NEW_DATA_URL = 'js/whats-new-data.json';
+        document.addEventListener('DOMContentLoaded', () => {
+            // TOCトグルボタンの処理
+            const tocToggles = document.querySelectorAll('.toc-toggle');
+            tocToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                    const subitems = toggle.closest('.toc-section').querySelector('.toc-subitems');
+
+                    if (isExpanded) {
+                        toggle.setAttribute('aria-expanded', 'false');
+                        subitems.classList.remove('expanded');
+                    } else {
+                        toggle.setAttribute('aria-expanded', 'true');
+                        subitems.classList.add('expanded');
+                    }
+                });
+            });
+        });
     </script>
-    <script defer src="js/whats-new.js"></script>
+
+    <!-- 選択ポップアップの制御 -->
+    <script>
+        // 少ないコンテンツ用のテストデータ
+        const minimalTestData = [
+            {
+                date: "2025年2月15日",
+                badge: "v1.1",
+                badgeClass: "",
+                title: "バージョン1.1の新機能と改善",
+                modalTitle: "新バージョンがリリースされました",
+                manualTitle: "バージョン1.1 更新内容",
+                contents: [
+                    {
+                        heading: "トランスクリプト音声入力の改善",
+                        text: "短文ごとに区切って入力できるようになりました。より自然な会話の記録が可能です。発話の区切りを自動的に検出し、読みやすい形式で表示します。",
+                        ticketIds: "2983"
+                    }
+                ]
+            }
+        ];
+
+        // 選択ポップアップを表示する関数
+        function showSelectionPopup() {
+            const popup = document.getElementById('selectionPopup');
+            if (popup) {
+                popup.style.display = 'flex';
+            }
+        }
+
+        // 選択ポップアップを閉じる関数
+        function hideSelectionPopup() {
+            const popup = document.getElementById('selectionPopup');
+            if (popup) {
+                popup.style.display = 'none';
+            }
+        }
+
+        // 全コンテンツのモーダルを表示
+        function showFullContentModal() {
+            hideSelectionPopup();
+            const manager = window.whatsNewManager;
+            if (manager) {
+                manager.openAppStyleModal();
+            }
+        }
+
+        // コンテンツ少ないモーダルを表示
+        function showMinimalContentModal() {
+            hideSelectionPopup();
+            const manager = window.whatsNewManager;
+            if (manager) {
+                // 一時的にwhatsNewDataを少ないデータに差し替え
+                const originalData = [...whatsNewData];
+                whatsNewData.length = 0;
+                whatsNewData.push(...minimalTestData);
+
+                // モーダル表示
+                manager.openAppStyleModal();
+
+                // データを元に戻す（モーダルが表示された後）
+                setTimeout(() => {
+                    whatsNewData.length = 0;
+                    whatsNewData.push(...originalData);
+                }, 100);
+            }
+        }
+
+        // イベントリスナーの設定
+        document.addEventListener('DOMContentLoaded', () => {
+            // 全コンテンツボタン
+            const selectFullBtn = document.getElementById('selectFullContent');
+            if (selectFullBtn) {
+                selectFullBtn.addEventListener('click', () => {
+                    showFullContentModal();
+                });
+            }
+
+            // コンテンツ少ないボタン
+            const selectMinimalBtn = document.getElementById('selectMinimalContent');
+            if (selectMinimalBtn) {
+                selectMinimalBtn.addEventListener('click', () => {
+                    showMinimalContentModal();
+                });
+            }
+
+            // キャンセルボタン
+            const closeBtn = document.getElementById('closeSelectionPopup');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    hideSelectionPopup();
+                });
+            }
+
+            // オーバーレイクリックで閉じる
+            const overlay = document.querySelector('.selection-popup-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    hideSelectionPopup();
+                });
+            }
+        });
+    </script>
+
+    <!-- 初回訪問時に選択ポップアップを表示 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // バージョン番号（新しいバージョンをリリースするたびに更新）
+            const currentVersion = 'v1.1';
+            const lastSeenVersion = localStorage.getItem('lastSeenWhatsNewVersion');
+
+            // 初回訪問、または新しいバージョンの場合に選択ポップアップを表示
+            if (!lastSeenVersion || lastSeenVersion !== currentVersion) {
+                // WhatsNewManagerの初期化を待つ
+                const checkManager = setInterval(() => {
+                    if (window.whatsNewManager) {
+                        clearInterval(checkManager);
+                        // 少し遅延させて表示（他の初期化処理が完了してから）
+                        setTimeout(() => {
+                            showSelectionPopup();
+                            // モーダルを閉じたときにlocalStorageを更新
+                            const modal = document.getElementById('whatsNewModal');
+                            const observer = new MutationObserver((mutations) => {
+                                mutations.forEach((mutation) => {
+                                    if (mutation.attributeName === 'aria-hidden' &&
+                                        modal.getAttribute('aria-hidden') === 'true') {
+                                        localStorage.setItem('lastSeenWhatsNewVersion', currentVersion);
+                                    }
+                                });
+                            });
+                            observer.observe(modal, { attributes: true });
+                        }, 500);
+                    }
+                }, 100);
+            }
+        });
+    </script>
 </body>
 
 </html>

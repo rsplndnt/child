@@ -1244,7 +1244,9 @@
       const state = loadTocOpenState();
       const getGroupIdByHash = (hash) => {
         if (!hash) return null;
-        if (hash === '#top') return 'sub-items-top';
+        // パス形式（/xxx）をハッシュ形式（#xxx）に変換
+        const normalizedHash = hash.startsWith('/') ? '#' + hash.slice(1) : hash;
+        if (normalizedHash === '#top') return 'sub-items-top';
         // 新しいID形式に対応
         const idMap = {
           '#account-setup': 'account-setup-items',
@@ -1253,9 +1255,10 @@
           '#mic-usage-tips': 'mic-usage-tips-items',
           '#terminology': 'terminology-items',
           '#faq': 'faq-items',
-          '#product-specs': 'product-specs-items'
+          '#product-specs': 'product-specs-items',
+          '#whats-new': 'whats-new-items'
         };
-        return idMap[hash] || null;
+        return idMap[normalizedHash] || null;
       };
 
       tocLinks.forEach(link => {
@@ -1267,8 +1270,10 @@
           e.preventDefault();
           const href = link.getAttribute('href');
           if (href) {
+            // パス形式（/xxx）をハッシュ形式（#xxx）に変換
+            const targetHash = href.startsWith('/') ? '#' + href.slice(1) : href;
             const activateFn = window.activateSection || activateSection;
-            activateFn(href, { closeMobile: true, scrollToTop: true });
+            activateFn(targetHash, { closeMobile: true, scrollToTop: true });
           }
         };
         
@@ -1332,21 +1337,23 @@
               e.stopPropagation();
               const anchor = na.getAttribute('href');
               if (!anchor) return;
+              // パスをハッシュに変換（例: /whats-new → #whats-new）
+              const normalizedAnchor = anchor.startsWith('/') ? '#' + anchor.slice(1) : anchor;
               // 対象セクションを特定して切替（右カラムと同様の挙動）
               let sectionHash = '#top';
-              const anchorEl = document.querySelector(anchor);
+              const anchorEl = document.querySelector(normalizedAnchor);
               if (anchorEl) {
                 const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
                 if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
               } else {
-                const m2 = anchor.match(/^#(section\d+)/i);
+                const m2 = normalizedAnchor.match(/^#(section\d+)/i);
                 if (m2) sectionHash = `#${m2[1]}`;
               }
 
               // 強制状態をセット（1500ms程度維持）
               if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
               forcedTocState.sectionHash = sectionHash;
-              forcedTocState.subHash = anchor;
+              forcedTocState.subHash = normalizedAnchor;
               setScrollSyncManual(true);
               forcedTocState.timer = setTimeout(() => {
                 forcedTocState.sectionHash = null;
@@ -1355,15 +1362,15 @@
                 triggerScrollSyncUpdate();
               }, 1500);
 
-              applySubLinkActiveState(sectionHash, anchor);
+              applySubLinkActiveState(sectionHash, normalizedAnchor);
               activateSection(sectionHash, {
                 scrollToTop: false,
                 parentHasActiveChild: true,
-                activeSubHash: anchor
+                activeSubHash: normalizedAnchor
               });
-              
+
               // 画像読み込みを待ってからスクロール
-              setTimeout(() => scrollToElement(anchor), 150);
+              setTimeout(() => scrollToElement(normalizedAnchor), 150);
               if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
             });
             li.appendChild(na);

@@ -1801,6 +1801,74 @@ ul.spec-list li{
   font-size: var(--sd-font-size-md); /* sm → md */ line-height: var(--sd-line-height-normal);
   white-space: normal; word-break: break-word; hyphens: auto;
 }
+.toc .toc-section h3 .toc-link .toc-badge {
+  background: var(--color-primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  align-self: center;
+  margin-left: 8px;
+}
+
+/* TOCトグルボタン */
+.toc .toc-section h3 .toc-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.toc .toc-section h3 .toc-toggle .toc-chevron {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+
+.toc .toc-section h3 .toc-toggle[aria-expanded="true"] .toc-chevron {
+  transform: rotate(180deg);
+}
+
+/* TOCサブアイテム */
+.toc .toc-section .toc-subitems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.toc .toc-section .toc-subitems.expanded {
+  max-height: 500px;
+}
+
+.toc .toc-section .toc-subitems li {
+  padding: 0;
+}
+
+.toc .toc-section .toc-subitems .toc-sublink {
+  display: block;
+  padding: 8px 14px 8px 56px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.toc .toc-section .toc-subitems .toc-sublink:hover {
+  background: var(--hovered-variant);
+}
+
+.toc .toc-section .toc-subitems .toc-sublink.active {
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+}
 .toc .toc-section h3 .toc-link i,
 .toc .toc-section h3 .toc-link .toc-icon { 
   font-size: 18px; 
@@ -2946,15 +3014,17 @@ ul.spec-list li{
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0 40px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 }
 
 .app-modal-title {
-  font-size: 28px;
+  font-family: Roboto, sans-serif;
+  font-size: 21px;
   font-weight: 700;
-  margin-bottom: 24px;
+  line-height: 160%;
+  margin-bottom: 16px;
   margin-top: 0;
   padding-top: 0;
   color: #333;
@@ -2966,7 +3036,7 @@ ul.spec-list li{
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   padding-right: 8px;
 }
 
@@ -3046,19 +3116,87 @@ ul.spec-list li{
   margin: 0 auto;
 }
 
+.app-modal-content-item {
+  margin-bottom: 32px;
+}
+
+.app-modal-content-heading {
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 160%;
+  margin-bottom: 12px;
+  margin-top: 0;
+  color: #333;
+}
+
+.app-modal-content-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.app-modal-content-link {
+  text-align: right;
+}
+
+.app-modal-content-link a {
+  color: #0071B8;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+}
+
+.app-modal-content-link a:hover {
+  text-decoration: underline;
+}
+
+.app-modal-simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.app-modal-simple-list li {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 12px;
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.app-modal-simple-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #333;
+  font-weight: bold;
+}
+
+.app-modal-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 32px 0;
+}
+
 .app-modal-buttons {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   margin-top: 0;
   flex-shrink: 0;
+  justify-content: flex-end;
 }
 
 .app-modal-btn {
-  flex: 1;
-  padding: 16px 24px;
+  width: 164px;
+  height: 48px;
+  padding: 0;
   border-radius: 8px;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 500;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -3067,19 +3205,20 @@ ul.spec-list li{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   font-family: "Noto Sans JP", sans-serif;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .app-modal-btn-outline {
   background-color: white;
   color: #333;
-  border: 2px solid #D4D7D8;
+  border: none;
 }
 
 .app-modal-btn-outline:hover {
   background-color: #f8f9fa;
-  border-color: #999;
 }
 
 .app-modal-btn-primary {
@@ -3101,8 +3240,8 @@ ul.spec-list li{
   }
 
   .app-modal-title {
-    font-size: 24px;
-    margin-bottom: 24px;
+    font-size: 21px;
+    margin-bottom: 16px;
   }
 
   .app-modal-list li {

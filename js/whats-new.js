@@ -1,31 +1,14 @@
 // 新着情報のページネーションとモーダル制御
 
-// JSONデータを読み込む
-let whatsNewData = [];
-let ITEMS_PER_PAGE = 5;
-
-// データ読み込み関数
-async function loadWhatsNewData() {
-  try {
-    // グローバル変数から取得(HubSpotでは {{ get_asset_url() }} で設定される)
-    // なければデフォルトのパスを使用
-    const jsonUrl = window.WHATS_NEW_DATA_URL || 'js/whats-new-data.json';
-
-    const response = await fetch(jsonUrl);
-    const data = await response.json();
-    whatsNewData = data;
-    return true;
-  } catch (error) {
-    console.error('新着情報データの読み込みに失敗しました:', error);
-    return false;
-  }
-}
+// whatsNewData は whats-new-data.js で定義されている
+// ITEMS_PER_PAGE も whats-new-data.js で定義されている
 
 class WhatsNewManager {
   constructor() {
     this.currentPage = 1;
     this.currentModalIndex = 0;
     this.currentContentIndex = 0;
+    this.currentAppModalContentIndex = 0; // アプリスタイルモーダル用のコンテンツインデックス
     this.init();
   }
 
@@ -50,43 +33,50 @@ class WhatsNewManager {
       const globalIndex = start + index;
 
       html += `
-        <article class="news-item" data-index="${globalIndex}" data-content-index="0">
-          <div class="news-item-header">
-            <div class="news-item-header-left">
-              <span class="news-item-date">${item.date}</span>
-              <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
-            </div>
-          </div>
-          <h2 class="news-item-title">${item.title}</h2>
-          <div class="news-item-content">
+        <div class="news-item-wrapper">
+          <h2 class="news-item-title">${item.manualTitle || item.title}</h2>
+          <article class="news-item" data-index="${globalIndex}" data-content-index="0">
+            <div class="news-item-content">
       `;
 
-      // 全てのコンテンツを1ページにまとめて表示
+      // 各コンテンツを見出し + 説明文 + 画像 + リンク + チケットIDの形式で表示
       if (item.contents && item.contents.length > 0) {
-        html += `<ul class="news-item-list">`;
-
-        // 最初のコンテンツのテキスト
-        html += `<li>${item.contents[0].text}</li>`;
-
-        // 全てのリストを同じ階層で表示
         item.contents.forEach(content => {
-          if (content.list && content.list.length > 0) {
-            content.list.forEach(listItem => {
-              html += `<li>${listItem}</li>`;
-            });
+          html += `
+            <div class="news-content-section">
+              <h3 class="news-content-heading">${content.heading}</h3>
+              <p class="news-content-text">${content.text}</p>
+          `;
+
+          // 画像がある場合は各トピックの直下に表示
+          if (content.image) {
+            html += `
+              <div class="news-content-image">
+                <img src="${content.image}" alt="${content.heading}" class="news-item-image" loading="lazy" style="max-width: 60%; height: auto;">
+              </div>
+            `;
           }
+
+          // リンクがある場合は表示
+          if (content.link) {
+            html += `<p class="news-content-link"><a href="${content.link}" target="_blank" rel="noopener noreferrer">マニュアルを確認する <i class="material-icons">open_in_new</i></a></p>`;
+          }
+
+          // チケットIDを併記（確認用）
+          if (content.ticketIds) {
+            html += `<p class="news-content-ticket-ids"><small>PBI（開発用に記載。本番環境では削除。）: ${content.ticketIds}</small></p>`;
+          }
+
+          html += `
+            </div>
+          `;
         });
-
-        html += `</ul>`;
-
-        // 画像を1枚表示（nullの場合はダミー画像）
-        const firstContent = item.contents[0];
-        html += this.renderImage(firstContent.image);
       }
 
       html += `
-          </div>
-        </article>
+            </div>
+          </article>
+        </div>
       `;
     });
 
@@ -115,6 +105,15 @@ class WhatsNewManager {
         ${list.map(item => `<li>${item}</li>`).join('')}
       </ul>
     `;
+  }
+
+  // テキストとリンクをレンダリング
+  // enableLink: true = マニュアルサイト内（リンクあり）, false = モーダル（リンクなし）
+  renderTextWithLink(text, link, enableLink) {
+    if (enableLink && link) {
+      return `<a href="${link}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    }
+    return text;
   }
 
   renderInlineContentPagination(currentIndex, totalContents) {
@@ -300,7 +299,7 @@ class WhatsNewManager {
         </div>
         <h2 class="modal-news-title">${item.title}</h2>
         <div class="modal-news-content">
-          <p>${content.text}</p>
+          <p>${this.renderTextWithLink(content.text, content.link, false)}</p>
           ${this.renderImage(content.image)}
           ${content.list ? this.renderList(content.list) : ''}
         </div>
@@ -334,7 +333,7 @@ class WhatsNewManager {
     `;
   }
 
-  // whats-new-modal.html スタイルのモーダル（最新1件のみ、2つのボタン）
+  // whats-new-modal.html スタイルのモーダル（最新1件の全項目を1つのモーダルに表示）
   openAppStyleModal() {
     const modal = document.getElementById('whatsNewModal');
     const modalBody = document.querySelector('.whats-new-modal-body');
@@ -344,46 +343,70 @@ class WhatsNewManager {
 
     // 最新（0番目）のデータを取得
     const latest = whatsNewData[0];
+    if (!latest.contents || latest.contents.length === 0) return;
 
     let contentHtml = `
       <div class="whats-new-modal-body-content app-style-modal">
-        <h1 class="app-modal-title">${latest.title || '新バージョンのお知らせ'}</h1>
+        <h1 class="app-modal-title">${latest.modalTitle || latest.title || '新バージョンのお知らせ'}</h1>
         <div class="app-modal-scrollable">
     `;
 
-    // 全てのコンテンツのテキストを箇条書きで表示（全て同じ階層）
-    if (latest.contents && latest.contents.length > 0) {
-      contentHtml += `<ul class="app-modal-list">`;
+    // 画像がある項目と画像がない項目を分ける
+    const itemsWithImage = latest.contents.filter(c => c.image);
+    const itemsWithoutImage = latest.contents.filter(c => !c.image);
 
-      // 最初のコンテンツのテキスト
-      contentHtml += `<li>${latest.contents[0].text}</li>`;
-
-      // リストがあれば全て同じ階層で表示
-      latest.contents.forEach(content => {
-        if (content.list && content.list.length > 0) {
-          content.list.forEach(item => {
-            contentHtml += `<li>${item}</li>`;
-          });
-        }
-      });
-
-      contentHtml += `</ul>`;
-
-      // 画像を1枚表示（nullの場合はダミー画像）
-      const firstContent = latest.contents[0];
+    // 画像がある項目を先に表示（見出し + 説明文 + 画像）
+    itemsWithImage.forEach((content, index) => {
       contentHtml += `
-        <div class="app-modal-image">
-          ${this.renderImage(firstContent.image)}
+        <div class="app-modal-content-item">
+          <h2 class="app-modal-content-heading">${content.heading}</h2>
+          <p class="app-modal-content-text">${content.text}</p>
+          <div class="app-modal-image">
+            <img src="${content.image}" alt="${content.heading}" class="modal-representative-image" loading="lazy" style="max-width: 60%; height: auto;">
+          </div>
         </div>
       `;
+
+      // 区切り線を追加
+      if (index < itemsWithImage.length - 1 || itemsWithoutImage.length > 0) {
+        contentHtml += `<hr class="app-modal-divider">`;
+      }
+    });
+
+    // 画像がない項目の表示
+    if (itemsWithoutImage.length > 0) {
+      // 項目が1つだけの場合は見出し+説明文で表示
+      if (itemsWithoutImage.length === 1) {
+        const content = itemsWithoutImage[0];
+        contentHtml += `
+          <div class="app-modal-content-item">
+            <h2 class="app-modal-content-heading">${content.heading}</h2>
+            <p class="app-modal-content-text">${content.text}</p>
+          </div>
+        `;
+      } else {
+        // 複数の場合は箇条書きで表示
+        contentHtml += `
+          <div class="app-modal-content-item">
+            <h2 class="app-modal-content-heading">その他の改善</h2>
+            <ul class="app-modal-simple-list">
+        `;
+
+        itemsWithoutImage.forEach(content => {
+          contentHtml += `<li>${content.heading}</li>`;
+        });
+
+        contentHtml += `
+            </ul>
+          </div>
+        `;
+      }
     }
 
     contentHtml += `
         </div>
         <div class="app-modal-buttons">
-          <a href="https://lp.melbridge.mitsubishielectric.co.jp/manual-swipetalk"
-             class="app-modal-btn app-modal-btn-outline"
-             target="_blank">
+          <a href="#whats-new" class="app-modal-btn app-modal-btn-outline" data-action="view-details">
             詳細を見る
             <i class="material-icons">open_in_new</i>
           </a>
@@ -398,13 +421,38 @@ class WhatsNewManager {
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // 閉じるボタンのイベント
+    // イベントリスナー設定
+    this.setupAppModalEvents();
+  }
+
+  // アプリスタイルモーダルのイベントリスナー設定
+  setupAppModalEvents() {
+    const modal = document.getElementById('whatsNewModal');
+    const modalBody = document.querySelector('.whats-new-modal-body');
+    if (!modalBody) return;
+
+    // 詳細を見るボタン
+    const detailsBtn = modalBody.querySelector('[data-action="view-details"]');
+    if (detailsBtn) {
+      detailsBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+
+    // 閉じるボタン
     const closeBtn = modalBody.querySelector('[data-action="close-app-modal"]');
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
         this.closeModal();
       });
     }
+
+    // オーバーレイクリックで閉じる
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        this.closeModal();
+      }
+    });
   }
 
   // テスト用: 日付選択リストを表示
@@ -526,6 +574,10 @@ class WhatsNewManager {
 
   closeModal() {
     const modal = document.getElementById('whatsNewModal');
+    // フォーカスをモーダル外に移動（アクセシビリティエラー回避）
+    if (document.activeElement && modal.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
@@ -536,8 +588,13 @@ class WhatsNewManager {
     // メイン画面右上のモーダル表示ボタン
     if (mainModalBtn) {
       mainModalBtn.addEventListener('click', () => {
-        // whats-new-modal.html スタイルのモーダルを表示
-        this.openAppStyleModal();
+        // 選択ポップアップを表示
+        if (typeof window.showSelectionPopup === 'function') {
+          window.showSelectionPopup();
+        } else {
+          // フォールバック：直接モーダルを表示
+          this.openAppStyleModal();
+        }
       });
     }
 
@@ -546,12 +603,12 @@ class WhatsNewManager {
   }
 }
 
-// DOMContentLoaded後にデータ読み込みと初期化
-document.addEventListener('DOMContentLoaded', async () => {
-  const loaded = await loadWhatsNewData();
-  if (loaded) {
-    new WhatsNewManager();
+// DOMContentLoaded後に初期化
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof whatsNewData !== 'undefined' && whatsNewData.length > 0) {
+    window.whatsNewManager = new WhatsNewManager();
+    console.log('WhatsNewManager initialized successfully');
   } else {
-    console.error('新着情報の初期化に失敗しました');
+    console.error('新着情報データが見つかりません');
   }
 });
