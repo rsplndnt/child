@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新履歴テスト</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .whats-new-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .news-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .news-item-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .news-item-badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .news-item-badge {
+            background: #0071B8;
+            color: white;
+        }
+
+        .news-item-badge-update {
+            background: #28a745;
+            color: white;
+        }
+
+        .news-item-badge-fix {
+            background: #ffc107;
+            color: black;
+        }
+
+        .news-item-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .news-item-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .news-item-list li {
+            margin-bottom: 8px;
+            padding-left: 1.2em;
+            position: relative;
+        }
+
+        .news-item-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .news-item-list a {
+            color: #0071B8;
+            text-decoration: none;
+        }
+
+        .news-item-list a:hover {
+            text-decoration: underline;
+        }
+
+        .news-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.active {
+            background: #0071B8;
+            color: white;
+        }
+
+        .test-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .test-btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+
+        .test-btn:hover {
+            background: #ff5252;
+        }
+
+        .test-btn-minimal {
+            background: #4CAF50;
+        }
+
+        .test-btn-minimal:hover {
+            background: #45a049;
+        }
+
+        /* 選択ポップアップ */
+        .selection-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selection-popup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .selection-popup-content {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .selection-popup-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 24px 0;
+            text-align: center;
+            color: #333;
+        }
+
+        .selection-popup-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .selection-popup-btn {
+            padding: 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .selection-popup-btn:hover {
+            background: #f5f5f5;
+            border-color: #0071B8;
+        }
+
+        .selection-popup-btn small {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .selection-popup-btn-full {
+            color: #ff6b6b;
+        }
+
+        .selection-popup-btn-minimal {
+            color: #4CAF50;
+        }
+
+        .selection-popup-close {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .selection-popup-close:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>更新履歴テスト</h1>
+
+    <div class="test-buttons">
+        <button id="testButton" class="test-btn">モーダル表示サンプル</button>
+    </div>
+
+    <div class="whats-new-container" id="whatsNewContainer">
+        <!-- JavaScriptで動的に生成されます -->
+    </div>
+
+    <!-- 選択ポップアップ -->
+    <div id="selectionPopup" class="selection-popup" style="display: none;">
+        <div class="selection-popup-overlay"></div>
+        <div class="selection-popup-content">
+            <h2 class="selection-popup-title">表示するコンテンツを選択</h2>
+            <div class="selection-popup-buttons">
+                <button id="selectFullContent" class="selection-popup-btn selection-popup-btn-full">
+                    全コンテンツ<br>
+                    <small>(16項目、画像5つ)</small>
+                </button>
+                <button id="selectMinimalContent" class="selection-popup-btn selection-popup-btn-minimal">
+                    コンテンツ少ない<br>
+                    <small>(1項目のみ)</small>
+                </button>
+            </div>
+            <button id="closeSelectionPopup" class="selection-popup-close">キャンセル</button>
+        </div>
+    </div>
+
+    <!-- モーダル -->
+    <div id="whatsNewModal" class="whats-new-modal" aria-hidden="true" role="dialog">
+        <div class="whats-new-modal-overlay"></div>
+        <div class="whats-new-modal-content">
+            <div class="whats-new-modal-header">
+                <h2>新着情報</h2>
+            </div>
+            <div class="whats-new-modal-body">
+                <!-- JavaScriptで動的に生成 -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .whats-new-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+        }
+
+        .whats-new-modal[aria-hidden="false"] {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://lp.melbridge.mitsubishielectric.co.jp/hubfs/top_transcript.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .whats-new-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .whats-new-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.20);
+            max-width: 900px;
+            width: 90vw;
+            height: auto;
+            max-height: 85vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .whats-new-modal-header h2 {
+            margin-bottom: 20px;
+        }
+
+        .whats-new-modal-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .app-style-modal {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .app-modal-title {
+            font-family: Roboto, sans-serif;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 160%;
+            margin-bottom: 16px;
+            margin-top: 0;
+            color: #333;
+        }
+
+        .app-modal-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-bottom: 32px;
+            padding-right: 8px;
+        }
+
+        .app-modal-content-item {
+            margin-bottom: 32px;
+        }
+
+        .app-modal-content-heading {
+            font-family: Roboto, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 160%;
+            margin-bottom: 12px;
+            margin-top: 0;
+            color: #333;
+        }
+
+        .app-modal-content-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 16px;
+        }
+
+        .app-modal-simple-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .app-modal-simple-list li {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 8px;
+            padding-left: 1.2em;
+            position: relative;
+        }
+
+        .app-modal-simple-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #555;
+        }
+
+        .app-modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            flex-shrink: 0;
+        }
+
+        .app-modal-btn {
+            width: 164px;
+            height: 48px;
+            padding: 0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .app-modal-btn-outline {
+            background-color: white;
+            color: #333;
+            border: none;
+        }
+
+        .app-modal-btn-outline:hover {
+            background-color: #f5f5f5;
+        }
+
+        .app-modal-btn-primary {
+            background-color: #6B777D;
+            color: white;
+            border: none;
+        }
+
+        .app-modal-btn-primary:hover {
+            background-color: #5a666b;
+        }
+
+        .app-modal-divider {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 24px 0;
+        }
+    </style>
+
+    <!-- データとスクリプトの読み込み -->
+    <script src="js/whats-new-data.js"></script>
+    <script src="js/whats-new.js"></script>
+
+    <script>
+        // 少ないコンテンツ用のテストデータ
+        const minimalTestData = [
+            {
+                date: "2025年2月15日",
+                badge: "v1.1",
+                badgeClass: "",
+                title: "バージョン1.1の新機能と改善",
+                modalTitle: "新バージョンがリリースされました",
+                manualTitle: "バージョン1.1 更新内容",
+                contents: [
+                    {
+                        heading: "トランスクリプト音声入力の改善",
+                        text: "短文ごとに区切って入力できるようになりました。より自然な会話の記録が可能です。発話の区切りを自動的に検出し、読みやすい形式で表示します。",
+                        ticketIds: "2983"
+                    }
+                ]
+            }
+        ];
+
+        // 選択ポップアップを表示する関数
+        function showSelectionPopup() {
+            const popup = document.getElementById('selectionPopup');
+            popup.style.display = 'flex';
+        }
+
+        // 選択ポップアップを閉じる関数
+        function hideSelectionPopup() {
+            const popup = document.getElementById('selectionPopup');
+            popup.style.display = 'none';
+        }
+
+        // 全コンテンツのモーダルを表示
+        function showFullContentModal() {
+            hideSelectionPopup();
+            const manager = window.whatsNewManager;
+            if (manager) {
+                manager.openAppStyleModal();
+            } else {
+                alert('WhatsNewManagerが初期化されていません');
+            }
+        }
+
+        // コンテンツ少ないモーダルを表示
+        function showMinimalContentModal() {
+            hideSelectionPopup();
+            const manager = window.whatsNewManager;
+            if (manager) {
+                // 一時的にwhatsNewDataを少ないデータに差し替え
+                const originalData = [...whatsNewData];
+                whatsNewData.length = 0;
+                whatsNewData.push(...minimalTestData);
+
+                // モーダル表示
+                manager.openAppStyleModal();
+
+                // データを元に戻す（モーダルが表示された後）
+                setTimeout(() => {
+                    whatsNewData.length = 0;
+                    whatsNewData.push(...originalData);
+                }, 100);
+            } else {
+                alert('WhatsNewManagerが初期化されていません');
+            }
+        }
+
+        // モーダル表示サンプルボタン → 選択ポップアップを表示
+        document.getElementById('testButton').addEventListener('click', () => {
+            showSelectionPopup();
+        });
+
+        // 全コンテンツボタン
+        document.getElementById('selectFullContent').addEventListener('click', () => {
+            showFullContentModal();
+        });
+
+        // コンテンツ少ないボタン
+        document.getElementById('selectMinimalContent').addEventListener('click', () => {
+            showMinimalContentModal();
+        });
+
+        // キャンセルボタン
+        document.getElementById('closeSelectionPopup').addEventListener('click', () => {
+            hideSelectionPopup();
+        });
+
+        // オーバーレイクリックで閉じる
+        document.querySelector('.selection-popup-overlay').addEventListener('click', () => {
+            hideSelectionPopup();
+        });
+
+        // WhatsNewManagerのインスタンスをグローバルに保存
+        const originalDOMContentLoaded = document.addEventListener;
+        document.addEventListener = function(type, listener, ...args) {
+            if (type === 'DOMContentLoaded') {
+                const wrappedListener = function(...eventArgs) {
+                    const result = listener.apply(this, eventArgs);
+                    if (window.WhatsNewManager) {
+                        console.log('WhatsNewManager found, attempting to get instance...');
+                    }
+                    return result;
+                };
+                return originalDOMContentLoaded.call(this, type, wrappedListener, ...args);
+            }
+            return originalDOMContentLoaded.call(this, type, listener, ...args);
+        };
+    </script>
+</body>
+</html>
