@@ -3248,10 +3248,6 @@ ul.spec-list li{
     font-size: 15px;
   }
 
-  .app-modal-buttons {
-    flex-direction: column;
-  }
-
   .app-modal-btn {
     padding: 14px 20px;
   }
