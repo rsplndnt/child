@@ -1,141 +1,126 @@
 
-// 新着情報データ
-const whatsNewData = [
-  // ========== バージョン 1.2 ==========
+// バージョン表示範囲（この範囲内のバージョンのみ表示）
+const VERSION_RANGE = { min: "1.0", max: "1.1" };
+
+// 全バージョンの新着情報データ
+const _allWhatsNewData = [
   {
-    date: "2025年2月15日",
-    badge: "v1.2",
-    badgeClass: "",
+    date: "2025-02-15",
+    version: "1.2",
     title: "バージョン1.2の新機能と改善",
-    modalTitle: "新バージョンがリリースされました", // モーダル用のタイトル
-    manualTitle: "バージョン1.2 更新内容", // マニュアルページ用のタイトル
+    modalTitle: "新バージョンがリリースされました",
+    manualTitle: "バージョン1.2",
     contents: [
-      // === レベル4：チーム機能（見出し+説明+画像+マニュアルリンク） ===
-      // ID: 2862, 2870, 2941, 2868, 864, 1204, 1008, 1235, 2940, 2864, 2865, 2866, 823, 1211, 2873, 2319, 2871, 2857, 2858, 2859, 2860, 2861, 2867
       {
         heading: "チーム機能の追加",
         text: "複数人で同じシートをリアルタイムで共有・編集できる「チームモード」が追加されました。トランスクリプトやキャンバスを複数人で同時に利用できます。",
-        link: "/operation-guide#team-mode", // マニュアルの新セクションへのリンク（実装時に正しいパスに変更）
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-team-mode.png", // 実際の画像に置き換える
-        ticketIds: "2862, 2870, 2941, 2868, 864, 1204, 1008, 1235, 2940, 2864, 2865, 2866, 823, 1211, 2873, 2319, 2871, 2857, 2858, 2859, 2860, 2861, 2867" // 確認用
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png",
+        link: "/operation-guide#team-mode"
       },
-      // === レベル4：使用時間制限と課金機能（見出し+説明+画像+マニュアルリンク） ===
-      // ID: 2491, 2672, 2673, 2492, 2670, 2493, 2494, 2674
       {
         heading: "使用時間制限の導入",
         text: "トランスクリプト機能の月間使用時間制限が導入されました。アカウント画面で残り時間を確認でき、上限に近づくと警告が表示されます。",
-        link: "/product-specs#usage-limits", // マニュアルの製品仕様セクションへのリンク
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-limit.png", // 実際の画像に置き換える
-        ticketIds: "2491, 2672, 2673, 2492, 2670, 2493, 2494, 2674" // 確認用
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png",
+        link: "/product-specs#usage-limits"
       },
-      // === レベル3：テキストのみ消去（見出し+説明+画像） ===
-      // ID: 2984
       {
         heading: "テキストのみ消去できる消しゴム機能",
         text: "画像や手描きの線を残したまま、音声入力で配置したテキストだけを消すことができるようになりました。新しい「テキスト消しゴム」ツールをご利用ください。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-text-eraser.png", // 実際の画像に置き換える
-        ticketIds: "2984" // 確認用
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png"
       },
-      // === レベル3：シート管理の改善（見出し+説明+画像） ===
-      // ID: 2489
       {
         heading: "シート管理の改善（11枚目以降のアーカイブ）",
         text: "11枚目のシートを作成すると、古いシートが自動的にアーカイブされます。アーカイブされたシートは「シート管理」メニューから確認・復元できます。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-sheet-archive.png", // 実際の画像に置き換える
-        ticketIds: "2489" // 確認用
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png"
       },
-      // === レベル3：PDFドキュメント対応（見出し+説明+画像） ===
-      // ID: 905, 2705
       {
         heading: "PDFドキュメントのキャンバス対応",
         text: "PDFファイルをキャンバスに直接読み込めるようになりました。画像と同様に、PDFに描き込みや翻訳テキストを追加できます。技術文書や図面での利用に便利です。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-pdf-support.png", // 実際の画像に置き換える
-        ticketIds: "905, 2705" // 確認用
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png"
       },
-      // === レベル2：トランスクリプト音声入力の改善（見出し+説明） ===
-      // ID: 2983
       {
         heading: "トランスクリプト音声入力の改善",
-        text: "短文ごとに区切って入力できるようになりました。より自然な会話の記録が可能です。発話の区切りを自動的に検出し、読みやすい形式で表示します。",
-        ticketIds: "2983" // 確認用
+        text: "短文ごとに区切って入力できるようになりました。より自然な会話の記録が可能です。発話の区切りを自動的に検出し、読みやすい形式で表示します。"
       },
-      // === レベル2：しゃべり描き®音声読み上げ機能（見出し+説明+マニュアルリンク） ===
-      // ID: 1678
       {
         heading: "しゃべり描き®音声読み上げ機能",
         text: "キャンバス上のテキストを音声で読み上げられるようになりました。視覚と聴覚の両方でコミュニケーションを支援します。",
-        link: "/operation-guide#canvas-features",
-        ticketIds: "1678" // 確認用
+        link: "/operation-guide#canvas-features"
       },
-      // === レベル2：トランスクリプト音声読み上げ機能（見出し+説明+マニュアルリンク） ===
-      // ID: 1679
       {
         heading: "トランスクリプト音声読み上げ機能",
         text: "トランスクリプトの会話内容を音声で読み上げられるようになりました。会話の流れを音声で確認できるため、より自然なコミュニケーションが可能です。",
-        link: "/operation-guide#transcript-features",
-        ticketIds: "1679" // 確認用
+        link: "/operation-guide#transcript-features"
       },
-      // === レベル2：画像・PDFファイルサイズ上限の拡張（見出し+説明） ===
-      // ID: 2702
       {
         heading: "画像・PDFファイルサイズ上限の拡張",
-        text: "より大きなファイルをアップロードできるようになりました。高解像度の画像や複雑なPDF文書も扱えるようになり、より多様な用途に対応します。",
-        ticketIds: "2702" // 確認用
+        text: "より大きなファイルをアップロードできるようになりました。高解像度の画像や複雑なPDF文書も扱えるようになり、より多様な用途に対応します。"
       },
-      // === レベル2：初期起動時の言語設定ポップアップ（見出し+説明+マニュアルリンク） ===
-      // ID: 1281
       {
         heading: "初期起動時の言語設定ポップアップ",
         text: "初回起動時に翻訳言語を設定するガイドが表示されます。初めての方でも迷わず設定できるようになりました。",
-        link: "/getting-started#initial-setup",
-        ticketIds: "1281" // 確認用
+        link: "/getting-started#initial-setup"
       },
-      // === レベル2：トランスクリプトのテキスト取得機能（見出し+説明+マニュアルリンク） ===
-      // ID: 1951
       {
         heading: "トランスクリプトのテキスト取得機能",
         text: "トランスクリプトの会話内容をテキストファイルとしてダウンロードできるようになりました。会話の記録を外部で活用できます。",
-        link: "/operation-guide#transcript-export",
-        ticketIds: "1951" // 確認用
+        link: "/operation-guide#transcript-export"
       },
-      // === レベル2：サポート対象外環境の警告表示（見出し+説明） ===
-      // ID: 2357
       {
         heading: "サポート対象外環境の警告表示",
-        text: "非推奨ブラウザやOSでアクセスした際に警告が表示されます。最適な環境でのご利用をサポートします。",
-        ticketIds: "2357" // 確認用
+        text: "非推奨ブラウザやOSでアクセスした際に警告が表示されます。最適な環境でのご利用をサポートします。"
       },
-      // === レベル1：リリース内容の通知機能追加（見出しのみ） ===
-      // ID: 2298
       {
         heading: "リリース内容の通知機能追加",
-        text: "新機能や更新内容をモーダルで確認できるようになりました。",
-        ticketIds: "2298" // 確認用
+        text: "新機能や更新内容をモーダルで確認できるようになりました。"
       },
-      // === レベル1：キャンバスのタッチパッド操作対応（見出しのみ） ===
-      // ID: 2987
       {
         heading: "キャンバスのタッチパッド操作対応",
-        text: "タッチパッドでの上下スクロールに対応しました。",
-        ticketIds: "2987" // 確認用
+        text: "タッチパッドでの上下スクロールに対応しました。"
       },
-      // === レベル1：シートタイトル機能の改善（見出しのみ） ===
-      // ID: 2703
       {
         heading: "シートタイトル機能の改善",
-        text: "より使いやすいタイトル編集機能に改善されました。",
-        ticketIds: "2703" // 確認用
+        text: "より使いやすいタイトル編集機能に改善されました。"
       },
-      // === レベル1：翻訳表示の高速化（見出しのみ） ===
-      // ID: 1937
       {
         heading: "翻訳表示の高速化（しゃべり描き）",
-        text: "しゃべり描き機能の応答待ち時間が短縮されました。",
-        ticketIds: "1937" // 確認用
+        text: "しゃべり描き機能の応答待ち時間が短縮されました。"
+      }
+    ]
+  },
+  {
+    date: "2026-01-12",
+    version: "1.1",
+    title: "バージョン1.1の改善",
+    modalTitle: "",
+    manualTitle: "バージョン1.1",
+    contents: [
+      {
+        heading: "安定性の向上",
+        text: "アプリケーションの安定性を向上させました。"
+      }
+    ]
+  },
+  {
+    date: "2025-10-01",
+    version: "1.0",
+    title: "初版リリース",
+    modalTitle: "",
+    manualTitle: "バージョン1.0",
+    contents: [
+      {
+        heading: "初版リリース",
+        text: "しゃべり描き翻訳をリリースしました。"
       }
     ]
   }
 ];
+
+// VERSION_RANGEでフィルタリングされたデータ
+const whatsNewData = _allWhatsNewData.filter(item => {
+  const v = parseFloat(item.version);
+  return v >= parseFloat(VERSION_RANGE.min) && v <= parseFloat(VERSION_RANGE.max);
+});
 
 // ページネーション設定
 const ITEMS_PER_PAGE = 5;

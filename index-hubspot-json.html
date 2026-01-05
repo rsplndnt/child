@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HubSpot Template Example - JSON Loader</title>
 
+    {{ standard_header_includes }}
+
     <!-- スタイルシートの読み込み -->
     <link href="{{ get_asset_url('css/manual-ui.css') }}" rel="stylesheet">
 </head>
@@ -94,13 +96,15 @@
         window.addEventListener('whatsNewDataLoaded', function(event) {
             console.log('✓ Page: whats-new data loaded', event.detail);
 
-            // ここにデータ読み込み後の処理を記述
-            // 例: 初回訪問時にモーダルを自動表示
-            // if (window.whatsNewManager && !localStorage.getItem('whatsNewShown_v1.1')) {
-            //     window.whatsNewManager.openAppStyleModal();
-            //     localStorage.setItem('whatsNewShown_v1.1', 'true');
-            // }
-        });
+        // ここにデータ読み込み後の処理を記述
+        // 例: 初回訪問時にモーダルを自動表示
+        // if (window.whatsNewManager && !localStorage.getItem('whatsNewShown_v1.1')) {
+        //     window.whatsNewManager.openAppStyleModal();
+        //     localStorage.setItem('whatsNewShown_v1.1', 'true');
+        // }
+    });
     </script>
+
+    {{ standard_footer_includes }}
 </body>
 </html>

@@ -1783,10 +1783,12 @@ ul.spec-list li{
 }
 
 /* TOC（左） */
-.toc{ 
-  padding: 12px; 
+.toc{
+  padding: 12px;
   /* スクロールバー表示時の改行を防ぐため右側に余裕を持たせる */
   padding-right: 16px;
+  /* トグル展開時に下部が隠れないよう余白を確保 */
+  padding-bottom: 80px;
 }
 .toc .toc-section{ margin-bottom: 12px; position: relative; }
 .toc .toc-section h3{ 
@@ -1815,12 +1817,27 @@ ul.spec-list li{
 
 /* TOCトグルボタン */
 .toc .toc-section h3 .toc-toggle {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
   width: 100%;
   background: none;
   border: none;
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
+  font-size: var(--sd-font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: var(--sd-line-height-normal);
+}
+
+.toc .toc-section h3 .toc-toggle:hover {
+  background: var(--hovered-variant);
+  color: var(--color-primary-700);
 }
 
 .toc .toc-section h3 .toc-toggle .toc-chevron {
@@ -1894,6 +1911,17 @@ ul.spec-list li{
   justify-content: center;
   margin-right: 10px;
   flex-shrink: 0;
+}
+/* 大きいアイコン用 */
+.toc .toc-section h3 .toc-link .toc-icon-large,
+.toc .toc-section h3 .toc-toggle .toc-icon-large {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 30px !important;
+  margin-left: 0 !important;
+  font-variation-settings: 'wght' 350;
+  position: relative;
+  top: -1px;
 }
 .toc .toc-section h3 .toc-link:hover{ background: var(--hovered-variant); color: var(--color-primary-700); }
 .toc .toc-section h3 .toc-link.active{ background: var(--color-primary); color:#fff; }
@@ -2872,62 +2900,6 @@ ul.spec-list li{
   }
 }
 
-/* ===== メイン画面右上のモーダル表示ボタン ===== */
-.main-modal-sample-btn {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 1000;
-  background: linear-gradient(135deg, #0071B8 0%, #005a91 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 16px 24px;
-  font-size: 18px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 113, 184, 0.3);
-  transition: all 0.3s ease;
-  font-family: "Noto Sans JP", sans-serif;
-}
-
-.main-modal-sample-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 113, 184, 0.4);
-  background: linear-gradient(135deg, #005a91 0%, #004770 100%);
-}
-
-.main-modal-sample-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 113, 184, 0.3);
-}
-
-.main-modal-sample-btn .material-icons {
-  font-size: 28px;
-}
-
-@media (max-width: 768px) {
-  .main-modal-sample-btn {
-    top: 16px;
-    right: 16px;
-    padding: 12px 20px;
-    font-size: 16px;
-  }
-
-  .main-modal-sample-btn .material-icons {
-    font-size: 24px;
-  }
-}
-
-@media print {
-  .main-modal-sample-btn {
-    display: none !important;
-  }
-}
-
 /* ===== 更新履歴メインページ ===== */
 .news-item-list {
   list-style: none;
@@ -3251,6 +3223,665 @@ ul.spec-list li{
   .app-modal-btn {
     padding: 14px 20px;
   }
+}
+
+/* ===== 更新履歴モーダル・インラインから移行 ===== */
+/* 更新履歴モーダルボタン */
+.whats-new-modal-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 4px 2px 4px;
+    margin-left: 8px;
+    color: #00a0e9;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.whats-new-modal-btn:hover {
+    background-color: rgba(0, 160, 233, 0.1);
+    transform: scale(1.1);
+}
+
+.whats-new-modal-btn .material-icons {
+    font-size: 20px;
+}
+
+/* モーダル本体 */
+.whats-new-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+}
+
+.whats-new-modal[aria-hidden="false"] {
+    display: block;
+    background-image: url('https://lp.melbridge.mitsubishielectric.co.jp/hubfs/top_transcript.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.whats-new-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.whats-new-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.20);
+    width: auto;
+    max-width: 727px;
+    min-width: 392px;
+    height: auto;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0ms cubic-bezier(0, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.whats-new-modal[aria-hidden="false"] .whats-new-modal-content {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: transform 225ms cubic-bezier(0, 0, 0.2, 1), opacity 225ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.whats-new-modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.whats-new-modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.whats-new-modal-body-content {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* モーダル内のスクロールバーカスタマイズ */
+.whats-new-modal-body-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.whats-new-modal-body-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.whats-new-modal-body-content::-webkit-scrollbar-thumb {
+    background: #d4d7d8;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.whats-new-modal-body-content::-webkit-scrollbar-thumb:hover {
+    background: #b8bfc3;
+}
+
+.whats-new-modal-body-content::-webkit-scrollbar-thumb:active {
+    background: #9ea5a9;
+}
+
+/* Firefox用のスクロールバースタイル */
+.whats-new-modal-body-content {
+    scrollbar-width: thin;
+    scrollbar-color: #d4d7d8 transparent;
+}
+
+.whats-new-modal-iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .whats-new-modal-header {
+        padding: 16px 20px;
+    }
+
+    .whats-new-modal-header h2 {
+        font-size: 20px;
+    }
+}
+
+/* 更新履歴セクションのスタイル */
+.news-item-wrapper {
+    margin-bottom: 40px;
+}
+
+.news-item {
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.news-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.news-item-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.news-item-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.news-item-date {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.news-item-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.news-item-badge-update {
+    background-color: #28a745;
+}
+
+.news-item-badge-fix {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.news-item-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: var(--color-primary);
+}
+
+.news-item-content {
+    font-size: 15px;
+    color: #555;
+    margin: 0;
+}
+
+.news-item-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.news-item-content li {
+    margin-bottom: 4px;
+}
+
+.news-item-image-real {
+    margin: 16px auto;
+    width: 67%;
+    aspect-ratio: 16 / 9;
+    border-radius: 4px;
+    object-fit: cover;
+    display: block;
+}
+
+.news-item-multi-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.news-item-more-btn {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.news-item-more-btn:hover {
+    background-color: #005a8f;
+}
+
+/* インラインコンテンツページネーション */
+.news-item-content-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.news-item-pagination-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background-color: #fff;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.news-item-pagination-btn:hover:not(.disabled) {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.news-item-pagination-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.news-item-pagination-btn .material-icons {
+    font-size: 16px;
+}
+
+.news-item-pagination-indicator {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* ページネーション */
+.news-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 40px;
+    padding: 20px 0;
+}
+
+.news-pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.news-pagination-btn:hover:not(.disabled) {
+    background-color: #f8f9fa;
+    border-color: var(--color-primary);
+}
+
+.news-pagination-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.news-pagination-pages {
+    display: flex;
+    gap: 8px;
+}
+
+.news-pagination-page {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.news-pagination-page:hover {
+    background-color: #f8f9fa;
+    border-color: var(--color-primary);
+}
+
+.news-pagination-page.active {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+/* モーダル内のコンテンツスタイル */
+.modal-news-header {
+    margin-bottom: 12px;
+}
+
+.modal-news-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: var(--color-primary);
+}
+
+.modal-news-content {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.modal-news-content p {
+    margin: 0 0 16px 0;
+}
+
+.modal-news-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.modal-news-content li {
+    margin-bottom: 4px;
+}
+
+/* モーダル内のコンテンツページネーション */
+.modal-content-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border-top: 1px solid #e0e0e0;
+    flex-shrink: 0;
+    background-color: #fff;
+    border-radius: 0 0 12px 12px;
+}
+
+.modal-pagination-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background-color: #fff;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-pagination-btn:hover:not(.disabled) {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.modal-pagination-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.modal-pagination-indicator {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.modal-close-btn {
+    margin-left: auto;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-close-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modal-close-btn .material-icons {
+    font-size: 20px;
+}
+
+/* 日付選択リスト */
+.modal-date-list-title {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+.modal-date-list-description {
+    margin: 0 0 24px 0;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    background-color: #fff9e6;
+    border-left: 4px solid #ffd76b;
+    border-radius: 4px;
+    line-height: 1.6;
+}
+
+.modal-date-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-date-list-item {
+    width: 100%;
+    padding: 16px 20px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.modal-date-list-item:hover {
+    background-color: #f8f9fa;
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.modal-date-list-item-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.modal-date-list-item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.modal-date-list-item-count {
+    font-size: 12px;
+    color: #666;
+}
+
+.modal-date-list-footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-date-list-cancel {
+    padding: 10px 24px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-date-list-cancel:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+    color: #333;
+}
+
+.modal-date-list-cancel .material-icons {
+    font-size: 20px;
+}
+
+@media (max-width: 768px) {
+    .modal-date-list-title {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .modal-date-list-item {
+        padding: 14px 16px;
+    }
+
+    .modal-date-list-item-title {
+        font-size: 15px;
+    }
+}
+
+/* マニュアルページ用のコンテンツスタイル */
+.news-content-section {
+    margin-bottom: 40px;
+}
+
+.news-content-section:last-child {
+    margin-bottom: 0;
+}
+
+.news-content-heading {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px 0;
+}
+
+.news-content-text {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+    margin: 0 0 12px 0;
+}
+
+.news-content-text:last-child {
+    margin-bottom: 0;
+}
+
+.news-content-link {
+    margin: 0;
+    text-align: right;
+}
+
+.news-content-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.news-content-link a:hover {
+    text-decoration: underline;
+    gap: 6px;
+}
+
+.news-content-link .material-icons {
+    font-size: 18px;
+}
+
+/* マニュアルページ用の画像グリッド */
+.news-item-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+}
+
+/* モーダル用の代表画像 */
+.modal-representative-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+@media (max-width: 768px) {
+    .news-item-images {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* (end of file) */

@@ -774,15 +774,31 @@
     setupScrollSync();
 
     // 検索モジュール
-    const searchModule = createSearchModule({
+    let searchModule = createSearchModule({
       sectionsSelector: '.content-panel .step-section',
-      procedureSelector: '.procedure-item',
+      procedureSelector: '.procedure-item, .news-item',
       searchInput,
       resultsPanel: searchResults,
       onJump: (anchorId, sectionHash) => {
         activateSection(sectionHash, { scrollToTop: false });
         setTimeout(() => searchModule.jumpTo(anchorId, sectionHash), 60);
       }
+    });
+
+    // 動的コンテンツ（新着情報など）読み込み後にインデックス再構築
+    window.addEventListener('whatsNewDataLoaded', () => {
+      setTimeout(() => {
+        searchModule = createSearchModule({
+          sectionsSelector: '.content-panel .step-section',
+          procedureSelector: '.procedure-item, .news-item',
+          searchInput,
+          resultsPanel: searchResults,
+          onJump: (anchorId, sectionHash) => {
+            activateSection(sectionHash, { scrollToTop: false });
+            setTimeout(() => searchModule.jumpTo(anchorId, sectionHash), 60);
+          }
+        });
+      }, 100);
     });
 
     // クエリパラメータによる初期表示調整（?target=xxx）
@@ -2650,19 +2666,26 @@
         // 手順のインデックス
         const items = Array.from(section.querySelectorAll(procSelector));
         items.forEach((item, i) => {
-          const h4 = item.querySelector('h4');
-          let anchorEl = h4 || item;
-          let anchorId = (h4 && h4.id) ? h4.id : (item.id || '');
+          // .procedure-item は h4、.news-item は h3 または親の h2.news-item-title を使用
+          const isNewsItem = item.classList.contains('news-item');
+          let heading = item.querySelector('h4');
+          if (isNewsItem) {
+            heading = item.querySelector('h3.news-content-heading') ||
+                      item.closest('.news-item-wrapper')?.querySelector('h2.news-item-title');
+          }
+          let anchorEl = heading || item;
+          let anchorId = (heading && heading.id) ? heading.id : (item.id || '');
           if (!anchorId) {
             anchorId = `${secId}-proc-${i + 1}`;
             anchorEl.id = anchorId;
             item.setAttribute('data-anchor-id', anchorId);
           }
-          const title = (h4?.textContent || ('手順 ' + (i + 1))).trim();
+          const title = (heading?.textContent || ('手順 ' + (i + 1))).trim();
           idx.push({
             id: `${secId}__proc__${i}`, el: item, anchorEl, anchorId,
             sectionId: secId, sectionTitle: secTitle, title,
-            type: 'procedure', text: (item.textContent || '').replace(/\s+/g, ' ').trim()
+            type: isNewsItem ? 'news' : 'procedure',
+            text: (item.textContent || '').replace(/\s+/g, ' ').trim()
           });
         });
       });
@@ -2935,5 +2958,15 @@
   } else {
     initOssTableToggle();
   }
+
+  // GA4: ハッシュ変更時にページビューを送信
+  window.addEventListener('hashchange', function() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'page_view', {
+        page_path: location.pathname + location.hash,
+        page_title: document.title
+      });
+    }
+  });
 
 })(); // EOF

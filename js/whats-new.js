@@ -32,8 +32,9 @@ class WhatsNewManager {
     pageData.forEach((item, index) => {
       const globalIndex = start + index;
 
+      const versionId = `whats-new-v${item.version.replace('.', '-')}`;
       html += `
-        <div class="news-item-wrapper">
+        <div class="news-item-wrapper" id="${versionId}">
           <h2 class="news-item-title">${item.manualTitle || item.title}</h2>
           <article class="news-item" data-index="${globalIndex}" data-content-index="0">
             <div class="news-item-content">
@@ -295,7 +296,7 @@ class WhatsNewManager {
       <div class="whats-new-modal-body-content">
         <div class="modal-news-header">
           <span class="news-item-date">${item.date}</span>
-          <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
+          <span class="news-item-badge">v${item.version}</span>
         </div>
         <h2 class="modal-news-title">${item.title}</h2>
         <div class="modal-news-content">
@@ -474,7 +475,7 @@ class WhatsNewManager {
         <button class="modal-date-list-item" data-index="${index}">
           <div class="modal-date-list-item-header">
             <span class="news-item-date">${item.date}</span>
-            <span class="news-item-badge ${item.badgeClass}">${item.badge}</span>
+            <span class="news-item-badge">v${item.version}</span>
           </div>
           <div class="modal-date-list-item-title">${item.title}</div>
           ${item.contents.length > 1 ? `<span class="modal-date-list-item-count">${item.contents.length}件のコンテンツ</span>` : ''}
@@ -583,28 +584,26 @@ class WhatsNewManager {
   }
 
   setupModalEvents() {
-    const mainModalBtn = document.getElementById('mainModalBtn');
-
-    // メイン画面右上のモーダル表示ボタン
-    if (mainModalBtn) {
-      mainModalBtn.addEventListener('click', () => {
-        // 選択ポップアップを表示
-        if (typeof window.showSelectionPopup === 'function') {
-          window.showSelectionPopup();
-        } else {
-          // フォールバック：直接モーダルを表示
-          this.openAppStyleModal();
-        }
-      });
-    }
-
     // オーバーレイクリックとESCキーは無効化
-    // 右上の×ボタンも後で削除予定
   }
+}
+
+// TOCの更新履歴リストを動的生成
+function generateWhatsNewTocList() {
+  const tocList = document.getElementById('whats-new-toc-list');
+  if (!tocList || typeof whatsNewData === 'undefined') return;
+
+  tocList.innerHTML = whatsNewData.map(item => {
+    const versionId = `whats-new-v${item.version.replace('.', '-')}`;
+    return `<li><a class="toc-sublink" href="#${versionId}" data-group-id="whats-new-items">v${item.version}</a></li>`;
+  }).join('');
 }
 
 // DOMContentLoaded後に初期化
 document.addEventListener('DOMContentLoaded', () => {
+  // TOCリストを生成
+  generateWhatsNewTocList();
+
   if (typeof whatsNewData !== 'undefined' && whatsNewData.length > 0) {
     window.whatsNewManager = new WhatsNewManager();
     console.log('WhatsNewManager initialized successfully');
