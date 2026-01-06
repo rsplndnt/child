@@ -48,6 +48,18 @@
   }
 
   /* ===== 02) URL & path helpers (updated for path-based routing) ===== */
+  // GitHub Pagesのベースパス（リポジトリ名）
+  // ローカル開発時は空文字、GitHub Pages時は '/リポジトリ名'
+  const BASE_PATH = (function() {
+    const host = window.location.hostname;
+    // GitHub Pagesの場合はリポジトリ名をベースパスとして使用
+    if (host.endsWith('.github.io')) {
+      return '/child';
+    }
+    // ローカル開発やその他の環境では空文字
+    return '';
+  })();
+
   function updateUrlPath(path, { replace = false } = {}) {
     if (!path) return;
     // パスベースのルーティング: "/" から始まるパスに変換
@@ -56,7 +68,9 @@
     if (path.startsWith('#')) {
       normalized = '/' + path.slice(1);
     }
-    const value = normalized.startsWith('/') ? normalized : `/${normalized}`;
+    const pathPart = normalized.startsWith('/') ? normalized : `/${normalized}`;
+    // ベースパスを付加
+    const value = BASE_PATH + pathPart;
     try {
       if (window.location.pathname === value && !replace) return;
       if (typeof history !== 'undefined' && history.pushState) {
