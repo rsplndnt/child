@@ -904,7 +904,10 @@
       if (redirectPath) {
         path = redirectPath;
         // URLをクリーンアップ（リダイレクトパラメータを削除）
-        const cleanUrl = window.location.origin + window.location.pathname + path;
+        // ベースパスを保持してリダイレクトパスを結合
+        let basePath = window.location.pathname.replace(/\/$/, ''); // 末尾の/を削除
+        const cleanPath = redirectPath.startsWith('/') ? redirectPath : '/' + redirectPath;
+        const cleanUrl = window.location.origin + basePath + cleanPath;
         history.replaceState(null, '', cleanUrl);
       }
 
