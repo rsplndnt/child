@@ -51,7 +51,12 @@
   function updateUrlPath(path, { replace = false } = {}) {
     if (!path) return;
     // パスベースのルーティング: "/" から始まるパスに変換
-    const value = path.startsWith('/') ? path : `/${path}`;
+    // "#xxx" 形式の場合は "/xxx" に変換
+    let normalized = path;
+    if (path.startsWith('#')) {
+      normalized = '/' + path.slice(1);
+    }
+    const value = normalized.startsWith('/') ? normalized : `/${normalized}`;
     try {
       if (window.location.pathname === value && !replace) return;
       if (typeof history !== 'undefined' && history.pushState) {
