@@ -1,0 +1,2781 @@
+<!--
+  templateType: "page"
+  label: "翻訳サイネージマニュアル"
+  isAvailableForNewContent: true
+-->
+<!DOCTYPE html>
+<html lang="{{ html_lang }}" dir="{{ html_dir }}">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- ========================
+       SEO（HubSpot変数対応）
+  ========================= -->
+  <title>{{ page_meta.html_title }}</title>
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="{{ content.meta_description }}">
+  <meta name="author" content="{{ site_settings.company_name }}">
+  <meta name="keywords" content="翻訳,マニュアル,SwipeTalk"> {# 静的に固定 #}
+  <link rel="canonical" href="{{ content.canonical_url }}">
+
+  <!-- ========================
+       Open Graph
+  ========================= -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ content.absolute_url }}">
+  <meta property="og:title" content="{{ page_meta.html_title }}">
+  <meta property="og:description" content="{{ content.meta_description }}">
+  <meta property="og:image" content="{{ content.featured_image }}">
+  <meta property="og:locale" content="{{ content.language }}">
+  <meta property="og:site_name" content="{{ site_settings.company_name }}">
+
+  <!-- ========================
+       Twitter Cards
+  ========================= -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="{{ content.absolute_url }}">
+  <meta name="twitter:title" content="{{ page_meta.html_title }}">
+  <meta name="twitter:description" content="{{ content.meta_description }}">
+  <meta name="twitter:image" content="{{ content.featured_image }}">
+
+  <!-- ========================
+       HubSpot必須タグ
+  ========================= -->
+  {{ standard_header_includes }}
+
+  <!-- ========================
+       Fonts & Icons（外部CDN）
+  ========================= -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- ========================
+       HubSpot管理CSS
+  ========================= -->
+  {% require_css %}
+  <link rel="stylesheet" href="{{ get_asset_url('child/css/manual-base.css') }}">
+  <link rel="stylesheet" href="{{ get_asset_url('child/css/manual-ui.css') }}">
+  <link rel="stylesheet" href="{{ get_asset_url('child/css/print.css') }}">
+  <link rel="stylesheet" href="{{ get_asset_url('child/css/manual-print.css') }}">
+  {% end_require_css %}
+
+  <!-- ========================
+       HubSpot管理JS
+  ========================= -->
+  {% require_js %}
+  <script src="{{ get_asset_url('child/js/manual-ui.js') }}"></script>
+  <script src="{{ get_asset_url('child/js/manual-ui-hash.js') }}"></script>
+  {% end_require_js %}
+  
+  
+</head>
+
+<body>
+    <!-- 印刷専用：ページ番号用の要素（現在は未使用） -->
+    <div class="print-page-reset" style="display:none"></div>
+    <div class="print-footer" style="display:none"></div>
+    <div class="manual-wrapper">
+        <div class="menu-overlay" id="menuOverlay"></div>
+
+        <!-- 左：サイドバー（大項目） -->
+        <aside class="manual-sidebar" id="sidebarMenu" aria-label="大項目ナビ">
+            <div class="sidebar-header">
+                <h1><a href="#top" class="header-title-link" aria-label="トップページへ移動">
+                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/logo-header.svg"
+                            alt="MelBridge® - しゃべり描き翻訳™ロゴ" width="40" height="40" loading="eager">
+                        <span>しゃべり描き翻訳™<br>ユーザーマニュアル</span>
+                    </a></h1>
+                <div class="version-info">
+                    <span class="version">v1.1</span>
+                </div>
+                <!-- モバイル用閉じるボタン -->
+                <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="メニューを閉じる">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+
+            <!-- 検索・ジャンプ機能 -->
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="manualSearch" placeholder="検索" aria-label="検索・ジャンプ">
+                    <button class="clear-btn" id="clearBtn" aria-label="検索をクリア" style="display: none;">
+                        <span class="material-icons">close</span>
+                    </button>
+                    <button class="search-btn" id="searchBtn" aria-label="検索">
+                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-serch.svg" alt="検索" width="24" height="24" />
+                    </button>
+                </div>
+                <div id="manualSearchResults" class="search-results"></div>
+            </div>
+
+            <nav class="toc">
+                <!-- TOPセクションは左TOCには表示しない -->
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#account-setup" data-group-id="account-setup-items" aria-label="アカウント初期設定セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-user-circle.svg" alt="" class="toc-icon" width="20" height="20" /><span>1. アカウントの初期設定を行う</span></a>
+                    </h3>
+                </div>
+                <div class="toc-divider"></div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#screen-layout" data-group-id="screen-layout-items" aria-label="画面構成セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-screen-transcript.svg" alt="" class="toc-icon" width="20" height="20" /><span>2. 画面構成</span></a></h3>
+                </div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#operation-guide" data-group-id="operation-guide-items" aria-label="操作方法セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-swipetalk-swipe.svg" alt="" class="toc-icon" width="20" height="20" /><span>3.
+                            アプリを操作する</span></a></h3>
+                </div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#mic-usage-tips" data-group-id="mic-usage-tips-items" aria-label="マイク使用ポイントセクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-mic.svg" alt="" class="toc-icon" width="20" height="20" /><span>4.
+                            マイクの使い方のポイント</span></a></h3>
+                </div>
+                <div class="toc-divider"></div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#terminology" data-group-id="terminology-items" aria-label="用語集セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-book-close.svg" alt="" class="toc-icon" width="20" height="20" /><span>5. 用語</span></a></h3>
+                </div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#faq" data-group-id="faq-items" aria-label="よくある質問セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-help-circle.svg" alt="" class="toc-icon" width="20" height="20" /><span>6.
+                            FAQ</span></a></h3>
+                </div>
+                <div class="toc-section">
+                    <h3><a class="toc-link" href="#product-specs" data-group-id="product-specs-items" aria-label="製品仕様セクション"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-information.svg" alt="" class="toc-icon" width="20" height="20" /><span>7. 製品仕様</span></a></h3>
+                </div>
+                <div class="toc-divider"></div>
+                <div class="toc-section toc-section-with-subitems">
+                    <h3><button class="toc-link toc-toggle" aria-label="更新履歴セクション" aria-expanded="false"><img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-update.svg" alt="" class="toc-icon" width="20" height="20" /><span>8. 更新履歴</span><i class="material-icons toc-chevron">expand_more</i></button></h3>
+                    <ul class="toc-subitems" id="whats-new-toc-list">
+                        <!-- whatsNewDataから動的に生成 -->
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- ハンバーガーメニュー -->
+        <button class="hamburger-menu" id="hamburgerMenu" aria-label="メニューを開く" aria-expanded="false">
+        </button>
+
+        <!-- デスクトップ用：リサイズハンドル -->
+        <div class="sidebar-resizer" id="sidebarResizer" aria-hidden="true"></div>
+
+        <!-- 中央＋右 -->
+        <main class="manual-content">
+            <!-- 中央：本文 -->
+            <div class="content-panel">
+
+                <!-- タブの直前に配置。aria-hidden を外す -->
+                <section class="print-cover only-print" data-date="2024年12月">
+                    <div class="print-cover-logo">
+                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/MelBridge_logo_1_RGB.jpg" alt="MelBridge® ロゴ" width="400" height="100" />
+                    </div>
+                    <div class="print-cover-title">
+                        <h1>しゃべり描き翻訳™<br><span style="font-size: 24pt;">ユーザーマニュアル</span></h1>
+                    </div>
+                </section>
+                
+                <!-- 印刷用目次（2ページ目） -->
+                <div class="print-toc-page only-print">
+                    <h2 class="print-toc-title">目次</h2>
+                    <div class="print-toc-content">
+                        <!-- 目次の内容はJavaScriptで動的に生成 -->
+                    </div>
+                </div>
+
+                <!-- ========== TOP Page ========== -->
+                <section id="top" class="step-section step-section--top">
+                    <header class="step-header top-hero">
+                            <h2>はじめてのしゃべり描き翻訳™<br>
+                                <span class="top-hero__subtitle">60秒クイックガイド</span>
+                            </h2>
+                        </header>
+                        <div class="top-video-container">
+                            <video class="top-video" controls autoplay muted loop playsinline>
+                                <source src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/movie-intro-pair-1.mp4" type="video/mp4">
+                                お使いのブラウザは動画タグをサポートしていません。
+                            </video>
+                        </div>
+                        <div class="top-description">
+                            <h3>しゃべり描き翻訳™でできること</h3>
+                            <p class="top-hero__lead">しゃべり描き翻訳™は、音声翻訳・手書き・画像貼り付けをひとつの画面で扱えるコミュニケーションツールです。何ができるかを、3つの特徴で素早く把握しましょう。</p>
+                        </div>
+                        <div class="top-feature-grid">
+                            <article class="top-feature-card" id="two-language-communication">
+                                <figure class="top-feature-visual">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-1.png" alt="２言語間のコミュニケーション画面のイメージ" loading="lazy">
+                                </figure>
+                                <h3>１対１の会話を翻訳し伝達をアシスト</h3>
+                                <p>１対１のコミュニケーションで、互いの言語を翻訳しながら伝達をアシストします。入力言語ごとにマイクボタンが分かれているので、素早く正確な入力・翻訳が可能です。</p>
+                                <a class="top-feature-link" href="#select-language"><span class="material-icons" aria-hidden="true">arrow_forward</span><span>使用する言語を選ぶ</span></a>
+                            </article>
+
+                            <article class="top-feature-card" id="transcript-conversation">
+                                <figure class="top-feature-visual">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-3.png" alt="トランスクリプト機能の画面イメージ" loading="lazy">
+                                </figure>
+                                <h3>トランスクリプトで会話の流れが分かる</h3>
+                                <p>トランスクリプト機能を使えば、話した内容をその場で翻訳して伝えられます。会話は吹き出し形式で保存され、あとから簡単に流れを振り返ることができます。</p>
+                                <a class="top-feature-link" href="#use-transcript"><span class="material-icons" aria-hidden="true">arrow_forward</span><span>トランスクリプトを使う</span></a>
+                            </article>
+
+                            <article class="top-feature-card" id="drawing-with-translation">
+                                <figure class="top-feature-visual">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-intro-pair-2.png" alt="しゃべり描き®で伝える様子のイメージ" loading="lazy">
+                                </figure>
+                                <h3>しゃべり描き®で視覚的に伝える</h3>
+                                <p>画像に矢印や図を描き込み、その上に音声入力した文字を翻訳して組み合わせられます。複雑な作業指導や図面変更の説明なども、直感的に表現しながら翻訳して伝えられます。</p>
+                                <a class="top-feature-link" href="#use-swipe-talk"><span class="material-icons" aria-hidden="true">arrow_forward</span><span>しゃべり描きを使う</span></a>
+                            </article>
+
+
+                        </div>
+                        <div class="top-hero-actions">
+                            <a href="#account-setup" class="hero-btn primary"><span class="material-icons" aria-hidden="true">play_arrow</span><span>アカウントの初期設定を行う</span></a>
+                            <a href="#create-new-sheet" class="hero-btn primary"><span class="material-icons" aria-hidden="true">note_add</span><span>新しいシートを作成する</span></a>
+                        </div>
+                </section>
+
+                <!-- ========== Section 1 ========== -->
+                <section id="account-setup" class="step-section is-hidden">
+                    <header class="step-header">
+                        <h2><span class="step-number">01</span> アカウントの初期設定を行う</h2>
+                    </header>
+                    <div class="step-content">
+                        <div class="procedure-item">
+                            <h4 id="signin-process">1. サインインする</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-1.png"
+                                            alt="サインイン手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>ブラウザで <a href="https://swipetalk.melbridge.com" target="_blank"
+                                                    rel="noopener">https://swipetalk.melbridge.com</a> にアクセスします。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-2.png"
+                                            alt="サインイン手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>[サインイン]画面で アカウント名を入力し[次へ]を押します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+                                            <ul>
+                                                <li>アカウント名および仮パスワードは、MelBridge®事務局からあなた宛てにメールでお送りしています。</li>
+                                                <li>件名：しゃべり描き翻訳™_アカウント発行のご連絡</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-3.png"
+                                            alt="サインイン手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li id="signin-step-3">[パスワード]画面で 仮パスワードを入力し[サインイン]を押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-signin-4.png"
+                                            alt="サインイン手順4" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="4">
+                                            <li id="signin-step-4">[パスワードの更新] 画面が表示されます。現在の仮パスワードと新しいパスワードを入力し、 [サインイン] を押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="setup-authenticator">2. 二段階認証を設定する</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-1.png"
+                                            alt="Authenticator設定手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>【Microsoft Authenticator】アプリに関する案内が表示されます。<br>
+                                                [QRコードをスキャンします]の画面が表示されるまで[次へ]を押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-2.png"
+                                            alt="Authenticator設定手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>手元にスマートフォンを用意します。<br>
+                                                スマートフォンで【Microsoft Authenticator】アプリを起動します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+                                            <ul>
+                                                <li>アプリをお持ちでない場合は、お使いのスマートフォンのアプリストアからMicrosoft Authenticatorを入手してください</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-3.png"
+                                            alt="Authenticator設定手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li>[QRアイコン]から、QRをスキャンする画面に移動します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authenticator-4.png"
+                                            alt="Authenticator設定手順4" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="4">
+                                            <li>PCのブラウザに表示されたQRコードを、スマートフォンで読み取ります。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+                                            <ul>
+                                                <li>スマートフォンのカメラアプリ/コードスキャンアプリからQRコードを読み取っても認証されません。必ず【Microsoft Authenticator】アプリを使用してください。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="authenticate-with-app">3. 二段階認証する</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-1.png"
+                                            alt="Authenticator認証手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>スマートフォンでQRコードを読み取ったら、PCのブラウザの[次へ]を押します。次の画面で2桁の番号が表示されます。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-2.png"
+                                            alt="Authenticator認証手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>PCのブラウザに表示された2桁の番号を、スマートフォンのアプリ画面で入力し[はい]を押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-3.png"
+                                            alt="Authenticator認証手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li>認証が完了します。スマートフォンのアプリ画面に、登録したアカウントが表示されたことを確認します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-setup-authorize-4.png"
+                                            alt="Authenticator認証手順4" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="4">
+                                            <li>PCのブラウザで[通知が承認されました]と表示されます。[次へ]を押し、[成功]画面で[完了]を押すと、ログインが完了します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>今後パスワードを入力せずにアクセスしたい場合、[サインインの状態を維持しますか？]の画面で[今後このメッセージを表示しない]をチェックし[はい]を押します。
+                                                </li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== Section 2 ========== -->
+                <section id="screen-layout" class="step-section is-hidden">
+                    <header class="step-header">
+                        <h2><span class="step-number">02</span> 画面構成</h2>
+                    </header>
+                    <div class="step-content">
+                        <div class="procedure-item">
+                            <h4 id="sheet-management-area">1. シート管理エリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-layout-header-2.png"
+                                            alt="シート管理エリア" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#create-new-sheet">シート選択・シート作成</a></strong>
+                                                    <p><strong>💡 シートとは</strong><br>
+                                                    <span class="small-text">キャンバスエリアとトランスクリプトエリアを一つのまとまりとして管理する単位です。テーマや用途ごとにシートを分けて使うと便利です。</span></p>
+                                                    <div class="feature-detail">
+                                                        <h6>シート作成</h6>
+                                                        <p>新しいシートを作成します。複数のシートを作り分けて使用できます。</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>シート選択</h6>
+                                                        <p>過去に作成したシートの一覧から、編集したいシートを選択できます。</p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#faq-change-sheet-title">シートタイトル</a></strong>
+                                                    <p>シートの名前を編集できます。内容が分かりやすい名前を付けることで、後から見返しやすくなります。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#export-canvas">書き出し</a></strong>
+                                                    <p>現在のシートをPNG画像として保存します。完成した作品の保存や共有にご利用ください。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#transcript-area">トランスクリプト表示</a></strong>
+                                                    <p>トランスクリプトエリアの表示・非表示を切り替えます。キャンバスを広く使いたいときは非表示にすると便利です。</p>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="canvas-area">2. キャンバスエリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-layout-canvas-2.png"
+                                            alt="キャンバスエリア" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#term-canvas">キャンバス</a></strong>
+                                                    <p>しゃべり描きやお絵描きを行うメインエリアです。音声入力した文字や、手描きの線・画像などを自由に配置できます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#use-swipe-talk">しゃべり描き®マイクボタン</a></strong>
+                                                    <p>このボタンを押すと、音声認識が開始されます。キャンバス上をなぞると、話した内容がキャンバスに文字として表示されます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#select-language">言語選択ボタン</a></strong>
+                                                    <p>しゃべり描きとトランスクリプトで使用する言語を選択します。入力言語と翻訳先言語を設定できます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#use-swipe-talk">しゃべり描き®文字（入力文・翻訳文・折り返し翻訳）</a></strong>
+                                                    <p>音声入力した内容がキャンバスに表示されます。以下の3種類の文字が表示されます：</p>
+                                                    <div class="feature-detail">
+                                                        <h6>入力文</h6>
+                                                        <p>認識された元の言語の文章</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>翻訳文</h6>
+                                                        <p>選択した言語への翻訳結果</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>折り返し翻訳文</h6>
+                                                        <p>翻訳文を元の言語に再翻訳した結果（翻訳の精度確認に便利）</p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-layout-canvas-3.png"
+                                            alt="キャンバスエリア" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="5">
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#drawing-tools">ツール（カーソル・ペン小中大・消しゴム）</a></strong>
+                                                    <div class="feature-detail">
+                                                        <h6>カーソル</h6>
+                                                        <p>文字や画像の移動・選択に使用します。</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>ペン（小・中・大）</h6>
+                                                        <p>線の太さを3段階から選んで描画できます。</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>消しゴム</h6>
+                                                        <p>描いた線や文字を消すことができます。</p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#use-swipe-talk">文字サイズ選択</a></strong>
+                                                    <p>しゃべり描きで表示される文字の大きさを変更します。キャンバスの使い方に合わせてサイズを調整してください。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#drawing-tools">パレット</a></strong>
+                                                    <p>しゃべり描きの文字色と、ペンで描く線の色を選択します。豊富なカラーバリエーションから選べます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#add-images">カメラ</a></strong>
+                                                    <p>端末のカメラを起動して撮影し、撮影した写真をキャンバスに貼り付けられます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#add-images">ファイル</a></strong>
+                                                    <p>端末に保存されている画像ファイルを選択して、キャンバスに貼り付けられます。</p>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-layout-canvas-4.png"
+                                            alt="キャンバスエリア" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="10">
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#term-undo-redo">アンドゥ・リドゥ</a></strong>
+                                                    <div class="feature-detail">
+                                                        <h6>アンドゥ（元に戻す）</h6>
+                                                        <p>直前の操作を取り消します。</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>リドゥ（やり直す）</h6>
+                                                        <p>取り消した操作をもう一度実行します。</p>
+                                                    </div>
+                                                    <p>複数回の操作を順番に戻したり、やり直したりできます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong>ヘルプ</strong>
+                                                    <p>ユーザーマニュアルを別ウィンドウで開きます。使い方に迷ったときにご参照ください。</p>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-text advice-section">
+                                    <h5>ワンポイントアドバイス</h5>
+                                    <div class="operation-grid">
+                                        <div class="operation-card">
+                                            <h6>スクロール上下</h6>
+                                            <p>📱 <strong>タッチ</strong>：２本指でドラッグ<br>
+                                            🖱️ <strong>マウス</strong>：ホイール</p>
+                                            <div class="operation-image">
+                                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-scroll-1.png"
+                                                    alt="スクロール上下" loading="lazy">
+                                            </div>
+                                        </div>
+                                        <div class="operation-card">
+                                            <h6>スクロール左右</h6>
+                                            <p>📱 <strong>タッチ</strong>：２本指でドラッグ<br>
+                                            🖱️ <strong>マウス</strong>：[Shift] + ホイール</p>
+                                            <div class="operation-image">
+                                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-scroll-2.png"
+                                                    alt="スクロール左右" loading="lazy">
+                                            </div>
+                                        </div>
+                                        <div class="operation-card">
+                                            <h6>拡大</h6>
+                                            <p>📱 <strong>タッチ</strong>：２本指でピンチアウト<br>
+                                            🖱️ <strong>マウス</strong>：[Ctrl] + ホイール上</p>
+                                            <div class="operation-image">
+                                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-pinch-1.png"
+                                                    alt="拡大" loading="lazy">
+                                            </div>
+                                        </div>
+                                        <div class="operation-card">
+                                            <h6>縮小</h6>
+                                            <p>📱 <strong>タッチ</strong>：２本指でピンチイン<br>
+                                            🖱️ <strong>マウス</strong>：[Ctrl] + ホイール下</p>
+                                            <div class="operation-image">
+                                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-pinch-2.png"
+                                                    alt="縮小" loading="lazy">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="transcript-area">3. トランスクリプトエリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-layout-transcript-2.png"
+                                            alt="トランスクリプトエリア" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#use-transcript">トランスクリプトマイクボタン</a></strong>
+                                                    <p>このボタンを押すと、音声認識が開始され、話した内容がトランスクリプトエリアにテキストとしてリアルタイムに記録されます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#select-language">言語表示バッジ</a></strong>
+                                                    <p>現在選択されている言語設定が表示されます。言語の変更は、キャンバスエリアの言語選択ボタンから行えます。</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div>
+                                                    <strong><a href="#use-transcript">トランスクリプト文字（入力文・翻訳文・折り返し翻訳）</a></strong>
+                                                    <p>音声入力した内容が時系列で記録されます。以下の3種類の文字が表示されます：</p>
+                                                    <div class="feature-detail">
+                                                        <h6>入力文</h6>
+                                                        <p>認識された元の言語の文章</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>翻訳文</h6>
+                                                        <p>選択した言語への翻訳結果</p>
+                                                    </div>
+                                                    <div class="feature-detail">
+                                                        <h6>折り返し翻訳文</h6>
+                                                        <p>翻訳文を元の言語に再翻訳した結果</p>
+                                                    </div>
+                                                    <p>キャンバスエリアとは別に、会話の記録として残すことができます。</p>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== Section 3 ========== -->
+                <section id="operation-guide" class="step-section is-hidden">
+                    <header class="step-header">
+                    <h2><span class="step-number">03</span> アプリを操作する</h2>
+                    </header>
+                    <div class="step-content">
+                        <div class="procedure-item">
+                            <h4 id="operation-signin">1. サインインする</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-signin-1.png"
+                                            alt="サインイン手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>ブラウザで <a href="https://swipetalk.melbridge.com" target="_blank"
+                                                    rel="noopener">https://swipetalk.melbridge.com</a> にアクセスします。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-signin-2.png"
+                                            alt="サインイン手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>[アカウントを選択する]画面で アカウントを選択すると、アプリ画面が開きます。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+
+                                            <h5>⚠ 注意</h5>
+                                            <ul>
+                                                    <li>アカウントがない場合は、<a href="#signin-step-3">初期設定 1の3以降の手順</a>を実行したか確認してください。</li>
+                                                    <li>Microsoft Authenticatorの認証を求められた場合は、<a href="#authenticate-with-app">初期設定 3の1~4の手順</a>を行ってください。</li>
+                                                    <li>パスワードの入力を求められた場合は、<a href="#signin-step-4">初期設定 1の4</a>で設定したパスワードを入力してください。</li>
+                                                    <li>パスワードを忘れた場合は、弊社の営業担当またはサポートデスクにお問い合わせください。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="procedure-item">
+                            <h4 id="create-new-sheet">2. シートを作成する</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-sheet-1.png"
+                                            alt="シート作成手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>[シートボタン]を押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-sheet-2.png"
+                                            alt="シート作成手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>[シートの新規作成]を押すと、新しいシートが作成されます。<br>
+                                                あなたが過去に作成したシートも、リストから選択して開くことができます。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>シートは最大10枚までしか作成できません。作成済みのシートが10枚に達した状態で新しいシートを作成した場合、最終更新日が古いシートから非表示になり、アクセスできません。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-sheet-3.png"
+                                            alt="シート作成手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li>開いているシートのタイトルを押すと、任意の名称に変更できます。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="procedure-item">
+                            <h4 id="select-language">3. 使用する言語を選ぶ</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-selectLanguage-1.png"
+                                            alt="言語選択手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>しゃべり描き®マイクの上にある[言語選択ボタン]を押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-selectLanguage-2.png"
+                                            alt="言語選択手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>使用可能な言語の一覧が表示されます。使用したい言語を選択し[決定]を押します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>使用可能な言語の一覧は製品仕様-翻訳言語 をご覧ください。<br>
+                                                    同一言語を選択して使用することもできます。その場合、翻訳は行われません。</li>
+                                            </ul>
+                                        </aside>
+
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-selectLanguage-3.png"
+                                            alt="言語選択手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li>しゃべり描き®マイクの言語と、対応するトランスクリプトマイクの言語が選択したものに設定されます。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>マイクと設定言語は１対１で紐づいています。入力する言語のすぐ下にあるマイクを使用してください。</li>
+                                                <li>トランスクリプトでは、左のマイクで入力した内容は左の吹き出し、右のマイクで入力した内容は右の吹き出しとして表示されます。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="procedure-item">
+                            <h4 id="use-swipe-talk">4. しゃべり描き®を使う</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-swipetalk-1.png"
+                                            alt="しゃべり描き®手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>左右いずれかのしゃべり描き®マイクボタンを押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-swipetalk-2.png"
+                                            alt="しゃべり描き®手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>しゃべり描き®マイクボタンが青色になったら、音声を入力します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>マイクボタンを押してから音声入力できるようになるまで短いラグがあります。必ずボタンが青くなるのを確認してから音声入力してください。</li>
+                                            </ul>
+                                        </aside>
+
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-swipetalk-3.png"
+                                            alt="しゃべり描き®手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li>キャンバスの任意の場所をマウス・指でなぞると、文字が表示されます。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-swipetalk-4.png"
+                                            alt="しゃべり描き®手順4" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="4">
+                                            <li>入力文が表示されたあと、翻訳文・折り返し翻訳文が順次表示されます。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-text advice-section">
+                                    <h5>ワンポイントアドバイス</h5>
+                                    <ul class="advice-list">
+                                        <li class="advice-item">
+                                            <span>しゃべり描き®マイクボタンを押したあと、すぐにキャンバスをなぞり、その後音声入力しても、文字が表示されます。</span>
+                                            <div class="advice-image-with-src">
+                                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-swipetalk-point-1.png"
+                                                    alt="しゃべり描き®のコツ" loading="lazy">
+                                            </div>
+                                        </li>
+                                        <li class="advice-item">
+                                            <span>しゃべり描き®を途中でキャンセルしたい場合は、しゃべり描き®マイクボタンを再度押すか、ツールパレットのいずれかのボタンを押します。</span>
+                                        </li>
+                                        <li class="advice-item">
+                                            <span>しゃべり描き®の色を選択したい場合はツールパレットの[●]を押します。</span>
+                                        </li>
+                                        <li class="advice-item">
+                                            <span>しゃべり描き®のサイズを変更したい場合は<span class="button-label button-label--lg">A</span><span class="button-label">A</span>のいずれかを選択します。</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="procedure-item">
+                            <h4 id="use-transcript">5. トランスクリプトを使う</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-transcript-1.png"
+                                            alt="トランスクリプト手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>[トランスクリプトボタン]を押してトランスクリプトエリアを表示します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-transcript-2.png"
+                                            alt="トランスクリプト手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>左右いずれかのトランスクリプトマイクボタンを押します。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-transcript-3.png"
+                                            alt="トランスクリプト手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="3">
+                                            <li>トランスクリプトマイクボタンが青色になったら、音声を入力します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>マイクボタンを押してから音声入力できるようになるまで短いラグがあります。必ずボタンが青くなるのを確認してから音声入力してください。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-transcript-4.png"
+                                            alt="トランスクリプト手順4" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="4">
+                                            <li>入力した文章が文字起こしされます。文章の吹き出しは一定の間隔で区切られ、翻訳・折り返し翻訳が表示されます。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>マイクと設定言語は１対１で紐づいています。入力する言語のすぐ下にあるトランスクリプトマイクを使用してください。</li>
+                                                <li>左のマイクで入力した内容は左の吹き出し、右のマイクで入力した内容は右の吹き出しとして表示されます。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-transcript-5.png"
+                                            alt="トランスクリプト手順5" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="5">
+                                            <li>トランスクリプトを終了したい場合は、有効になっているトランスクリプトマイクボタンを再度押し、ボタンがグレーになるのを確認します。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+                                            <ul>
+                                                <li>トランスクリプトでは通常、音声の区切りによる自動終了は行われません。<br>
+                                                    音声認識を連続して10分有効にすると、強制的に終了します</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-text advice-section">
+                                    <h5>ワンポイントアドバイス</h5>
+                                    <ul class="advice-list">
+                                        <li class="advice-item">
+                                            <span>片方の言語のトランスクリプトマイクが有効のときに、もう一方の言語のトランスクリプトマイクを押すと、あとから押したほうのマイクが有効になり、素早く認識言語を切り替えられます。</span>
+                                            <div class="advice-image-with-src">
+                                                <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-transcript-point-1.png"
+                                                    alt="トランスクリプトのコツ" loading="lazy">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <aside class="note-card" role="note" style="margin-left: 0; margin-top: 16px;">
+                                    <h5>⚠ 注意</h5>
+                                    <ul>
+                                        <li>トランスクリプトの起動中に、新規シートの作成や既存のシートへの切り替えを行わないでください。会話中のチャットが次のシートに出力されることがあります。シート操作を実施する際は、必ずトランスクリプトのマイクボタンを無効化してから切り替えを行ってください。</li>
+                                    </ul>
+                                </aside>
+                            </div>
+                        </div>
+                        <div class="procedure-item">
+                            <h4 id="add-images">6. 写真・画像を貼り付ける</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-subsection">
+                                    <h5 class="step-subsection-title">A. 写真を撮影して貼り付ける</h5>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-a-1.png"
+                                                alt="画像貼り付け手順1" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-1. <br>ツールパレット内の[カメラボタン]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-a-2.png"
+                                                alt="画像貼り付け手順2" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-2. <br>撮影画面が出現します。[カメラボタン]を押すと写真を撮影できます。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-text advice-section">
+                                        <h5>ワンポイントアドバイス</h5>
+                                        <ul class="advice-list">
+                                            <li class="advice-item">
+                                                <div class="advice-item-content">
+                                                    <span>アプリを使用している端末に２つ以上のカメラが接続されている場合、自動でいずれかのカメラが選択されます。<br>
+                                                        カメラの切替はブラウザの設定から行うことができます。</span>
+                                                    <div class="browser-settings-guide">
+                                                    <h6>PCブラウザでのカメラ切替方法</h6>
+                                                    <p>以下のURLをアドレスバーにコピー&ペーストして、カメラの設定画面にアクセスできます。</p>
+                                                    <div id="browser-setting-url" class="browser-url-container">
+                                                        <div class="browser-url-wrapper">
+                                                            <code id="setting-url-text" class="setting-url">chrome://settings/content/camera</code>
+                                                            <button id="copy-url-btn" class="copy-url-btn" title="URLをコピー" aria-label="URLをコピー">
+                                                                <span class="material-icons" aria-hidden="true">content_copy</span>
+                                                            </button>
+                                                        </div>
+                                                        <p class="browser-detected-info">
+                                                            <span class="material-icons" aria-hidden="true">info</span>
+                                                            <span id="detected-browser-text">お使いのブラウザ: <strong id="browser-name">Chrome</strong></span>
+                                                        </p>
+                                                    </div>
+                                                    <ul class="browser-instructions">
+                                                        <li>URLをコピーしたら、ブラウザのアドレスバーに貼り付けてEnterキーを押してください</li>
+                                                        <li>設定画面で使用するカメラを選択できます</li>
+                                                    </ul>
+                                                    
+                                                    <div class="camera-settings-video-container">
+                                                        <h6 class="video-title">
+                                                            <span class="material-icons" aria-hidden="true">play_circle</span>
+                                                            切り替え方法の動画（例：Microsoft Edge）※音声なし
+                                                        </h6>
+                                                        <div class="camera-video-wrapper">
+                                                            <video class="camera-settings-video" controls playsinline>
+                                                                <source src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/cameraSetting.mp4" type="video/mp4">
+                                                                お使いのブラウザは動画タグをサポートしていません。
+                                                            </video>
+                                                        </div>
+                                                        <p class="video-description">
+                                                            <span class="material-icons" aria-hidden="true">info</span>
+                                                            ブラウザによって、設定画面は異なります。この動画はMicrosoft Edgeの設定画面を例にしています。
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </li>
+                                            <li class="advice-item">
+                                                <div class="advice-item-content">
+                                                    <span>タブレット端末では、カメラの切り替え機能がご利用いただけない場合があります。</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-a-3.png"
+                                                alt="画像貼り付け手順3" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-3. <br>確認画面が表示されます。撮影した写真をそのまま使用する場合は[これを使用]を押します。もう一度撮影画面に戻る場合は[撮り直す]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-a-4.png"
+                                                alt="画像貼り付け手順4" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>A-4. <br>撮影した写真がキャンバスの中央に配置されます。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-with-subsection">
+                                    <h5 class="step-subsection-title">B. 端末に保存された画像を貼り付ける</h5>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-b-1.png"
+                                                alt="画像貼り付け手順5" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>B-1. <br>ツールパレット内の[ファイルボタン]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-b-2.png"
+                                                alt="画像貼り付け手順5" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>B-2. <br>エクスプローラー画面が出現します。貼り付けたい画像を選択して[開く]を押します。</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-b-3.png"
+                                                alt="画像貼り付け手順6" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>B-3. <br>選択した写真がキャンバスの中央に配置されます。</p>
+                                            <aside class="note-card" role="note">
+                                                <h5>⚠ 注意</h5>
+                                                <ul>
+                                                    <li>画像が大きすぎるとアップロードできません。その場合は画像を圧縮してからアップロードしてください。</li>
+                                                </ul>
+                                            </aside>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-with-subsection">
+                                    <h5 class="step-subsection-title">C. クリップボードにコピーされた画像を貼り付ける</h5>
+                                    <div class="step-with-image">
+                                        <div class="step-image">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-picture-c-1.png"
+                                                alt="画像貼り付け手順7" loading="lazy">
+                                        </div>
+                                        <div class="step-text">
+                                            <p>C-1.
+                                                <br>クリップボードに画像をコピーし、アプリ画面のウィンドウを開いた状態で[Ctrl]+[V]を押すと、コピーした画像がキャンバスの中央に配置されます。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="drawing-tools">7. お絵描きを行う</h4>
+                            <div class="procedure-steps">
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-drawing-1.png"
+                                            alt="お絵描き手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol>
+                                            <li>ツールパレット内の[ペンボタン]を選択します。ペンの太さを３種類から選択できます。</li>
+                                        </ol>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>タッチ操作の場合、マルチタッチによる描画はできません。必ず1点のみをタッチして描画してください。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-drawing-2.png"
+                                            alt="お絵描き手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <ol start="2">
+                                            <li>キャンバスを押してなぞると、お絵描きができます。</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="step-text advice-section">
+                                    <h5>ワンポイントアドバイス</h5>
+                                    <ul class="advice-list">
+                                        <li class="advice-item">
+                                            <span>お絵描きの色を選択したい場合はツールパレットの[●]を押します。</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="procedure-item">
+                        <h4 id="edit-elements">8. 要素を移動・消去・編集する</h4>
+                        <div class="procedure-steps">
+                            <div class="step-with-subsection">
+                                <h5 class="step-subsection-title">A. 要素を移動する</h5>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-a-1.png"
+                                            alt="要素移動手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>A-1. <br>ツールパレット内の[カーソル]を選択します。</p>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-a-2.png"
+                                            alt="要素移動手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>A-2.
+                                            <br>お絵描き・画像・しゃべり描き®文字のいずれかを押すと、選択枠が表示されます。その状態で、要素を任意の場所にドラッグ・スライドします。
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-a-3.png"
+                                            alt="要素移動手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>A-3. <br>キャンバスの空いた場所を押すと、選択枠が非表示になり、移動が完了します。</p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+
+                                            <ul>
+                                                <li>要素が重なっている場合、一番手前に配置されている要素が選択されます。</li>
+                                            </ul>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step-with-subsection">
+                                <h5 class="step-subsection-title">B. 要素を消去する</h5>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-b-1.png"
+                                            alt="要素消去手順" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>B-1. <br>ツールパレット内の[消しゴムボタン]を選択します。</p>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-b-2.png"
+                                            alt="要素消去手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>B-2. <br>消去したい要素に触れると、要素が消去されます。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step-with-subsection">
+                                <h5 class="step-subsection-title">C. 文字要素を編集する</h5>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-c-1.png"
+                                            alt="文字編集手順1" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>C-1. <br>ツールパレット内の[カーソル]を選択します。</p>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-c-2.png"
+                                            alt="文字編集手順2" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>C-2.
+                                            <br>しゃべり描き®文字を１回押すと、選択枠が表示されます。その状態でしゃべり描き®文字をもう１回押すと、テキストボックスが表示されます。
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="step-with-image">
+                                    <div class="step-image">
+                                        <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-boundingBox-c-3.png"
+                                            alt="文字編集手順3" loading="lazy">
+                                    </div>
+                                    <div class="step-text">
+                                        <p>C-3.
+                                            <br>テキストボックス内で入力文を編集し、[決定]を押します。キャンバス上のしゃべり描き®文字が更新され、それに合わせて翻訳文・折り返し翻訳文が修正されます。
+                                        </p>
+                                        <aside class="note-card" role="note">
+                                            <h5>⚠ 注意</h5>
+                                            <p>翻訳結果が出力されるまでは[決定]は押せません。翻訳結果が出力されると決定ボタンが押せるようになります。</p>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="export-canvas">9. キャンバスエリアを画像として書き出す</h4>
+                        <div class="procedure-steps">
+                            <div class="step-with-image">
+                                <div class="step-image">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-export-1.png"
+                                        alt="画像書き出し手順1" loading="lazy">
+                                </div>
+                                <div class="step-text">
+                                    <ol>
+                                        <li>[シート管理]内の[書き出しボタン]を押します。</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="step-with-image">
+                                <div class="step-image">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-export-2.png"
+                                        alt="画像書き出し手順2" loading="lazy">
+                                </div>
+                                <div class="step-text">
+                                    <ol start="2">
+                                        <li>キャンバスが画像として書き出され、ブラウザのダウンロード機能により任意の場所に保存されます。</li>
+                                    </ol>
+                                    <aside class="note-card" role="note">
+                                        <h5>⚠ 注意</h5>
+
+                                        <ul>
+                                            <li>保存場所はブラウザの設定により異なります。</li>
+                                        </ul>
+                                    </aside>
+                                    <aside class="note-card" role="note">
+                                        <h5>⚠ 注意</h5>
+
+                                        <ul>
+                                            <li>トランスクリプトは書き出しされません。</li>
+                                        </ul>
+                                    </aside>
+
+                                </div>
+                            </div>
+                            <div class="step-text advice-section">
+                                <h5>ワンポイントアドバイス</h5>
+                                <ul class="advice-list">
+                                    <li class="advice-item">
+                                        <span>書き出される範囲は、ブラウザであなたが表示しているキャンバスの範囲です。キャンバスのズーム率を変更したり、ブラウザのウィンドウサイズを変更することで、書き出される範囲を広げたり、狭めたりすることが出来ます。</span>
+                                        <div class="advice-image-with-src">
+                                            <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-export-point-1.png"
+                                                alt="キャンバス書き出し範囲のガイド" loading="lazy">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== Section 4 ========== -->
+                <section id="mic-usage-tips" class="step-section is-hidden">
+                <header class="step-header">
+                    <h2><span class="step-number">04</span> マイクの使い方のポイント</h2>
+                </header>
+                <div class="step-content">
+                    <div class="procedure-item">
+                        <h4 id="mic-permission">マイクの許可について</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>マイクを起動した際にブラウザからマイクへのアクセス許可を求める通知が表示された場合は、必ず<span class="button-label">許可</span>を押してください。許可しないとマイク機能をご使用いただけません。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="mic-input-lag">音声入力時のボタンのラグ</h4>
+                        <div class="procedure-steps">
+                            <div class="step-with-image">
+                                <div class="step-image">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-caution-mic-1.png"
+                                        alt="マイクボタンのラグ" loading="lazy">
+                                </div>
+                                <div class="step-text">
+                                    <p>マイクボタンを押してから音声入力できるようになるまで短いラグがあります。必ずボタンが青くなるのを確認してから音声入力してください。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="concurrent-usage-notes">しゃべり描きとトランスクリプトの同時使用の条件</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <ul>
+                                    <li>しゃべり描き®マイクを有効にした場合、その他のマイクボタンは一時的に無効になり、押すことができません。</li>
+                                    <li>トランスクリプトマイクを有効にした場合、同一言語であれば途中でしゃべり描き®マイクを使用できます。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="dual-user-mic-usage">マイクと設定言語と吹き出しの紐づき</h4>
+                        <div class="procedure-steps">
+                            <div class="step-with-image">
+                                <div class="step-image">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-caution-mic-2.png"
+                                        alt="マイクと言語の紐づき" loading="lazy">
+                                </div>
+                                <div class="step-text">
+                                    <ul>
+                                        <li>マイクと設定言語は１対１で紐づいています。入力する言語のすぐ下にあるマイクを使用します。</li>
+                                        <li>トランスクリプトでは、左のマイクで入力した内容は左の吹き出し、右のマイクで入力した内容は右の吹き出しとして表示されます。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="multiple-window-restriction">複数ウィンドウを開いたときのマイク使用の条件</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>複数のブラウザウィンドウまたはタブで同時にアプリを開いてトランスクリプトを実行をしないでください</p>
+                                <aside class="note-card" role="note">
+                                    <h5>⚠ 注意</h5>
+                                    <p>複数のブラウザウィンドウ / タブで同時にアプリを開き、トランスクリプトを実行することはサポート対象外です。</p>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </section>
+
+                <!-- ========== Section 5 ========== -->
+                <section id="terminology" class="step-section is-hidden">
+                    <header class="step-header">
+                        <h2><span class="step-number">05</span> 用語</h2>
+                    </header>
+                    <div class="step-content">
+                        <div class="local-section-search" data-scope="terminology">
+                            <div class="search-box">
+                                <input type="text" id="terminologySearch" placeholder="用語を検索" aria-label="用語を検索">
+                                <button class="clear-btn" id="terminologySearchClear" aria-label="検索をクリア" style="display: none;">
+                                    <span class="material-icons">close</span>
+                                </button>
+                                <button class="search-btn" id="terminologySearchBtn" aria-label="検索">
+                                    <img src="https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/icon-serch.svg" alt="" width="20" height="20" aria-hidden="true" />
+                                </button>
+                            </div>
+                            <div id="terminologySearchResults" class="search-results"></div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-swipetalk">しゃべり描き翻訳™</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>このマニュアル全体で扱うウェブアプリ。左右の言語ペアで音声入力を行い、翻訳結果や折り返し翻訳をキャンバスとトランスクリプトに表示します。</p>
+                                    <ul>
+                                        <li>しゃべり描き®で描画と音声入力を組み合わせて情報を伝えられます（<a href="#use-swipe-talk">操作手順</a>）。</li>
+                                        <li>トランスクリプトでは会話を吹き出し形式で記録し、翻訳できます（<a href="#use-transcript">操作手順</a>）。</li>
+                                        <li>マイクの左右がそれぞれ別言語に割り当てられており、会話者ごとの入力を切り替えできます。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-swipe-talk-feature">しゃべり描き®（Swipe Talk機能）</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>音声入力と同時にキャンバスに文字を配置する機能。入力文・翻訳文・折り返し翻訳が3段で表示されます。</p>
+                                    <ul>
+                                        <li>マイクボタンを押して話し、指でなぞると、翻訳結果がリアルタイムでキャンバスに表示されます。</li>
+                                        <li>色や文字サイズはツールパレットから変更できます。</li>
+                                        <li>配置後の文字は選択枠で移動・編集・削除が可能です（<a href="#use-swipe-talk">使い方</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-sheet">シート</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバスエリアとトランスクリプトエリアを一つのまとまりとして管理する単位。</p>
+                                    <ul>
+                                        <li>シート管理エリアから新規作成やタイトル変更、書き出しができます（<a href="#sheet-management-area">画面構成</a>）。</li>
+                                        <li>同時に保持できるのは最大10枚。11枚目を作成すると最終更新日時の古いシートから非表示になります（<a href="#create-new-sheet">操作する</a>）。</li>
+                                        <li>「書き出し」ボタンで現在のキャンバスを画像として保存できます。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-canvas">キャンバスエリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>画面中央の作業スペース。しゃべり描き®で生成されたテキストや図、貼り付けた画像を配置できます。</p>
+                                    <ul>
+                                        <li>ツールパレットのボタンからしゃべり描き®・お絵描き・画像貼り付けなどを操作します。</li>
+                                        <li>選択枠を使って要素の移動・削除・テキスト更新が可能です（<a href="#edit-elements">編集方法</a>）。</li>
+                                        <li>キャンバスの表示倍率やブラウザのサイズを変更すると、書き出し範囲も変わります（<a href="#export-canvas">書き出し</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-transcript">トランスクリプト</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>会話の音声を連続的に文字起こしして翻訳する機能。</p>
+                                    <ul>
+                                        <li>トランスクリプトボタンでエリアを開き、左右どちらかのマイクを有効にして音声入力します。</li>
+                                        <li>10分連続で利用すると自動停止するため、長時間利用時は途中で一旦停止→再開してください。</li>
+                                        <li>認識言語はしゃべり描き®と共通で、言語メニューから切り替えます（<a href="#select-language">言語を選ぶ</a>）。</li>
+                                        <li>画像書き出しを行う際、トランスクリプトは書き出しはできません</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-back-translation">折り返し翻訳</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>入力した文章を翻訳したあと、元の言語に再翻訳した結果。誤訳やニュアンスのずれをチェックするためのフィードバックとして表示されます。</p>
+                                    <ul>
+                                        <li>しゃべり描き®では翻訳文の下に折り返し翻訳が順次表示されます。</li>
+                                        <li>トランスクリプトでは吹き出しごとに翻訳・折り返し翻訳がセットで表示されます。</li>
+                                        <li>折り返し翻訳が大きく変わる場合は、入力文の表現を言い換えて再入力すると改善することがあります。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-tool-palette">ツールパレット</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバス左側に並ぶ操作ボタン群。しゃべり描き®・お絵描き・画像貼り付け・カメラ撮影・取り消しなど、キャンバス操作の入口になります。</p>
+                                    <ul>
+                                        <li>しゃべり描き®の色や文字サイズ、ペンの太さなどはそれぞれのボタンから切り替えます。</li>
+                                        <li>画像貼り付けは「カメラ」「画像を選択」「貼り付け用クリップボード」の3経路を用意しています（<a href="#add-images">写真・画像を貼り付ける</a>）。</li>
+                                        <li>操作をやり直したい場合はアンドゥを行ってください。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-sheet-management-area">シート管理エリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>画面上部に配置されたシート一覧とタイトル編集、書き出しボタンのある領域。</p>
+                                    <ul>
+                                        <li>最大10枚まで同時保持できます。11枚目を作成すると最終更新日時の古いシートから自動的に非表示になります。</li>
+                                        <li>タイトル部分をクリックすると編集できます。</li>
+                                        <li>「書き出し」ボタンで現在のキャンバスを画像として保存できます（<a href="#sheet-management-area">画面構成</a>、<a href="#create-new-sheet">シート作成</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-transcript-area">トランスクリプトエリア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>画面右側に表示される会話記録領域。</p>
+                                    <ul>
+                                        <li>吹き出し形式で発話者ごとに音声入力が蓄積され、翻訳・折り返し翻訳もセットで表示されます。</li>
+                                        <li>トランスクリプトボタンをクリックしてエリアを開き、マイクを有効にして使用します。</li>
+                                        <li>10分連続で利用すると自動停止するため、長時間利用時は途中で再開してください（<a href="#transcript-area">画面構成</a>、<a href="#use-transcript">使い方</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-bounding-box">選択枠</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバス上の要素（テキストや画像）をクリックすると表示される選択枠。</p>
+                                    <ul>
+                                        <li>この枠をドラッグして要素を移動できます。</li>
+                                        <li>削除アイコンをクリックすると要素を消去できます。</li>
+                                        <li>テキストの場合はダブルクリックで内容を編集できます（<a href="#edit-elements">要素の編集</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-mic-button">マイクボタン（左右）</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>しゃべり描き®とトランスクリプトで使用する音声入力ボタン。左右それぞれが異なる言語に紐づきます。</p>
+                                    <ul>
+                                        <li>ボタンを押してから青く光るまで短い待ち時間（1〜2秒）があります（<a href="#mic-input-lag">詳細</a>）。</li>
+                                        <li>会話者ごとの入力切り替えに使用します。</li>
+                                        <li>左右のマイクと設定言語、吹き出しの色は自動的に紐づきます（<a href="#dual-user-mic-usage">マイクと言語の紐づき</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-language-pair">言語ペア</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>翻訳元と翻訳先の2言語の組み合わせ。画面上部の言語選択メニューで設定します。</p>
+                                    <ul>
+                                        <li>しゃべり描き®とトランスクリプトで共通の設定を使用します。</li>
+                                        <li>対応言語は全30言語です（<a href="#supported-languages">翻訳言語一覧</a>）。</li>
+                                        <li>言語を切り替えると、左右のマイクに割り当てられる認識言語も変わります（<a href="#select-language">言語を選ぶ</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-undo-redo">アンドゥ・リドゥ</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>キャンバス上の操作を取り消し（アンドゥ）・やり直し（リドゥ）する機能。</p>
+                                    <ul>
+                                        <li>ツールパレット下部のボタンから操作できます。</li>
+                                        <li>描画や要素配置のミスをすぐに修正できます。</li>
+                                        <li>複数回の操作を順番に取り消し・やり直すことが可能です。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="procedure-item">
+                            <h4 id="term-export">書き出し（エクスポート）</h4>
+                            <div class="procedure-steps">
+                                <div class="step-text">
+                                    <p>現在のキャンバス内容を画像ファイル（PNG形式）として保存する機能。</p>
+                                    <ul>
+                                        <li>シート管理エリアの「書き出し」ボタンまたは各シートのメニューから実行します。</li>
+                                        <li>書き出し範囲は表示中のキャンバス領域に依存するため、ズーム率やウィンドウサイズを調整してから実行してください。</li>
+                                        <li>画像はブラウザのダウンロードフォルダに保存されます（<a href="#export-canvas">書き出し手順</a>）。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </section>
+
+                <!-- ========== Section 6 ========== -->
+                <section id="faq" class="step-section is-hidden">
+                <header class="step-header">
+                    <h2><span class="step-number">06</span> FAQ</h2>
+                </header>
+                <div class="step-content">
+                    <div class="local-section-search" data-scope="faq">
+                        <div class="search-box">
+                            <input type="text" id="faqSearch" placeholder="FAQを検索" aria-label="FAQを検索">
+                            <button class="clear-btn" id="faqSearchClear" aria-label="検索をクリア" style="display: none;">
+                                <span class="material-icons">close</span>
+                            </button>
+                            <button class="search-btn" id="faqSearchBtn" aria-label="検索">
+                                <span class="material-icons" aria-hidden="true">search</span>
+                            </button>
+                        </div>
+                        <div id="faqSearchResults" class="search-results"></div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="change-transcript-language">Q. トランスクリプトの言語だけを切り替えたい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>トランスクリプトとしゃべり描き®は同じ言語設定を共有します。画面上部の言語選択メニューで翻訳元 / 翻訳先を変更すると、両方のマイクに反映されます。</p>
+                                <ul>
+                                    <li>片方の言語だけ切り替えたいときは、トランスクリプト側で別のマイクを有効にしてから発話すると認識言語が切り替わります。</li>
+                                    <li>設定を戻したい場合は同じメニューで元の言語を選び直してください。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="faq-mic-not-green">Q. マイクボタンが青くならず録音が始まらない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>次のポイントを順番に確認してください。</p>
+                                <ul>
+                                    <li>ボタンを押してから青くなるまで短い待ち時間があります。光るまで発話を待ってください（<a href="#mic-input-lag">詳細</a>）。</li>
+                                    <li>ブラウザのマイク権限が拒否されていないか確認し、必要に応じてページを再読み込みしてください。</li>
+                                    <li>同じアカウントで別ウィンドウを開いている場合は、音声入力できるのは1つのウィンドウのみです（<a href="#multiple-window-restriction">複数ウィンドウの制限</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-sheet-limit">Q. 新しいシートが作成できない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>シートは同時に10枚まで保持できます。11枚目を作成しようとすると、最終更新日が古いシートから非表示になります。</p>
+                                <ul>
+                                    <li>既存シートを再利用して内容を書き換えてください。</li>
+                                    <li>書き出しボタンでキャンバス内容を画像保存しておくと、以前のシート内容を手元に残せます。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-export-location">Q. 書き出した画像ファイルが見つからない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>書き出した画像はブラウザのダウンロードフォルダに保存されます。保存場所はブラウザの設定で決まるため、Chrome や Edge のダウンロード履歴を確認してください。</p>
+                                <ul>
+                                    <li>ブラウザがダウンロードをブロックした場合は、ポップアップの許可を与えてから再度書き出しを実行してください。</li>
+                                    <li>書き出し範囲は表示中のキャンバス領域です。必要に応じてズーム率やウィンドウサイズを調整してから実行します。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-add-image">Q. カメラや画像の貼り付けがうまくいかない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>貼り付け方法ごとに次の点を確認してください。</p>
+                                <ul>
+                                    <li><strong>カメラ撮影:</strong> ブラウザにカメラの使用を許可し、必要に応じて使用するカメラをブラウザの設定から切り替えてください（<a href="#add-images">A-1〜A-3</a>）。</li>
+                                    <li><strong>ファイル選択:</strong> JPG/PNGなど一般的な画像形式に対応しています。アップロード完了まで画面を切り替えないでください。</li>
+                                    <li><strong>クリップボード貼り付け:</strong> 画像をコピーした直後にキャンバスをクリックし、貼り付け用ボタンを押してからCtrl+V（または⌘+V）を実行します。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-authenticator-reset">Q. Microsoft Authenticatorを再設定したい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>端末の買い替えやアプリの再インストール後は、再度QRコードを読み取って登録し直す必要があります。</p>
+                                <ul>
+                                    <li>ブラウザでログイン後、Authenticator の設定画面に進み直し、QRコードを表示します（<a href="#setup-authenticator">設定手順</a>）。</li>
+                                    <li>スマートフォンのアプリで <strong>アカウントの追加</strong> &gt; <strong>職場または学校アカウント</strong> を選び、表示されたQRコードをスキャンしてください。</li>
+                                    <li>最後に2桁コードを入力し、PC側で「通知が承認されました」と表示されれば再設定が完了します（<a href="#authenticate-with-app">認証手順</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-voice-not-recognized">Q. 音声が認識されない／翻訳が表示されない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>次の点を確認してください。</p>
+                                <ul>
+                                    <li>マイクボタンが青く光っているか確認してください（光るまで1〜2秒待ちます）。</li>
+                                    <li>ブラウザのマイク権限が許可されているか確認してください。</li>
+                                    <li>周囲の騒音が大きすぎないか、マイクとの距離が適切か確認してください。</li>
+                                    <li>選択している言語が発話内容と一致しているか確認してください（<a href="#select-language">言語を選ぶ</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-back-translation-different">Q. 折り返し翻訳の内容が元の文と大きく違う</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>折り返し翻訳は翻訳精度の確認用フィードバックです。</p>
+                                <ul>
+                                    <li>大きく意味が変わる場合は、入力文を短くしたり言い換えたりすると改善することがあります。</li>
+                                    <li>専門用語や固有名詞が誤訳される場合は、より一般的な表現に置き換えてみてください。</li>
+                                    <li>折り返し翻訳の仕組みについては用語集をご覧ください（<a href="#term-back-translation">折り返し翻訳とは</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-simultaneous-use">Q. しゃべり描き®とトランスクリプトは同時に使える？</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>基本的に同時使用は可能ですが、以下の制約があります。</p>
+                                <ul>
+                                    <li>同じマイクボタンを同時に押すことはできません（どちらか一方のみ有効）。</li>
+                                    <li>一方で音声入力中にもう一方のマイクを押すと、先に押していた方の入力が停止します。</li>
+                                    <li>詳細は「マイクの使い方のポイント」をご覧ください（<a href="#concurrent-usage-notes">同時使用の条件</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-transcript-auto-stop">Q. トランスクリプトが10分で自動停止する</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>連続使用の制限により、10分経過すると自動的にマイクが停止します。</p>
+                                <ul>
+                                    <li>長時間利用する場合は、途中で一旦マイクを停止→再度開始してください。</li>
+                                    <li>停止前の会話履歴は消えず、トランスクリプトエリアに残ります。</li>
+                                    <li>詳細は用語集をご覧ください（<a href="#term-transcript">トランスクリプト</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-cannot-select-element">Q. キャンバス上の要素が選択できない／動かせない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>以下を確認してください。</p>
+                                <ul>
+                                    <li>ツールパレットで「カーソル（矢印）」モードが選択されているか確認してください。</li>
+                                    <li>要素をクリックして選択枠が表示されるか確認してください。</li>
+                                    <li>ペンや消しゴムモードになっていると選択できないため、カーソルに切り替えてください。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#edit-elements">要素を編集する</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-export-size-issue">Q. 書き出した画像が小さい／切れている</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>書き出し範囲は表示中のキャンバス領域に依存します。</p>
+                                <ul>
+                                    <li>ブラウザのズーム率を100%に戻してください。</li>
+                                    <li>ウィンドウサイズを広げてキャンバス全体が見える状態にしてください。</li>
+                                    <li>必要に応じてキャンバスの表示倍率を調整してから書き出してください。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#export-canvas">書き出し手順</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-change-sheet-title">Q. シートのタイトルを変更したい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>シート管理エリアで対象シートを選択し、タイトル部分をクリックすると編集できます。</p>
+                                <ul>
+                                    <li>変更後はEnterキーを押すか、別の場所をクリックして確定してください。</li>
+                                    <li>タイトルは最大50文字まで入力できます。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#create-new-sheet">シートを作成する</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-old-sheet-not-found">Q. 過去に作成したシートが見つからない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>同時に保持できるのは10枚までです。11枚目を作成すると最終更新日時の古いシートから非表示になります。</p>
+                                <ul>
+                                    <li>重要なシートは定期的に「書き出し」で画像保存することをお勧めします。</li>
+                                    <li>サーバー側に自動保存されているため、完全に削除されるわけではありません。</li>
+                                    <li>詳細は用語集とFAQをご覧ください（<a href="#term-sheet">シートとは</a>、<a href="#faq-sheet-limit">シート制限</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-change-pen-color">Q. ペンの色や太さを変更したい</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>ツールパレットから以下のように操作します。</p>
+                                <ul>
+                                    <li><strong>色の変更：</strong> パレットアイコンをクリックして希望の色を選択してください。</li>
+                                    <li><strong>太さの変更：</strong> ペン小・ペン中・ペン大のいずれかを選択してください。</li>
+                                    <li>設定は次回の描画から反映されます（既存の線には影響しません）。</li>
+                                    <li>詳細は操作手順をご覧ください（<a href="#drawing-tools">お絵描きを行う</a>）。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="procedure-item">
+                        <h4 id="faq-multiple-window-restriction">Q. 複数のウィンドウで同時に音声入力できない</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p class="faq-answer"><span class="faq-answer-label">A</span>同じアカウントで複数のブラウザウィンドウ / タブを開いている場合、音声入力は1つのウィンドウでのみ有効です。</p>
+                                <ul>
+                                    <li>これはマイクリソースの競合を防ぐための仕様です。</li>
+                                    <li>詳細は「マイクの使い方のポイント」をご覧ください（<a href="#multiple-window-restriction">複数ウィンドウ制限</a>）。</li>
+                                </ul>
+                                <aside class="note-card" role="note">
+                                    <h5>⚠ 注意</h5>
+                                    <p>複数のブラウザウィンドウ / タブで同時にアプリを開き、トランスクリプトを実行することはサポート対象外です。</p>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </section>
+
+                <!-- ========== Section 7 ========== -->
+                <section id="product-specs" class="step-section is-hidden">
+                <header class="step-header">
+                    <h2><span class="step-number">07</span> 製品仕様</h2>
+                </header>
+                <div class="step-content">
+                    <div class="local-section-search" data-scope="product-specs">
+                        <div class="search-box">
+                            <input type="text" id="productSpecsSearch" placeholder="製品仕様を検索" aria-label="製品仕様を検索">
+                            <button class="clear-btn" id="productSpecsSearchClear" aria-label="検索をクリア" style="display: none;">
+                                <span class="material-icons">close</span>
+                            </button>
+                            <button class="search-btn" id="productSpecsSearchBtn" aria-label="検索">
+                                <span class="material-icons" aria-hidden="true">search</span>
+                            </button>
+                        </div>
+                        <div id="productSpecsSearchResults" class="search-results"></div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="product-name">製品名称</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>MelBridge しゃべり描き翻訳™</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="supported-languages">翻訳言語</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>対応言語は全30言語です。地域ごとの一覧は以下をご確認ください。</p>
+                                <dl class="spec-list">
+                                    <dt>東アジア</dt>
+                                    <dd>日本語（日本）、韓国語（韓国）、中国語[簡体]、モンゴル語（モンゴル）</dd>
+                                    <dt>東南アジア</dt>
+                                    <dd>ベトナム語（ベトナム）、タイ語（タイ）、インドネシア語（インドネシア）、タガログ語（フィリピン）、マレー語（マレーシア）、ラオ語（ラオス）</dd>
+                                    <dt>南アジア</dt>
+                                    <dd>シンハラ語（スリランカ）、タミル語（インド）、ヒンディー語（インド）、ベンガル語（バングラデシュ）、ネパール語（ネパール）</dd>
+                                    <dt>西アジア（中東含む）</dt>
+                                    <dd>トルコ語（トルコ）</dd>
+                                    <dt>ヨーロッパ</dt>
+                                    <dd>ポルトガル語（ポルトガル）、スペイン語（スペイン）、ロシア語（ロシア）、ドイツ語（ドイツ）、ハンガリー語（ハンガリー）、チェコ語（チェコ）、ポーランド語（ポーランド）、オランダ語（オランダ）、デンマーク語（デンマーク）、フィンランド語（フィンランド）、スウェーデン語（スウェーデン）</dd>
+                                    <dt>北米・南米</dt>
+                                    <dd>英語（アメリカ）、ポルトガル語（ブラジル）</dd>
+                                    <dt>アフリカ</dt>
+                                    <dd>アフリカーンス語（南アフリカ）</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="recommended-browsers">推奨ブラウザ</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>最新バージョンの各ブラウザをご利用ください。</p>
+                                <ul class="spec-list">
+                                    <li>Windows：Microsoft Edge、Google Chrome</li>
+                                    <li>iOS：Safari</li>
+                                    <li>Android：Google Chrome</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="service-desk">サポートデスク</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>お問い合わせは以下の窓口までご連絡ください。</p>
+                                <ul class="spec-list">
+                                    <li><span class="no-tel-link">TEL：03-5460-3576</span></li>
+                                    <li>メール：<a href="mailto:MelBridge_supportdesk@mb.MitsubishiElectric.co.jp">MelBridge_supportdesk@mb.MitsubishiElectric.co.jp</a></li>
+                                </ul>
+                                <p>受付時間：平日9:00〜17:00（土・日・祝日および所定の休業日を除く）</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="procedure-item">
+                        <h4 id="oss-licenses">ライセンス</h4>
+                        <div class="procedure-steps">
+                            <div class="step-text">
+                                <p>本製品では以下のオープンソースソフトウェアおよびライブラリを使用しています。</p>
+                                <table class="oss-license-table">
+                                    <thead>
+                                        <tr>
+                                            <th>OSS</th>
+                                            <th>ライセンス</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>agent-base</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/animations</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/cdk</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/common</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/compiler</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/core</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/forms</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/material</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/platform-browser</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/platform-browser-dynamic</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>angular/router</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>asynckit</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>available-typed-arrays</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>axios</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/abort-controller</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/core-util</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/logger</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/msal-angular</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/msal-browser</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/msal-common</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>azure/web-pubsub-client</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>base64-arraybuffer</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>base64-js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>buffer</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>call-bind</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>call-bind-apply-helpers</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>call-bound</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>combined-stream</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>crc-32</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>cross-fetch</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>css-line-break</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>datadog/browser-core</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>datadog/browser-rum</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>datadog/browser-rum-core</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>debug</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>define-data-property</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>delayed-stream</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>double-ended-queue</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>dunder-proto</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>engine.io-client</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>engine.io-parser</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>entities</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:BSD-2-Clause" target="_blank" rel="noopener noreferrer">BSD-2-Clause <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>es-define-property</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>es-errors</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>es-object-atoms</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>es-set-tostringtag</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>events</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>exit-on-epipe</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluid-framework</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/aqueduct</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/azure-client</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/common-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/common-utils</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/container-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/container-loader</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/container-runtime</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/container-runtime-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/core-interfaces</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/core-utils</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/datastore</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/datastore-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/driver-base</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/driver-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/driver-utils</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/fluid-static</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/gitresources</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/id-compressor</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/map</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/merge-tree</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/protocol-base</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/protocol-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/request-handler</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/routerlicious-driver</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/runtime-definitions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/runtime-utils</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/sequence</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/server-services-client</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/shared-object-base</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/synthesize</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/telemetry-utils</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluidframework/tree</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>fluid-internal/client-utils</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>follow-redirects</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>for-each</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>form-data</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>function-bind</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>get-intrinsic</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>get-proto</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>gopd</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>hasown</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>has-property-descriptors</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>has-symbols</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>has-tostringtag</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>html2canvas</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>http-proxy-agent</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>https-proxy-agent</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ieee754</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:BSD-3-Clause" target="_blank" rel="noopener noreferrer">BSD-3-Clause <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>inherits</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:ISC" target="_blank" rel="noopener noreferrer">ISC <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>isarray</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>is-callable</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>is-typed-array</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>json-stringify-safe</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:ISC" target="_blank" rel="noopener noreferrer">ISC <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>jsrsasign</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>jwt-decode</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>lodash</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>lz4js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:ISC" target="_blank" rel="noopener noreferrer">ISC <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>math-intrinsics</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>mime-db</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>mime-types</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ms</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ngx-translate/core</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ngx-translate/http-loader</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>node-fetch</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>parse5</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>path-browserify</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>possible-typed-array-names</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>printj</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>proxy-from-env</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>rxjs</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:Apache-2.0" target="_blank" rel="noopener noreferrer">Apache-2.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>safe-buffer</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>semver-ts</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:ISC" target="_blank" rel="noopener noreferrer">ISC <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>set-function-length</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>sha.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT, BSD-3-Clause <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>sillyname</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>sinclair/typebox</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>socket.io-client</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>socket.io/component-emitter</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>socket.io-parser</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>svgdotjs/svg.draggable.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>svgdotjs/svg.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>svgdotjs/svg.panzoom.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>svgdotjs/svg.resize.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>svgdotjs/svg.select.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>text-segmentation</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>to-buffer</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>tr46</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>tslib</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:0BSD" target="_blank" rel="noopener noreferrer">0BSD <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>tylerbu/sorted-btree-es6</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>typed-array-buffer</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>types/events</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>typespec/ts-http-runtime</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>types/ungap__structured-clone</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ungap/structured-clone</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:ISC" target="_blank" rel="noopener noreferrer">ISC <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>utrie</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>webidl-conversions</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:BSD-2-Clause" target="_blank" rel="noopener noreferrer">BSD-2-Clause <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>whatwg-url</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>which-typed-array</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ws</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>xmlhttprequest-ssl</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>zone.js</td>
+                                            <td><a href="https://app.snyk.io/vuln/snyk:lic:MIT" target="_blank" rel="noopener noreferrer">MIT <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Google Sound Library</td>
+                                            <td><a href="https://developers.google.com/terms/site-policies" target="_blank" rel="noopener noreferrer">Proprietary <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Springin' Sound Stock</td>
+                                            <td><a href="https://www.springin.org/jp/policy/" target="_blank" rel="noopener noreferrer">Springin' 利用規約 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Material Design Sound Resources</td>
+                                            <td><a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener noreferrer">CC BY 4.0 <span class="material-icons" aria-hidden="true">open_in_new</span></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="oss-table-toggle">
+                                    <button id="toggleOssTable" class="oss-toggle-btn" aria-expanded="false">
+                                        <span class="toggle-text">すべて表示</span>
+                                        <span class="toggle-count">（残り 146個）</span>
+                                        <span class="material-icons">expand_more</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </section>
+
+                <!-- ========== Section 8 ========== -->
+                <section id="whats-new" class="step-section is-hidden">
+                    <header class="step-header">
+                        <h2><span class="step-number">08</span> 更新履歴</h2>
+                    </header>
+                    <div class="step-content">
+                        <div class="whats-new-container" id="whatsNewContainer">
+                            <!-- JavaScriptで動的に生成されます -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+    <!-- 右：中項目 -->
+    <aside class="sub-items-panel" aria-label="中項目ナビ">
+        <div class="sub-items-content">
+            <div id="sub-items-top" class="sub-items-group active">
+                <h4>しゃべり描き翻訳™<br class="mobile-only">でできること</h4>
+                <ul>
+                    <li><a href="#two-language-communication" title="しゃべり描き翻訳™で実現する２言語間コミュニケーション機能">1. １対１の会話を翻訳し伝達をアシスト</a></li>
+                    <li><a href="#drawing-with-translation" title="お絵描きと画像を使った視覚的な翻訳コミュニケーション">2. しゃべり描き®で視覚的に伝える</a></li>
+                    <li><a href="#transcript-conversation" title="リアルタイム音声認識と翻訳によるトランスクリプト機能">3. トランスクリプトで会話の流れが分かる</a></li>
+                </ul>
+            </div>
+            <div id="account-setup-items" class="sub-items-group">
+                <h4>1. アカウントの初期設定を行う</h4>
+                <ul>
+                    <li><a href="#signin-process" title="しゃべり描き翻訳™へのサインイン手順と初回ログイン方法">1. サインインする</a></li>
+                    <li><a href="#setup-authenticator" title="Microsoft Authenticatorによる二段階認証の設定手順">2. 二段階認証を設定する</a></li>
+                    <li><a href="#authenticate-with-app" title="二段階認証アプリを使った認証プロセスの完了方法">3. 二段階認証する</a></li>
+                </ul>
+            </div>
+            <div id="screen-layout-items" class="sub-items-group">
+                <h4>2. 画面構成</h4>
+                <ul>
+                    <li><a href="#sheet-management-area" title="シートの作成・選択・書き出し機能の画面説明">1. シート管理エリア</a></li>
+                    <li><a href="#canvas-area" title="描画・音声入力・画像配置ができるメイン作業エリアの説明">2. キャンバスエリア</a></li>
+                    <li><a href="#transcript-area" title="音声認識結果と翻訳を表示するトランスクリプトエリアの説明">3. トランスクリプトエリア</a></li>
+                </ul>
+            </div>
+            <div id="operation-guide-items" class="sub-items-group">
+                <h4>3. アプリを操作する</h4>
+                <ul>
+                    <li><a href="#operation-signin" title="アプリケーションへのログイン方法と認証手順">1. サインインする</a></li>
+                    <li><a href="#create-new-sheet" title="新規シートの作成方法とタイトル設定手順">2. シートを作成する</a></li>
+                    <li><a href="#select-language" title="翻訳元言語と翻訳先言語の選択方法">3. 使用する言語を選ぶ</a></li>
+                    <li><a href="#use-swipe-talk" title="音声入力と手書きを組み合わせたしゃべり描き®機能の使い方">4. しゃべり描き®を使う</a></li>
+                    <li><a href="#use-transcript" title="リアルタイム音声認識・翻訳機能の使用方法">5. トランスクリプトを使う</a></li>
+                    <li><a href="#add-images" title="カメラ撮影・ファイル選択・クリップボードからの画像貼り付け方法">6. 写真・画像を貼り付ける</a></li>
+                    <li><a href="#drawing-tools" title="ペンツールを使ったキャンバスへの描画方法">7. お絵描きを行う</a></li>
+                    <li><a href="#edit-elements" title="キャンバス上の要素の移動・消去・テキスト編集方法">8. 要素を移動・消去・編集する</a></li>
+                    <li><a href="#export-canvas" title="キャンバス内容を画像ファイルとしてエクスポートする方法">9. キャンバスを画像で書き出す</a></li>
+                </ul>
+            </div>
+            <div id="mic-usage-tips-items" class="sub-items-group">
+                <h4>4. マイクの使い方のポイント</h4>
+                <ul>
+                    <li><a href="#mic-permission" title="ブラウザのマイク許可設定方法">マイクの許可について</a></li>
+                    <li><a href="#mic-input-lag" title="マイクボタンの反応時間と対処方法">音声入力時のボタンのラグ</a></li>
+                    <li><a href="#concurrent-usage-notes" title="複数機能を同時使用する際の制限と注意事項">しゃべり描きとトランスクリプトの同時使用の条件</a></li>
+                    <li><a href="#dual-user-mic-usage" title="複数人での会話時のマイク切り替え方法">マイクと設定言語と吹き出しの紐づき</a></li>
+                    <li><a href="#multiple-window-restriction" title="複数ウィンドウでの同時音声入力制限について">複数ウィンドウを開いたときのマイク使用の条件</a></li>
+                </ul>
+            </div>
+            <div id="product-specs-items" class="sub-items-group">
+                <h4>7. 製品仕様</h4>
+                <ul>
+                    <li><a href="#product-name" title="製品名称">製品名称</a></li>
+                    <li><a href="#supported-languages" title="翻訳言語">翻訳言語</a></li>
+                    <li><a href="#recommended-browsers" title="推奨ブラウザ">推奨ブラウザ</a></li>
+                    <li><a href="#service-desk" title="サポートデスク">サポートデスク</a></li>
+                    <li><a href="#oss-licenses" title="ライセンス">ライセンス</a></li>
+                </ul>
+            </div>
+            <div id="whats-new-items" class="sub-items-group">
+                <h4>8. 更新履歴</h4>
+                <ul>
+                    <li><a href="#whats-new" title="更新履歴">更新履歴</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </aside>
+    </main>
+    </div>
+
+    <!-- セクショントップに戻るボタン -->
+    <button id="back-to-top" class="back-to-top" aria-label="セクショントップに戻る" title="セクショントップに戻る">
+        <i class="material-icons">arrow_upward</i>
+    </button>
+
+    <!-- 更新履歴モーダル -->
+    <div id="whatsNewModal" class="whats-new-modal" aria-hidden="true" role="dialog" aria-labelledby="whatsNewModalTitle">
+        <div class="whats-new-modal-overlay" id="whatsNewModalOverlay"></div>
+        <div class="whats-new-modal-content">
+            <div class="whats-new-modal-body">
+                <!-- JavaScriptで動的に生成されます -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Standard footer includes removed for HTML version -->
+
+    <!-- ★JSの読み込みは必ずこの形： -->
+    <script defer src="js/manual-ui.js?v=2025010520"></script>
+
+    <!-- 更新履歴データとスクリプトの読み込み -->
+    <script src="js/whats-new-data.js?v=1.1.7"></script>
+    <script src="js/whats-new.js?v=1.1.7"></script>
+
+    <!-- TOCトグル機能 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // TOCトグルボタンの処理
+            const tocToggles = document.querySelectorAll('.toc-toggle');
+            tocToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                    const subitems = toggle.closest('.toc-section').querySelector('.toc-subitems');
+
+                    if (isExpanded) {
+                        toggle.setAttribute('aria-expanded', 'false');
+                        subitems.classList.remove('expanded');
+                    } else {
+                        toggle.setAttribute('aria-expanded', 'true');
+                        subitems.classList.add('expanded');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+{{ standard_footer_includes }}
+</html>

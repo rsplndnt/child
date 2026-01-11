@@ -1,0 +1,2875 @@
+/* =============================================================
+   manual-ui.js — 構成ガイド（実装順そのまま、動作影響なし）
+   Sections (read-only guide):
+   00) bootstrap & tokens
+   01) utilities (debounce, escape, scroll offset)
+   02) URL/hash helpers
+   03) smooth scroll engine
+   04) layout helpers (container detection, scroll-to heading)
+   05) back-to-top button
+   06) content tabs / section activation / hash handling
+   07) search module integration
+   08) sidebar behaviors (resize, hamburger)
+   09) event bindings & startup
+   NOTE: このコメントはメンテ用の目印のみで、コード順・ロジックは変更しません。
+   ============================================================= */
+(function () {
+  'use strict';
+
+  const IMG_SRC = 'https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/test.png';
+  const SIDEBAR_WIDTH_KEY = 'mb-manual-sidebar-width';
+  const MOBILE_BREAKPOINT = 1024;
+
+  /* ===== 01) utilities ===== */
+  function debounce(fn, wait = 160) {
+    let t = null;
+    return function (...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), wait);
+    };
+  }
+  function escapeRegExp(s) { return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+  function getScrollOffset() {
+    const tabs = document.querySelector('.content-tabs');
+    const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
+    // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
+    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    const mobileOffset = isMobile ? 52 : 0;
+    return base + 16 + mobileOffset;
+  }
+
+  // ひらがなをカタカナへ正規化（グローバル定義）
+  function normalizeKana(str) {
+    if (!str) return '';
+    return String(str).replace(/[\u3041-\u3096]/g, function(ch){
+      return String.fromCharCode(ch.charCodeAt(0) + 0x60);
+    });
+  }
+
+  /* ===== 02) URL & hash helpers (hash-based routing for HubSpot) ===== */
+  function updateUrlHash(hash, { replace = false } = {}) {
+    if (!hash) return;
+    // ハッシュベースのルーティング: "#" から始まるハッシュに変換
+    const hashValue = hash.startsWith('#') ? hash : `#${hash}`;
+    // GA4/Clarity用にはパス形式で送信
+    const pathForAnalytics = hash.startsWith('#') ? hash.slice(1) : hash;
+    const pathValue = pathForAnalytics.startsWith('/') ? pathForAnalytics : `/${pathForAnalytics}`;
+
+    try {
+      if (window.location.hash === hashValue && !replace) return;
+      if (replace) {
+        window.location.replace(hashValue);
+      } else {
+        window.location.hash = hashValue;
+      }
+      // GA4/Clarity用にパス形式でページビューイベントを送信
+      sendPageView(pathValue);
+    } catch (_) {
+      try {
+        window.location.hash = hashValue;
+      } catch (__) {}
+    }
+  }
+
+  function replaceHashWithoutQuery(hash) {
+    const hashValue = hash && hash.startsWith('#') ? hash : `#${hash || ''}`;
+    const pathForAnalytics = hash ? (hash.startsWith('#') ? hash.slice(1) : hash) : '';
+    const pathValue = pathForAnalytics ? (pathForAnalytics.startsWith('/') ? pathForAnalytics : `/${pathForAnalytics}`) : '/';
+
+    try {
+      window.location.replace(hashValue);
+      sendPageView(pathValue);
+    } catch (_) {
+      try {
+        window.location.hash = hashValue;
+      } catch (__) {}
+    }
+  }
+
+  // GA4/Clarity用のページビュー送信関数（パス形式で送信）
+  function sendPageView(path) {
+    // GA4
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'page_view', {
+        page_location: window.location.origin + window.location.pathname + path,
+        page_path: path,
+        page_title: document.title
+      });
+    }
+
+    // Microsoft Clarity
+    if (typeof clarity !== 'undefined') {
+      clarity('set', 'page', path);
+    }
+  }
+
+  // パスベース版との互換性のため
+  const updateUrlPath = updateUrlHash;
+
+  /* ===== 03) smooth scroll engine ===== */
+  const DEFAULT_SCROLL_DURATION = 315;
+  const scrollAnimationMap = new WeakMap();
+  let windowScrollAnimation = null;
+  const tocLastActiveSub = new Map();
+
+  function prefersReducedMotion() {
+    try {
+      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function getWindowScrollY() {
+    return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+  }
+
+  function cancelScrollAnimation(target) {
+    if (!target) return;
+    if (target === window) {
+      if (windowScrollAnimation && windowScrollAnimation.id) {
+        cancelAnimationFrame(windowScrollAnimation.id);
+      }
+      windowScrollAnimation = null;
+    } else {
+      const state = scrollAnimationMap.get(target);
+      if (state && state.id) {
+        cancelAnimationFrame(state.id);
+      }
+      scrollAnimationMap.delete(target);
+    }
+  }
+
+  function storeScrollAnimation(target, state) {
+    if (!target || !state) return;
+    if (target === window) {
+      windowScrollAnimation = state;
+    } else {
+      scrollAnimationMap.set(target, state);
+    }
+  }
+
+  function fastSmoothScrollTo({ target = 0, container = null, duration = DEFAULT_SCROLL_DURATION } = {}) {
+    const el = (!container || container === document || container === document.body || container === document.documentElement) ? window : container;
+    const isWindow = el === window;
+    const start = isWindow ? getWindowScrollY() : el.scrollTop;
+    const maxScroll = isWindow
+      ? Math.max(0, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) - window.innerHeight)
+      : Math.max(0, el.scrollHeight - el.clientHeight);
+    const clampedTarget = Math.max(0, Math.min(target, maxScroll));
+    const distance = clampedTarget - start;
+
+    cancelScrollAnimation(el);
+
+    if (Math.abs(distance) < 1 || duration <= 0 || prefersReducedMotion() || typeof requestAnimationFrame !== 'function') {
+      if (isWindow) {
+        window.scrollTo(0, clampedTarget);
+      } else {
+        el.scrollTop = clampedTarget;
+      }
+      return;
+    }
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    const state = { start, target: clampedTarget, startTime: performance.now(), duration };
+
+    function step(now) {
+      const elapsed = now - state.startTime;
+      const progress = Math.min(1, elapsed / state.duration);
+      const eased = easeOutCubic(progress);
+      const next = state.start + distance * eased;
+      if (isWindow) {
+        window.scrollTo(0, next);
+      } else {
+        el.scrollTop = next;
+      }
+      if (progress < 1) {
+        state.id = requestAnimationFrame(step);
+      } else {
+        cancelScrollAnimation(el);
+      }
+    }
+
+    state.id = requestAnimationFrame(step);
+    storeScrollAnimation(el, state);
+  }
+
+  /* ---------------- A-1, B-2, C-3の文字装飾 ---------------- */
+  function decorateStepNumbers() {
+    const stepTexts = document.querySelectorAll('.step-text p');
+    
+    stepTexts.forEach(p => {
+      const text = p.textContent;
+      // A-1, B-2, C-3などのパターンを検出
+      const match = text.match(/^([A-C]-([0-9]+)\.\s*)/);
+      
+      if (match) {
+        const fullMatch = match[1]; // A-1. など
+        const numberOnly = match[2]; // 1 など（数字のみ）
+        const remainingText = text.replace(fullMatch, '').trim();
+        
+        // 親のstep-textを取得
+        const stepTextContainer = p.parentElement;
+        
+        // 既存のolがあるかチェック
+        let ol = stepTextContainer.querySelector('ol.step-number-list');
+        if (!ol) {
+          // 新しいolを作成
+          ol = document.createElement('ol');
+          ol.className = 'step-number-list';
+          // p要素の位置に挿入（note-cardより前に）
+          stepTextContainer.insertBefore(ol, p);
+        }
+        
+        // li要素を作成
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="step-number-label">${numberOnly}.</span> ${remainingText}`;
+        ol.appendChild(li);
+        
+        // 元のp要素を削除
+        p.remove();
+      }
+    });
+  }
+
+  /* ---------------- ボタンラベル変換処理 ---------------- */
+  function convertButtonLabels() {
+    // step-text, note-card, step-advice内のテキストを処理
+    const selectors = '.step-text li, .note-card li, .step-advice li, .step-text p, .note-card p, .step-advice p';
+    const elements = document.querySelectorAll(selectors);
+    
+    elements.forEach(element => {
+      // HTMLを取得
+      let html = element.innerHTML;
+      // [ボタン名]のパターンを検出して置換
+      if (html.includes('[') && html.includes(']')) {
+        html = html.replace(/\[([^\]]+)\]/g, '<span class="button-label">$1</span>');
+        element.innerHTML = html;
+      }
+    });
+  }
+
+  /* ---------------- ブラウザ検出とカメラ設定URLの表示 ---------------- */
+  function setupBrowserCameraSettings() {
+    const urlTextElement = document.getElementById('setting-url-text');
+    const browserNameElement = document.getElementById('browser-name');
+    const copyButton = document.getElementById('copy-url-btn');
+    const urlWrapper = document.querySelector('.browser-url-wrapper');
+    const instructionsList = document.querySelector('.browser-instructions');
+    
+    if (!urlTextElement || !browserNameElement) return;
+    
+    // ブラウザ検出
+    const userAgent = navigator.userAgent.toLowerCase();
+    let browserName = 'Chrome';
+    let settingUrl = 'chrome://settings/content/camera';
+    let isSafari = false;
+    
+    if (userAgent.includes('edg/')) {
+      browserName = 'Microsoft Edge';
+      settingUrl = 'edge://settings/content/camera';
+    } else if (userAgent.includes('firefox')) {
+      browserName = 'Firefox';
+      settingUrl = 'about:preferences#privacy';
+    } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+      browserName = 'Safari';
+      isSafari = true;
+    } else if (userAgent.includes('opr/') || userAgent.includes('opera')) {
+      browserName = 'Opera';
+      settingUrl = 'opera://settings/content/camera';
+    }
+    
+    // Safari の場合は特別な表示
+    if (isSafari) {
+      // コピーボタンを非表示
+      if (copyButton) {
+        copyButton.style.display = 'none';
+      }
+      
+      // URL表示エリアをシステム設定の手順に変更
+      if (urlWrapper) {
+        urlWrapper.classList.add('safari-instructions');
+        urlTextElement.innerHTML = '<strong>macOS システム環境設定</strong> → <strong>プライバシーとセキュリティ</strong> → <strong>カメラ</strong>';
+      }
+      
+      // 手順説明を更新
+      if (instructionsList) {
+        instructionsList.innerHTML = `
+          <li>画面左上のAppleメニュー () から「システム設定...」を開きます</li>
+          <li>左側のメニューから「プライバシーとセキュリティ」を選択します</li>
+          <li>「カメラ」をクリックして、Safariの使用を許可します</li>
+          <li>Safariの設定から特定のカメラを選択することはできないため、macOSのシステムレベルで既定のカメラを変更する必要があります</li>
+        `;
+      }
+      
+      // 動画セクションを非表示
+      const videoContainer = document.querySelector('.camera-settings-video-container');
+      if (videoContainer) {
+        videoContainer.style.display = 'none';
+      }
+    } else {
+      // 通常のブラウザ（URL形式）
+      urlTextElement.textContent = settingUrl;
+    }
+    
+    // ブラウザ名を表示
+    browserNameElement.textContent = browserName;
+    
+    // コピーボタンのイベントリスナー
+    if (copyButton) {
+      copyButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // クリップボードにコピー
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(settingUrl)
+            .then(() => {
+              // コピー成功のフィードバック
+              const icon = copyButton.querySelector('.material-icons');
+              const originalIcon = icon.textContent;
+              icon.textContent = 'check';
+              copyButton.classList.add('copied');
+              
+              setTimeout(() => {
+                icon.textContent = originalIcon;
+                copyButton.classList.remove('copied');
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('コピーに失敗しました:', err);
+              // フォールバック: テキストを選択状態にする
+              const range = document.createRange();
+              range.selectNodeContents(urlTextElement);
+              const selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
+            });
+        } else {
+          // 古いブラウザ向けのフォールバック
+          const range = document.createRange();
+          range.selectNodeContents(urlTextElement);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          
+          try {
+            document.execCommand('copy');
+            const icon = copyButton.querySelector('.material-icons');
+            const originalIcon = icon.textContent;
+            icon.textContent = 'check';
+            copyButton.classList.add('copied');
+            
+            setTimeout(() => {
+              icon.textContent = originalIcon;
+              copyButton.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('コピーに失敗しました:', err);
+          }
+        }
+      });
+    }
+  }
+
+  /* ---------------- boot ---------------- */
+  document.addEventListener('DOMContentLoaded', function() {
+    // ブラウザ検出とカメラ設定を初期化
+    setupBrowserCameraSettings();
+    // 少し遅延を追加して要素が確実に存在することを保証
+    setTimeout(init, 100);
+  });
+
+  /* ---------------- セクショントップに戻るボタン ---------------- */
+  function setupBackToTop() {
+    const button = document.getElementById('back-to-top');
+    if (!button) return;
+
+    function getScrollContainer(){
+      const c = document.querySelector('.manual-content');
+      if (c && c.scrollHeight > c.clientHeight) return c;
+      return null;
+    }
+    function toggleStaticVisibility(){
+      const container = document.querySelector('.manual-content');
+      if (!container) {
+        button.classList.add('is-static-hidden');
+        return;
+      }
+      const hasScroll = container.scrollHeight > container.clientHeight + 4;
+      button.classList.toggle('is-static-hidden', !hasScroll);
+    }
+    function getOffsetTopWithin(container, el){
+      let y = 0; let node = el;
+      while (node && node !== container){
+        y += node.offsetTop || 0;
+        node = node.offsetParent;
+      }
+      return y - (container.offsetTop || 0);
+    }
+
+    // クリック時に現在表示中のセクションのh2に戻る
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      // 現在表示中のセクションを探す
+      const visibleSection = document.querySelector('.step-section:not(.is-hidden)');
+
+      const container = getScrollContainer();
+
+      if (visibleSection) {
+        const h2 = visibleSection.querySelector('h2');
+        if (h2) {
+          if (container) {
+            const targetY = Math.max(0, getOffsetTopWithin(container, h2) - 80);
+            container.scrollTo({ top: targetY, behavior: 'smooth' });
+          } else {
+            const targetY = Math.max(0, h2.getBoundingClientRect().top + getWindowScrollY() - 80);
+            fastSmoothScrollTo({ target: targetY });
+          }
+        } else {
+          if (container) {
+            const targetY = Math.max(0, getOffsetTopWithin(container, visibleSection));
+            container.scrollTo({ top: targetY, behavior: 'smooth' });
+          } else {
+            const y = Math.max(0, visibleSection.getBoundingClientRect().top + getWindowScrollY());
+            fastSmoothScrollTo({ target: y });
+          }
+        }
+      } else {
+        if (container) {
+          container.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          fastSmoothScrollTo({ target: 0 });
+        }
+      }
+    });
+
+    function toggleVisibility() {
+      const container = getScrollContainer();
+      if (!container) {
+        button.classList.remove('show');
+        return;
+      }
+      const threshold = 200;
+      const show = container.scrollTop > threshold;
+      button.classList.toggle('show', show);
+    }
+
+    toggleStaticVisibility();
+    toggleVisibility();
+
+    const container = document.querySelector('.manual-content');
+    if (container){
+      container.addEventListener('scroll', toggleVisibility, { passive: true });
+    }
+    window.addEventListener('resize', () => {
+      toggleStaticVisibility();
+      toggleVisibility();
+    });
+
+    const observer = new MutationObserver(() => {
+      toggleStaticVisibility();
+      toggleVisibility();
+    });
+    observer.observe(document.querySelector('.content-panel') || document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  function init() {
+    // 二重初期化ガード（重複読み込み/多重バインド防止）
+    const INIT_FLAG = 'data-mb-manual-ui-init';
+    const root = document.documentElement;
+    if (root.getAttribute(INIT_FLAG) === '1') { 
+      return; 
+    }
+    root.setAttribute(INIT_FLAG, '1');
+    
+  // ボタンラベルの変換を実行
+  convertButtonLabels();
+  
+  // A-1, B-2, C-3などの文字装飾を実行
+  decorateStepNumbers();
+    
+    const sidebar = document.getElementById('sidebarMenu');
+    const resizer = document.getElementById('sidebarResizer');
+    const hamburger = document.getElementById('hamburgerMenu');
+    const overlay = document.getElementById('menuOverlay');
+    const tabs = Array.from(document.querySelectorAll('.content-tabs .tab'));
+    const tocLinks = Array.from(document.querySelectorAll('.toc .toc-link'));
+    const subGroups = Array.from(document.querySelectorAll('.sub-items-group'));
+    const subLinks = Array.from(document.querySelectorAll('.sub-items-group a'));
+    const sections = Array.from(document.querySelectorAll('.content-panel .step-section'));
+    const searchInput = document.getElementById('manualSearch');
+    const searchResults = document.getElementById('manualSearchResults');
+    const searchBtn = document.getElementById('searchBtn');
+    let searchCycleIndex = -1; // 検索ボタンサイクル用
+    let lastQueryValue = '';
+
+    // 左TOCの一時的な強制状態（サブ項目クリック直後のチラつき抑止）
+    const forcedTocState = { sectionHash: null, subHash: null, timer: null };
+    let setScrollSyncManual = () => {};
+    let triggerScrollSyncUpdate = () => {};
+
+    // remove duplicate/外部クリア要素（安全に）
+    removeExternalClearButtons();
+
+    // ノーマライズ & placeholder & ダミーコンテンツ
+    normalizeLabels();
+    insertPlaceholders();
+    addDummyContent();
+    markEmptyInfoCards();
+    setupSectionScopedSearch({
+      sectionSelector: '#terminology',
+      inputId: 'terminologySearch',
+      clearButtonId: 'terminologySearchClear',
+      searchButtonId: 'terminologySearchBtn',
+      resultsContainerId: 'terminologySearchResults'
+    });
+    setupSectionScopedSearch({
+      sectionSelector: '#faq',
+      inputId: 'faqSearch',
+      clearButtonId: 'faqSearchClear',
+      searchButtonId: 'faqSearchBtn',
+      resultsContainerId: 'faqSearchResults'
+    });
+    setupSectionScopedSearch({
+      sectionSelector: '#product-specs',
+      inputId: 'productSpecsSearch',
+      clearButtonId: 'productSpecsSearchClear',
+      searchButtonId: 'productSpecsSearchBtn',
+      resultsContainerId: 'productSpecsSearchResults'
+    });
+
+    // 初期化時に✕ボタンを非表示
+    const closeBtn = document.getElementById('sidebarCloseBtn');
+    if (closeBtn) {
+      closeBtn.style.display = 'none';
+    }
+
+    // 左TOCにサブ項目（右カラムの内容）を生成し、Expand More/Lessで開閉・永続化
+    setupLeftTocSubitems({ tocLinks, subGroups });
+
+    // タブクリック -> セクション切替
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-target');
+        if (target) activateSection(target, { scrollToTop: true });
+      });
+    });
+
+    // ヘッダータイトルリンククリック
+    const headerTitleLink = document.querySelector('.header-title-link');
+    if (headerTitleLink) {
+      headerTitleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = headerTitleLink.getAttribute('href');
+        if (href) {
+          activateSection(href, { closeMobile: true, scrollToTop: false });
+          // TOPセクションのh2にスクロール
+          setTimeout(() => {
+            const topHeader = document.querySelector('#top .step-header h2');
+            if (topHeader) {
+              const offset = getScrollOffset();
+              const container = document.querySelector('.manual-content');
+              if (container && typeof container.scrollTo === 'function') {
+                const cRect = container.getBoundingClientRect();
+                const eRect = topHeader.getBoundingClientRect();
+                const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+                fastSmoothScrollTo({ container, target: Math.max(0, target) });
+              } else {
+                const y = Math.max(0, topHeader.getBoundingClientRect().top + getWindowScrollY() - offset);
+                fastSmoothScrollTo({ target: y });
+              }
+            }
+          }, 40);
+        }
+      });
+    }
+
+    // 左TOCクリック - 基本のイベントリスナーは削除（setupLeftTocSubitems内で設定）
+    // tocLinks.forEach(a => {
+    //   a.addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     const href = a.getAttribute('href');
+    //     if (!href) return;
+    //     activateSection(href, { closeMobile: true, scrollToTop: true });
+    //   });
+    // });
+
+    // 右中項目クリック（スムーススクロール）
+    subLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const anchor = a.getAttribute('href');
+        if (!anchor) return;
+        // アンカーから最寄りの.step-sectionを特定（TOP含む全ケースで安全）
+        let sectionHash = '#top';
+        const anchorEl = document.querySelector(anchor);
+        if (anchorEl) {
+          const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
+          if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
+        } else {
+          const m = anchor.match(/^#(section\d+)/i);
+          if (m) sectionHash = `#${m[1]}`;
+        }
+        if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+        forcedTocState.sectionHash = sectionHash;
+        forcedTocState.subHash = anchor;
+        setScrollSyncManual(true);
+        forcedTocState.timer = setTimeout(() => {
+          forcedTocState.sectionHash = null;
+          forcedTocState.subHash = null;
+          setScrollSyncManual(false);
+          triggerScrollSyncUpdate();
+        }, 1500);
+
+        applySubLinkActiveState(sectionHash, anchor);
+        activateSection(sectionHash, {
+          scrollToTop: false,
+          parentHasActiveChild: true,
+          activeSubHash: anchor
+        });
+        // 画像読み込みを待ってからスクロール
+        setTimeout(() => scrollToElement(anchor), 150);
+        if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+      });
+    });
+
+    // ハンバーガー（Material Symbolsを使った文字列切替）
+    if (hamburger) {
+      // 即座に初期化（フォント待機なし、より確実）
+      setupHamburger(hamburger, sidebar, overlay);
+    }
+
+    // overlay click
+    overlay && overlay.addEventListener('click', closeMobileSidebar);
+
+    // サイドバー閉じるボタン（無効化・常時非表示。外側クリックで閉じる方針）
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    if (sidebarCloseBtn) {
+      sidebarCloseBtn.style.display = 'none';
+      sidebarCloseBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); });
+    }
+
+    // sidebar responsive mode
+    setSidebarMode();
+    window.addEventListener('resize', debounce(setSidebarMode, 120));
+
+    // resizer
+    if (resizer && sidebar) setupSidebarResizer(sidebar, resizer);
+
+    // 内部リンクの処理（ハッシュベース対応）
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+
+      // 左TOC（大項目/サブ項目）は個別ハンドラで処理するため除外
+      if (link.closest('.toc-sublist') || link.closest('.toc-section')) {
+        return;
+      }
+
+      const href = link.getAttribute('href');
+      if (!href || href === '#' || href === '#top') {
+        // ルートの場合は最初のセクションに遷移
+        e.preventDefault();
+        activateSection('#top', { scrollToTop: true });
+        updateUrlHash('#top', { replace: false });
+        return;
+      }
+
+      // target="_blank"の場合は新しいタブで開く
+      if (link.getAttribute('target') === '_blank') {
+        e.preventDefault();
+        const baseUrl = window.location.origin + window.location.pathname;
+        const newUrl = `${baseUrl}${href}`;
+        const newWindow = window.open(newUrl, '_blank');
+
+        // 新しいウィンドウが読み込まれた後に表示処理を実行
+        if (newWindow) {
+          newWindow.addEventListener('load', function() {
+            setTimeout(() => {
+              const targetId = href.slice(1); // "#" を除去
+              const targetElement = newWindow.document.getElementById(targetId);
+              if (targetElement) {
+                const sectionElement = targetElement.closest('.step-section') || targetElement;
+                if (sectionElement) {
+                  // セクションを表示（直接DOM操作）
+                  const allSections = newWindow.document.querySelectorAll('.step-section');
+                  allSections.forEach(section => { section.classList.add('is-hidden'); });
+                  sectionElement.classList.remove('is-hidden');
+                  // 目的位置へ瞬時に移動
+                  scrollToElementNoAnim(`#${targetId}`, newWindow.document);
+                }
+              }
+            }, 300);
+          });
+        }
+        return;
+      }
+
+      // 内部リンクの場合
+      e.preventDefault();
+      const targetId = href.slice(1); // "#" を除去してIDに変換
+      const targetElement = document.getElementById(targetId);
+      if (!targetElement) return;
+
+      // 対象要素が属するセクションを特定
+      const sectionElement = targetElement.closest('.step-section') || targetElement;
+      if (sectionElement) {
+        const sectionId = sectionElement.id;
+        if (sectionId) {
+          // まずセクションを表示
+          activateSection(`#${sectionId}`, { scrollToTop: false });
+
+          // URLを更新（GA4/Clarityに通知）
+          updateUrlHash(href, { replace: false });
+
+          // 画像読み込みを待ってからスクロール
+          setTimeout(() => {
+            scrollToElementNoAnim(`#${targetId}`);
+          }, 100);
+        }
+      }
+    });
+
+    // ハッシュベースルーティングの初期化
+    const initialHandledByTarget = handleInitialTargetRequest();
+    const initialHandledByHash = !initialHandledByTarget && handleInitialHash();
+    if (!initialHandledByTarget && !initialHandledByHash) {
+      activateSection('#top', { scrollToTop: false, updateUrl: false });
+    }
+
+    // ブラウザの戻る/進むボタン対応（hashchangeイベント）
+    window.addEventListener('hashchange', function(e) {
+      const hash = window.location.hash;
+      if (!hash || hash === '#' || hash === '#top') {
+        activateSection('#top', { scrollToTop: true, updateUrl: false });
+        sendPageView('/');
+      } else {
+        const targetId = hash.slice(1); // "#" を除去
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          const sectionElement = targetElement.closest('.step-section') || targetElement;
+          if (sectionElement) {
+            const sectionId = sectionElement.id;
+            activateSection(`#${sectionId}`, { scrollToTop: false, updateUrl: false });
+            setTimeout(() => {
+              scrollToElementNoAnim(`#${targetId}`);
+            }, 100);
+          }
+        }
+        // hashchangeの場合もページビューを送信（パス形式で）
+        const pathForAnalytics = hash.startsWith('/') ? hash : `/${hash.slice(1)}`;
+        sendPageView(pathForAnalytics);
+      }
+    });
+
+    // スクロール連動機能
+    setupScrollSync();
+
+    // 検索モジュール
+    const searchModule = createSearchModule({
+      sectionsSelector: '.content-panel .step-section',
+      procedureSelector: '.procedure-item',
+      searchInput,
+      resultsPanel: searchResults,
+      onJump: (anchorId, sectionHash) => {
+        activateSection(sectionHash, { scrollToTop: false });
+        setTimeout(() => searchModule.jumpTo(anchorId, sectionHash), 60);
+      }
+    });
+
+    // クエリパラメータによる初期表示調整（?target=xxx）
+
+    // 検索トリガ（ボタン/Enter）共通処理
+    function handleSearchTrigger() {
+      const q = (searchInput && searchInput.value || '').trim();
+      if (!q) return;
+      const needNewSearch = !searchResults || !searchResults.classList.contains('show') || q !== lastQueryValue;
+      if (needNewSearch) {
+        const results = searchModule.search(q);
+        lastQueryValue = q;
+        if (searchResults && results && results.length) {
+          searchCycleIndex = 0;
+          setTimeout(() => {
+            const items = searchResults.querySelectorAll('.sr-item');
+            if (items.length) {
+              const first = items[0];
+              // 入力を連打で使えるよう、最終的なフォーカスは検索入力に戻す
+              const anchorId = first.getAttribute('data-anchor-id');
+              const sectionHash = first.getAttribute('data-target');
+              if (sectionHash) {
+                activateSection(sectionHash, { scrollToTop: false });
+                setTimeout(() => searchModule.jumpTo(anchorId, sectionHash), 40);
+              }
+            }
+            // フォーカスを検索入力へ戻す（スクロール防止オプション付き）
+            try { searchInput.focus({ preventScroll: true }); } catch (_) { searchInput.focus(); }
+          }, 20);
+        }
+        return;
+      }
+      // 候補が表示中 → 次の候補へ移動（循環）
+      if (searchResults) {
+        const items = searchResults.querySelectorAll('.sr-item');
+        if (!items.length) return;
+        searchCycleIndex = (searchCycleIndex + 1 + items.length) % items.length;
+        const target = items[searchCycleIndex];
+        if (target) {
+          if (typeof target.scrollIntoView === 'function') {
+            target.scrollIntoView({ block: 'nearest' });
+          }
+          const anchorId = target.getAttribute('data-anchor-id');
+          const sectionHash = target.getAttribute('data-target');
+          if (sectionHash) {
+            activateSection(sectionHash, { scrollToTop: false });
+            setTimeout(() => searchModule.jumpTo(anchorId, sectionHash), 40);
+          }
+          // 次のEnterに備えて検索入力へフォーカス維持
+          try { searchInput.focus({ preventScroll: true }); } catch (_) { searchInput.focus(); }
+        }
+      }
+    }
+
+    function handleInitialTargetRequest() {
+      const params = new URLSearchParams(window.location.search || '');
+      const targetId = (params.get('target') || '').trim();
+      if (!targetId) return false;
+      const hash = `#${targetId.replace(/^#+/, '')}`;
+      const targetEl = document.querySelector(hash);
+      if (!targetEl) return false;
+
+      const sectionEl = targetEl.closest('.step-section');
+      const sectionHash = sectionEl && sectionEl.id ? `#${sectionEl.id}` : '#top';
+
+      if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+      forcedTocState.sectionHash = sectionHash;
+      forcedTocState.subHash = hash;
+      setScrollSyncManual(true);
+
+      activateSection(sectionHash, { scrollToTop: false, parentHasActiveChild: true, activeSubHash: hash, updateUrl: false });
+      // 画像読み込みを待ってからスクロール
+      setTimeout(() => {
+        scrollToElementNoAnim(hash);
+      }, 150);
+      replaceHashWithoutQuery(hash);
+
+      // 一定時間後にスクロール連動を再開
+      forcedTocState.timer = setTimeout(() => {
+        forcedTocState.sectionHash = null;
+        forcedTocState.subHash = null;
+        setScrollSyncManual(false);
+        triggerScrollSyncUpdate();
+      }, 800);
+
+      return true;
+    }
+
+    function handleInitialHash() {
+      let hash = (window.location.hash || '').trim();
+      if (!hash || hash === '#top') return false;
+
+      const targetEl = document.querySelector(hash);
+      let sectionEl = null;
+      if (targetEl) {
+        sectionEl = targetEl.classList.contains('step-section') ? targetEl : targetEl.closest('.step-section');
+      } else {
+        const id = hash.replace(/^#/, '');
+        const possibleSection = document.getElementById(id);
+        if (possibleSection && possibleSection.classList.contains('step-section')) {
+          sectionEl = possibleSection;
+        } else {
+          return false;
+        }
+      }
+
+      const sectionHash = sectionEl && sectionEl.id ? `#${sectionEl.id}` : '#top';
+      const isSectionAnchor = sectionHash === hash;
+      const subHash = isSectionAnchor ? null : hash;
+
+      if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+      forcedTocState.sectionHash = sectionHash;
+      forcedTocState.subHash = subHash;
+      setScrollSyncManual(true);
+
+      activateSection(sectionHash, {
+        scrollToTop: false,
+        parentHasActiveChild: Boolean(subHash),
+        activeSubHash: subHash,
+        updateUrl: false
+      });
+
+      // 画像読み込みを待ってからスクロール
+      const targetHash = subHash || sectionHash;
+      setTimeout(() => {
+        scrollToElementNoAnim(targetHash);
+      }, 150);
+
+      forcedTocState.timer = setTimeout(() => {
+        forcedTocState.sectionHash = null;
+        forcedTocState.subHash = null;
+        setScrollSyncManual(false);
+        triggerScrollSyncUpdate();
+      }, 800);
+
+      // 初回ページビューを送信（パス形式で）
+      const pathForAnalytics = hash.startsWith('/') ? hash : `/${hash.slice(1)}`;
+      sendPageView(pathForAnalytics);
+
+      return true;
+    }
+
+    // 検索ボタン
+    if (searchBtn && searchInput) {
+      searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleSearchTrigger();
+      });
+    }
+
+    // 候補リスト上でEnterを押しても「クリック扱い」にせず、検索ボタンと同じサイクル挙動にする
+    if (searchResults) {
+      searchResults.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSearchTrigger();
+        }
+      });
+    }
+
+    // 入力が変わったらサイクルインデックスをリセット
+    if (searchInput) {
+      searchInput.addEventListener('input', () => { searchCycleIndex = -1; });
+    }
+    if (searchResults) {
+      searchResults.addEventListener('click', () => { searchCycleIndex = -1; });
+    }
+
+    // 検索ボックス内 クリア(✕) ボタン
+    const clearBtn = document.getElementById('clearBtn');
+    if (clearBtn && searchInput) {
+      const updateClearVisibility = () => {
+        const hasText = (searchInput.value || '').trim().length > 0;
+        clearBtn.style.display = hasText ? 'flex' : 'none';
+      };
+      updateClearVisibility();
+      searchInput.addEventListener('input', updateClearVisibility);
+      clearBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // 入力と結果をクリア
+        searchModule.clearSearch();
+        searchCycleIndex = -1;
+        clearBtn.style.display = 'none';
+      });
+    }
+
+    // Enter/Escape の振る舞い（検索ボックス）
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSearchTrigger();
+        } else if (e.key === 'Escape') {
+          searchModule.clearSearch();
+          searchCycleIndex = -1;
+        }
+      });
+    }
+
+    // クリックで結果パネル外なら閉じる + メニュー外クリックでメニューを閉じる
+    document.addEventListener('click', (ev) => {
+      // 検索結果パネル
+      if (searchResults && searchInput) {
+        const searchBtnEl = document.getElementById('searchBtn');
+        if (!(searchResults.contains(ev.target) || searchInput.contains(ev.target) || (searchBtnEl && searchBtnEl.contains(ev.target)))) {
+          searchResults.classList.remove('show');
+        }
+      }
+
+      // メニュー外クリック
+      const sidebarEl = document.getElementById('sidebarMenu');
+      const hamburgerEl = document.getElementById('hamburgerMenu');
+      const clickedInsideMenu = sidebarEl && sidebarEl.contains(ev.target);
+      const clickedHamburger = hamburgerEl && hamburgerEl.contains(ev.target);
+      if (!clickedInsideMenu && !clickedHamburger) {
+        closeMobileSidebar();
+        // 念のため、ここでもハンバーガー状態へ強制的に戻す
+        const h = document.getElementById('hamburgerMenu');
+        if (h) {
+          h.classList.remove('active');
+          h.setAttribute('aria-expanded', 'false');
+          const mi1 = h.querySelector('.menu-icon');
+          const mi2 = h.querySelector('.close-icon');
+          if (mi1 && mi2) {
+            mi2.style.opacity = '0';
+            mi1.style.opacity = '1';
+            mi2.style.display = 'none';
+            mi1.style.display = 'flex';
+          }
+        }
+      }
+    });
+
+    // タブをモバイル時に非表示かつ a11y を確保
+    updateTabsForViewport();
+    window.addEventListener('resize', debounce(updateTabsForViewport, 120));
+
+    /* ---------- helper functions (inside init scope) ---------- */
+    
+    // スクロール連動機能
+    function setupScrollSync() {
+      const manualContent = document.querySelector('.manual-content');
+      if (!manualContent) {
+        setScrollSyncManual = () => {};
+        triggerScrollSyncUpdate = () => {};
+        return;
+      }
+
+      let isScrolling = false;
+      let scrollTimeout;
+      let lastScrollTop = 0;
+
+      setScrollSyncManual = (flag) => { isScrolling = !!flag; };
+
+      const updateActiveSection = () => {
+        if (isScrolling) return;
+        
+        // スクロール方向を検出
+        const currentScrollTop = manualContent.scrollTop;
+        const isScrollingDown = currentScrollTop > lastScrollTop;
+        lastScrollTop = currentScrollTop;
+        
+        // 現在表示されているセクションを特定
+        // スクロール方向に関わらず、ビューポート中心に最も近いタイトルを基準に選択
+        let activeSection = null;
+        let activeProcedureItem = null;
+        let closestToCenter = Infinity;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const viewportCenter = viewportHeight / 2;
+        
+        sections.forEach(section => {
+          if (section.classList.contains('is-hidden')) return;
+          
+          const rect = section.getBoundingClientRect();
+          
+          // セクションが画面外の場合はスキップ
+          if (rect.bottom < 0 || rect.top > viewportHeight) return;
+          
+          // セクションのタイトル（h2）の位置を取得
+          const title = section.querySelector('h2');
+          if (!title) return;
+          
+          const titleRect = title.getBoundingClientRect();
+          
+          // タイトルの中心とビューポート中心の距離を計算
+          const titleCenter = titleRect.top + (titleRect.height / 2);
+          const distanceToCenter = Math.abs(titleCenter - viewportCenter);
+          
+          // ビューポート中心に最も近いタイトルを持つセクションを選択
+          if (distanceToCenter < closestToCenter) {
+            closestToCenter = distanceToCenter;
+            activeSection = section;
+          }
+        });
+        
+        // アクティブセクション内の procedure-item を特定
+        if (activeSection) {
+          const procedureItems = activeSection.querySelectorAll('.procedure-item');
+          let closestItemDistance = Infinity;
+          const targetPosition = 150; // 画面上部から150pxの位置を基準
+          
+          procedureItems.forEach(item => {
+            const itemRect = item.getBoundingClientRect();
+            
+            // 画面外のアイテムはスキップ
+            if (itemRect.bottom < 0 || itemRect.top > viewportHeight) return;
+            
+            // アイテムのタイトル（h4）の位置を取得
+            const itemTitle = item.querySelector('h4');
+            if (!itemTitle) return;
+            
+            const itemTitleRect = itemTitle.getBoundingClientRect();
+            
+            // タイトルが画面内に見えている場合
+            if (itemTitleRect.top <= viewportHeight && itemTitleRect.bottom >= 0) {
+              // タイトルの上端と目標位置（上部150px）との距離を計算
+              const distance = Math.abs(itemTitleRect.top - targetPosition);
+              
+              // 上部150pxに最も近いタイトルを選択
+              if (distance < closestItemDistance) {
+                closestItemDistance = distance;
+                activeProcedureItem = item;
+              }
+            }
+          });
+        }
+        
+        // 左TOCの選択状態を更新
+        if (activeSection) {
+          const sectionId = activeSection.id;
+          const sectionHash = `#${sectionId}`;
+          
+          // 事前にアクティブなサブアイテムのハッシュを算出
+          let itemHash = null;
+          if (forcedTocState.sectionHash === sectionHash) {
+            // クリック直後は強制状態を優先してチラつきを抑止
+            itemHash = forcedTocState.subHash;
+          } else if (activeProcedureItem) {
+            const itemId = activeProcedureItem.querySelector('h4')?.id;
+            if (itemId) itemHash = `#${itemId}`;
+          }
+          
+          // メイン/サブのハイライトを更新
+          requestAnimationFrame(() => {
+            if (itemHash) {
+              applySubLinkActiveState(sectionHash, itemHash);
+            } else {
+              applySubLinkActiveState(sectionHash, null, { preserveExisting: true });
+            }
+          });
+        }
+      };
+
+      triggerScrollSyncUpdate = () => { updateActiveSection(); };
+      
+      // スクロールイベントのデバウンス処理（高速化）
+      const handleScroll = debounce(() => {
+        clearTimeout(scrollTimeout);
+        // サブ項目クリック直後はアップデートを停止
+        if (forcedTocState.sectionHash) {
+          return;
+        }
+        scrollTimeout = setTimeout(() => {
+          setScrollSyncManual(false);
+          updateActiveSection();
+        }, 20);  // 100ms → 20msに短縮
+      }, 10);  // 50ms → 10msに短縮
+      
+      // スクロールイベントリスナー
+      manualContent.addEventListener('scroll', handleScroll);
+      // 初回実行
+      updateActiveSection();
+      
+      // activateSection関数を拡張して、スクロール連動を一時的に無効化
+      const originalActivateSection = window.activateSection || activateSection;
+      const enhancedActivateSection = function(targetHash, opts = {}) {
+        setScrollSyncManual(true);
+        originalActivateSection.call(this, targetHash, opts);
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          setScrollSyncManual(false);
+        }, 500);  // 1000ms → 500msに短縮（クリック後の復帰を高速化）
+      };
+      
+      // グローバルに公開（デバッグ用）
+      window.activateSection = enhancedActivateSection;
+    }
+
+    // 左TOC: サブ項目生成とトグル（localStorageに永続化）
+    const TOC_OPEN_STATE_KEY = 'mb-manual-lefttoc-open';
+    function loadTocOpenState() {
+      try { return JSON.parse(localStorage.getItem(TOC_OPEN_STATE_KEY) || '{}'); } catch (_) { return {}; }
+    }
+    function saveTocOpenState(state) {
+      try { localStorage.setItem(TOC_OPEN_STATE_KEY, JSON.stringify(state || {})); } catch (_) {}
+    }
+    function setupLeftTocSubitems({ tocLinks, subGroups }) {
+      if (!tocLinks || !tocLinks.length) return;
+      const state = loadTocOpenState();
+      const getGroupIdByHash = (hash) => {
+        if (!hash) return null;
+        if (hash === '#top') return 'sub-items-top';
+        // 新しいID形式に対応
+        const idMap = {
+          '#account-setup': 'account-setup-items',
+          '#screen-layout': 'screen-layout-items',
+          '#operation-guide': 'operation-guide-items',
+          '#mic-usage-tips': 'mic-usage-tips-items',
+          '#terminology': 'terminology-items',
+          '#faq': 'faq-items',
+          '#product-specs': 'product-specs-items'
+        };
+        return idMap[hash] || null;
+      };
+
+      tocLinks.forEach(link => {
+        const hash = link.getAttribute('href');
+        const groupId = getGroupIdByHash(hash);
+        
+        // デフォルトのクリックイベントを設定（すべてのリンクに必要）
+        const defaultClickHandler = (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href) {
+            const activateFn = window.activateSection || activateSection;
+            activateFn(href, { closeMobile: true, scrollToTop: true });
+          }
+        };
+        
+        if (!groupId) {
+          // groupIdがない場合
+          link.addEventListener('click', defaultClickHandler);
+          return;
+        }
+        const rightGroup = document.getElementById(groupId);
+        if (!rightGroup) {
+          // サブ項目グループがない場合
+          link.addEventListener('click', defaultClickHandler);
+          return;
+        }
+        const items = Array.from(rightGroup.querySelectorAll('a'));
+        if (!items.length) {
+          // サブ項目がない場合
+          link.addEventListener('click', defaultClickHandler);
+          return;
+        }
+
+        // リンク内にトグルアイコンを追加（テキストの右側）
+        const h3 = link.closest('h3');
+        if (!h3) return;
+        const section = h3.parentElement;
+        if (!section || !section.classList.contains('toc-section')) return;
+        
+        // リンク内にトグルアイコンがなければ追加（製品仕様セクションは除外）
+        let toggleIcon = link.querySelector('.toc-toggle-icon');
+        const isProductSpecs = link.getAttribute('href') === '#product-specs';
+        if (!toggleIcon && items.length > 0 && !isProductSpecs) {
+          toggleIcon = document.createElement('span');
+          toggleIcon.className = 'toc-toggle-icon material-icons';
+          toggleIcon.textContent = 'expand_more';
+          link.appendChild(toggleIcon);
+        }
+
+        // 左TOCにサブリストを生成
+        let sublist = section.querySelector('.toc-sublist');
+        if (!sublist) {
+          sublist = document.createElement('ul');
+          sublist.className = 'toc-sublist';
+          section.appendChild(sublist);
+        }
+        if (!sublist.hasChildNodes()) {
+          items.forEach(a => {
+            const li = document.createElement('li');
+            const na = document.createElement('a');
+            na.href = a.getAttribute('href');
+            // section1の場合は数字を残す、それ以外は数字を削除
+            const text = a.textContent || '';
+            if (groupId === 'account-setup-items') {
+              // アカウント設定セクションは番号をそのまま残す
+              na.textContent = text.trim(); // 数字を残す
+            } else {
+              // その他のセクションは数字を削除
+              na.textContent = text.replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim(); // 数字を削除
+            }
+            na.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const anchor = na.getAttribute('href');
+              if (!anchor) return;
+              // 対象セクションを特定して切替（右カラムと同様の挙動）
+              let sectionHash = '#top';
+              const anchorEl = document.querySelector(anchor);
+              if (anchorEl) {
+                const sectionEl = anchorEl.closest && anchorEl.closest('.step-section');
+                if (sectionEl && sectionEl.id) sectionHash = `#${sectionEl.id}`;
+              } else {
+                const m2 = anchor.match(/^#(section\d+)/i);
+                if (m2) sectionHash = `#${m2[1]}`;
+              }
+
+              // 強制状態をセット（1500ms程度維持）
+              if (forcedTocState.timer) clearTimeout(forcedTocState.timer);
+              forcedTocState.sectionHash = sectionHash;
+              forcedTocState.subHash = anchor;
+              setScrollSyncManual(true);
+              forcedTocState.timer = setTimeout(() => {
+                forcedTocState.sectionHash = null;
+                forcedTocState.subHash = null;
+                setScrollSyncManual(false);
+                triggerScrollSyncUpdate();
+              }, 1500);
+
+              applySubLinkActiveState(sectionHash, anchor);
+              activateSection(sectionHash, {
+                scrollToTop: false,
+                parentHasActiveChild: true,
+                activeSubHash: anchor
+              });
+              
+              // 画像読み込みを待ってからスクロール
+              setTimeout(() => scrollToElement(anchor), 150);
+              if (window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+            });
+            li.appendChild(na);
+            sublist.appendChild(li);
+          });
+        }
+
+        // 初期状態の反映
+        const key = groupId;
+        const isOpen = Boolean(state[key]);
+        // toggleIconは既に上で宣言済み
+        applyTocOpenState({ sublist, toggleIcon, open: isOpen });
+
+        // リンククリック時の処理
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          // 用語、FAQ、製品仕様は常にセクション先頭にスクロール
+          const isScrollToTopSection = hash === '#terminology' || hash === '#faq' || hash === '#product-specs';
+          
+          if (isScrollToTopSection) {
+            // 検索専用セクションは常にセクション先頭にスクロール
+            const activateFn = window.activateSection || activateSection;
+            activateFn(hash, { closeMobile: true, scrollToTop: true });
+            return;
+          }
+          
+          // サブ項目がある場合はトグルのみ（画面遷移なし）
+          if (items.length > 0) {
+            const nowOpen = !sublist.classList.contains('show');
+            applyTocOpenState({ sublist, toggleIcon, open: nowOpen });
+            state[key] = nowOpen;
+            saveTocOpenState(state);
+          } else {
+            // サブ項目がない場合のみ画面遷移
+            const href = link.getAttribute('href');
+            if (href) {
+              const activateFn = window.activateSection || activateSection;
+              activateFn(href, { closeMobile: true, scrollToTop: true });
+            }
+          }
+        });
+      });
+    }
+    function applyTocOpenState({ sublist, toggleIcon, open }) {
+      if (!sublist) return;
+      sublist.classList.toggle('show', !!open);
+      if (toggleIcon) {
+        toggleIcon.textContent = open ? 'expand_less' : 'expand_more';
+      }
+    }
+
+    function removeExternalClearButtons() {
+      const ids = ['manualSearchClear', 'manualSearchClearOuter'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      });
+      Array.from(document.querySelectorAll('.external-clear, .search-clear-outer, .manual-search .external-clear')).forEach(el => {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      });
+    }
+
+    function setupHamburger(hamburgerEl, sidebarEl, overlayEl) {
+      if (!hamburgerEl) {
+        return;
+      }
+      
+      // ensure icon child
+      let mi = hamburgerEl.querySelector('.mi, .material-icons');
+      if (!mi) {
+        mi = document.createElement('i');
+        mi.className = 'material-icons mi';
+        mi.setAttribute('aria-hidden', 'true');
+        mi.textContent = 'menu';
+        hamburgerEl.appendChild(mi);
+      }
+      
+      // initialize aria-expanded according to classes
+      const isActive = hamburgerEl.classList.contains('active');
+      hamburgerEl.setAttribute('aria-expanded', String(isActive));
+      mi.textContent = isActive ? 'close' : 'menu';
+
+      // イベントリスナー登録直前にdata-initializedを設定
+      hamburgerEl.setAttribute('data-initialized', 'true');
+
+      hamburgerEl.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        
+        // 現在の状態を取得
+        const isCurrentlyActive = hamburgerEl.classList.contains('active');
+        const newActiveState = !isCurrentlyActive;
+        
+        // ハンバーガーボタンの状態を更新
+        if (newActiveState) {
+          hamburgerEl.classList.add('active');
+        } else {
+          hamburgerEl.classList.remove('active');
+        }
+        
+        mi.textContent = newActiveState ? 'close' : 'menu';
+        hamburgerEl.setAttribute('aria-expanded', String(newActiveState));
+        
+        if (sidebarEl) {
+          if (newActiveState) {
+            sidebarEl.classList.add('active');
+          } else {
+            sidebarEl.classList.remove('active');
+          }
+        }
+        if (overlayEl) {
+          if (newActiveState) {
+            overlayEl.classList.add('active');
+          } else {
+            overlayEl.classList.remove('active');
+          }
+        }
+        // prevent background scroll when open (only for mobile)
+        document.body.style.overflow = newActiveState ? 'hidden' : '';
+      });
+
+      // on resize ensure hamburger isn't left in active state when switching to desktop
+      window.addEventListener('resize', debounce(() => {
+        if (window.innerWidth > MOBILE_BREAKPOINT) {
+          // make sure overlay/sidebar/hamburger are reset
+          hamburgerEl.classList.remove('active');
+          hamburgerEl.setAttribute('aria-expanded', 'false');
+          mi.textContent = 'menu';
+          if (sidebarEl) sidebarEl.classList.remove('active');
+          if (overlayEl) overlayEl.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }, 120));
+    }
+
+    function closeMobileSidebar() {
+      const hamburgerEl = document.getElementById('hamburgerMenu');
+      const overlayEl = document.getElementById('menuOverlay');
+      const sidebarEl = document.getElementById('sidebarMenu');
+      
+      if (hamburgerEl) {
+        hamburgerEl.classList.remove('active');
+        hamburgerEl.setAttribute('aria-expanded', 'false');
+        const mi = hamburgerEl.querySelector('.material-icons');
+        if (mi) mi.textContent = 'menu';
+      }
+      if (overlayEl) overlayEl.classList.remove('active');
+      if (sidebarEl) sidebarEl.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function setSidebarMode() {
+      if (!sidebar) return;
+      if (window.innerWidth <= MOBILE_BREAKPOINT) sidebar.classList.add('mobile');
+      else { sidebar.classList.remove('mobile'); closeMobileSidebar(); }
+    }
+
+    function getSectionNum(hash) { return (hash || '').replace('#section', ''); }
+
+    function applySubLinkActiveState(sectionHash, subHash, opts = {}) {
+      const { fallbackToFirst = false, preserveExisting = false } = opts;
+      const normalizedSection = (sectionHash || '').trim();
+      const requestedSub = subHash ? (subHash.startsWith('#') ? subHash : `#${subHash}`) : '';
+
+      const sectionLink = normalizedSection
+        ? document.querySelector(`.toc .toc-link[href="${normalizedSection}"]`)
+        : null;
+      const tocSectionEl = sectionLink ? sectionLink.closest('.toc-section') : null;
+      const availableSubLinks = tocSectionEl ? Array.from(tocSectionEl.querySelectorAll('.toc-sublist a')) : [];
+      const cachedSub = tocLastActiveSub.get(normalizedSection) || '';
+
+      let resolvedSub = requestedSub;
+      if (!resolvedSub && preserveExisting && cachedSub) {
+        resolvedSub = cachedSub;
+      }
+      if (!resolvedSub && fallbackToFirst && availableSubLinks.length) {
+        resolvedSub = availableSubLinks[0].getAttribute('href') || '';
+      }
+      if (resolvedSub && availableSubLinks.length && !availableSubLinks.some(a => a.getAttribute('href') === resolvedSub)) {
+        if (fallbackToFirst && availableSubLinks.length) {
+          resolvedSub = availableSubLinks[0].getAttribute('href') || '';
+        } else if (!preserveExisting) {
+          resolvedSub = '';
+        }
+      }
+
+      document.querySelectorAll('.toc .toc-link').forEach(link => {
+        const href = link.getAttribute('href');
+        const isTarget = normalizedSection && href === normalizedSection;
+        if (!isTarget) {
+          link.classList.remove('active');
+          link.classList.remove('has-active-child');
+          return;
+        }
+        if (resolvedSub) {
+          link.classList.remove('active');
+          link.classList.add('has-active-child');
+        } else {
+          link.classList.add('active');
+          link.classList.remove('has-active-child');
+        }
+      });
+
+      if (resolvedSub) {
+        document.querySelectorAll('.toc .toc-sublist a').forEach(a => {
+          const isMatch = a.getAttribute('href') === resolvedSub;
+          a.classList.toggle('active', isMatch);
+        });
+        tocLastActiveSub.set(normalizedSection, resolvedSub);
+      } else if (!preserveExisting) {
+        if (tocSectionEl) {
+          tocSectionEl.querySelectorAll('.toc-sublist a.active').forEach(a => a.classList.remove('active'));
+        } else {
+          document.querySelectorAll('.toc .toc-sublist a.active').forEach(a => a.classList.remove('active'));
+        }
+        tocLastActiveSub.delete(normalizedSection);
+      }
+
+      subGroups.forEach(g => g.classList.remove('active'));
+      document.querySelectorAll('.sub-items-group a.active').forEach(a => a.classList.remove('active'));
+
+      const activateGroup = (group) => {
+        if (!group) return;
+        group.classList.add('active');
+        let targetLink = null;
+        if (resolvedSub) targetLink = group.querySelector(`a[href="${resolvedSub}"]`);
+        if (!targetLink) targetLink = group.querySelector('a');
+        if (targetLink) targetLink.classList.add('active');
+      };
+
+      if (normalizedSection === '#top') {
+        activateGroup(document.getElementById('sub-items-top'));
+      } else if (normalizedSection) {
+        const num = getSectionNum(normalizedSection);
+        activateGroup(document.getElementById(`sub-items-section${num}`));
+      }
+    }
+
+    function activateSection(targetHash, opts = {}) {
+      if (!targetHash) return;
+      const normalizedTarget = targetHash.trim();
+      let activeSubHash = opts.activeSubHash || null;
+      if (!activeSubHash && forcedTocState.sectionHash === normalizedTarget && forcedTocState.subHash) {
+        activeSubHash = forcedTocState.subHash;
+      }
+      if (activeSubHash && !activeSubHash.startsWith('#')) {
+        activeSubHash = `#${activeSubHash}`;
+      }
+      const shouldMarkParentHasChild = opts.parentHasActiveChild || Boolean(activeSubHash);
+      
+      tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-target') === normalizedTarget));
+      sections.forEach(sec => {
+        const shouldBeHidden = `#${sec.id}` !== normalizedTarget;
+        if (shouldBeHidden) {
+          sec.classList.add('is-hidden');
+        } else {
+          sec.classList.remove('is-hidden');
+        }
+      });
+      const applyOpts = shouldMarkParentHasChild ? {} : { fallbackToFirst: true };
+      applySubLinkActiveState(normalizedTarget, shouldMarkParentHasChild ? activeSubHash : null, applyOpts);
+
+      if (opts.scrollToTop !== false) {
+        const container = document.querySelector('.manual-content');
+        if (container) {
+          // セクション切り替え時は先頭にスクロール
+          container.scrollTop = 0;
+        }
+      }
+      if (opts.closeMobile && window.innerWidth <= MOBILE_BREAKPOINT) closeMobileSidebar();
+
+      if (opts.updateUrl !== false) {
+        const hashForUrl = (activeSubHash && activeSubHash.trim()) || normalizedTarget;
+        updateUrlHash(hashForUrl);
+      }
+    }
+
+    function scrollToElement(hash) {
+      if (!hash) return;
+      const el = document.querySelector(hash);
+      if (!el) return;
+      const offset = getScrollOffset();
+      const container = document.querySelector('.manual-content');
+      if (container && typeof container.scrollTo === 'function') {
+        const cRect = container.getBoundingClientRect();
+        const eRect = el.getBoundingClientRect();
+        const target = container.scrollTop + (eRect.top - cRect.top) - offset;
+        fastSmoothScrollTo({ container, target: Math.max(0, target) });
+      } else {
+        const y = Math.max(0, el.getBoundingClientRect().top + getWindowScrollY() - offset);
+        fastSmoothScrollTo({ target: y });
+      }
+      
+      // procedure-itemをハイライト
+      const procedureItem = el.closest('.procedure-item');
+      if (procedureItem) {
+        // 既存のハイライトを削除
+        document.querySelectorAll('.procedure-item.highlight-flash').forEach(item => {
+          item.classList.remove('highlight-flash');
+        });
+        // スクロール完了後にハイライトを追加
+        setTimeout(() => {
+          procedureItem.classList.add('highlight-flash');
+          // 1.2秒後にクラスを削除
+          setTimeout(() => {
+            procedureItem.classList.remove('highlight-flash');
+          }, 1200);
+        }, 350); // スクロールアニメーション完了後
+      }
+      
+      updateUrlHash(hash, { replace: true });
+    }
+
+    // スクロールアニメーションなしで瞬時に目的位置へ移動
+    function scrollToElementNoAnim(hash, docRef) {
+      const doc = docRef || document;
+      if (!hash) return;
+      const el = doc.querySelector(hash);
+      if (!el) return;
+      // オフセット（ヘッダ等）
+      const tabs = doc.querySelector('.content-tabs');
+      const base = (tabs && tabs.offsetHeight) ? tabs.offsetHeight + 12 : 20;
+      // モバイル時はハンバーガーボタンの高さ分さらにオフセットを追加
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      const mobileOffset = isMobile ? 52 : 0;
+      const offset = base + 16 + mobileOffset;
+      const container = doc.querySelector('.manual-content');
+      if (container) {
+        const cRect = container.getBoundingClientRect();
+        const eRect = el.getBoundingClientRect();
+        const currentTop = container.scrollTop || 0;
+        const target = currentTop + (eRect.top - cRect.top) - offset;
+        container.scrollTop = Math.max(0, target);
+      } else {
+        const y = Math.max(0, el.getBoundingClientRect().top + (doc.defaultView?.scrollY || window.scrollY) - offset);
+        (doc.defaultView || window).scrollTo({ top: y, behavior: 'auto' });
+      }
+      
+      // procedure-itemをハイライト
+      if (!docRef) {
+        const procedureItem = el.closest('.procedure-item');
+        if (procedureItem) {
+          // 既存のハイライトを削除
+          doc.querySelectorAll('.procedure-item.highlight-flash').forEach(item => {
+            item.classList.remove('highlight-flash');
+          });
+          // 瞬時移動なので少し待ってからハイライト
+          setTimeout(() => {
+            procedureItem.classList.add('highlight-flash');
+            // 1.2秒後にクラスを削除（アニメーション完了後）
+            setTimeout(() => {
+              procedureItem.classList.remove('highlight-flash');
+            }, 1200);
+          }, 50);
+        }
+        updateUrlHash(hash, { replace: true });
+      }
+    }
+
+    function updateTabsForViewport() {
+      const tabsEl = document.querySelector('.content-tabs');
+      if (!tabsEl) return;
+      const buttons = Array.from(tabsEl.querySelectorAll('.tab'));
+      if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        tabsEl.style.display = 'none';
+        tabsEl.setAttribute('aria-hidden', 'true');
+        buttons.forEach(btn => {
+          if (btn.hasAttribute('tabindex')) btn.dataset._prevTabindex = btn.getAttribute('tabindex');
+          btn.setAttribute('tabindex', '-1');
+          btn.disabled = true;
+          btn.setAttribute('aria-hidden', 'true');
+        });
+      } else {
+        tabsEl.style.display = '';
+        tabsEl.removeAttribute('aria-hidden');
+        buttons.forEach(btn => {
+          if (btn.dataset._prevTabindex) {
+            btn.setAttribute('tabindex', btn.dataset._prevTabindex);
+            delete btn.dataset._prevTabindex;
+          } else btn.removeAttribute('tabindex');
+          btn.disabled = false;
+          btn.removeAttribute('aria-hidden');
+        });
+      }
+    }
+    
+    // ブラウザの戻る/進むボタン対応
+    window.addEventListener('popstate', function(e) {
+      try {
+        const hash = window.location.hash;
+        
+        if (hash) {
+          // ハッシュから要素を探す（サブセクションの可能性もある）
+          const targetElement = document.querySelector(hash);
+          
+          if (targetElement) {
+            // 要素が見つかった場合、その親のセクションを探す
+            const parentSection = targetElement.closest('.step-section');
+            
+            if (parentSection) {
+              // 親セクションのIDを取得
+              const sectionId = `#${parentSection.id}`;
+              
+              // セクション切り替え（URLは更新しない）
+              activateSection(sectionId, {
+                updateUrl: false,  // 重要：無限ループを防ぐ
+                scrollToTop: false, // スクロール位置は後で調整
+                closeMobile: false
+              });
+              
+              // サブセクションへスクロール（少し遅延を入れて確実に）
+              setTimeout(() => {
+                const targetEl = document.querySelector(hash);
+                if (targetEl) {
+                  const container = document.querySelector('.manual-content');
+                  if (container) {
+                    const containerTop = container.getBoundingClientRect().top;
+                    const targetTop = targetEl.getBoundingClientRect().top;
+                    const scrollTop = container.scrollTop;
+                    const offset = targetTop - containerTop + scrollTop - 20; // 20pxの余白
+                    
+                    container.scrollTo({
+                      top: offset,
+                      behavior: 'smooth'
+                    });
+                  }
+                }
+              }, 100);
+            } else {
+              // セクション自体の場合
+              const sectionElement = sections.find(s => `#${s.id}` === hash);
+              if (sectionElement) {
+                activateSection(hash, {
+                  updateUrl: false,
+                  scrollToTop: true,
+                  closeMobile: false
+                });
+              }
+            }
+          }
+        } else {
+          // ハッシュがない場合は最初のセクションを表示
+          const firstSection = sections[0];
+          if (firstSection) {
+            activateSection(`#${firstSection.id}`, {
+              updateUrl: false,
+              scrollToTop: true,
+              closeMobile: false
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error in popstate handler:', error);
+        // エラー時は最初のセクションを表示して復旧
+        const firstSection = sections[0];
+        if (firstSection) {
+          activateSection(`#${firstSection.id}`, {
+            updateUrl: false,
+            scrollToTop: true,
+            closeMobile: false
+          });
+        }
+      }
+    });
+    
+    // ページトップに戻るボタンの初期化
+    setupBackToTop();
+  } // end init
+
+  /* ---------------- sidebar resizer ---------------- */
+  function setupSidebarResizer(sidebar, resizer) {
+    const MIN = 240, MAX = 520;
+    let dragging = false, startX = 0, startW = sidebar.getBoundingClientRect().width;
+    
+    // 既存のlocalStorageデータをクリア
+    try {
+      localStorage.removeItem(SIDEBAR_WIDTH_KEY);
+    } catch (e) {}
+    
+    // localStorage からの読み込みを無効化（常に初期値350pxを使用）
+    // try {
+    //   const saved = Number(localStorage.getItem(SIDEBAR_WIDTH_KEY) || 0);
+    //   if (saved && saved >= MIN && saved <= MAX) {
+    //     sidebar.style.flexBasis = saved + 'px';
+    //     sidebar.style.maxWidth = saved + 'px';
+    //   }
+    // } catch (e) {}
+    resizer.addEventListener('mousedown', (e) => {
+      if (window.innerWidth <= MOBILE_BREAKPOINT) return;
+      dragging = true; startX = e.clientX; startW = sidebar.getBoundingClientRect().width;
+      document.body.style.userSelect = 'none'; document.body.style.cursor = 'col-resize';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      const w = Math.min(MAX, Math.max(MIN, Math.round(startW + (e.clientX - startX))));
+      sidebar.style.flexBasis = w + 'px'; sidebar.style.maxWidth = w + 'px';
+    });
+    window.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = '';
+      // localStorage への保存を無効化
+      // try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
+    });
+
+    // touch support
+    resizer.addEventListener('touchstart', (e) => {
+      const t = e.touches[0]; dragging = true; startX = t.clientX; startW = sidebar.getBoundingClientRect().width;
+      document.body.style.userSelect = 'none';
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (!dragging) return;
+      const t = e.touches[0];
+      const w = Math.min(MAX, Math.max(MIN, Math.round(startW + (t.clientX - startX))));
+      sidebar.style.flexBasis = w + 'px'; sidebar.style.maxWidth = w + 'px';
+    }, { passive: true });
+    window.addEventListener('touchend', () => {
+      if (!dragging) return;
+      dragging = false; document.body.style.userSelect = '';
+      // localStorage への保存を無効化
+      // try { const w = Math.round(sidebar.getBoundingClientRect().width); localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
+    });
+  }
+
+  function setupSectionScopedSearch({ sectionSelector, inputId, clearButtonId, searchButtonId, resultsContainerId }) {
+    const sectionEl = document.querySelector(sectionSelector);
+    const input = document.getElementById(inputId);
+    const resultsPanel = document.getElementById(resultsContainerId);
+    const searchBtn = document.getElementById(searchButtonId);
+    if (!sectionEl || !input || !resultsPanel || !searchBtn) return;
+    const clearBtn = clearButtonId ? document.getElementById(clearButtonId) : null;
+    const sectionHash = sectionEl.id ? `#${sectionEl.id}` : sectionSelector;
+
+    const searchModule = createSearchModule({
+      sectionsSelector: sectionSelector,
+      procedureSelector: '.procedure-item',
+      searchInput: input,
+      resultsPanel,
+      onJump(anchorId, targetHash) {
+        const sectionTarget = targetHash || sectionHash;
+        const subHash = anchorId ? `#${anchorId}` : null;
+        activateSection(sectionTarget, {
+          scrollToTop: false,
+          parentHasActiveChild: Boolean(subHash),
+          activeSubHash: subHash,
+          updateUrl: true
+        });
+        setTimeout(() => searchModule.jumpTo(anchorId, sectionTarget), 60);
+      }
+    });
+
+    let cycleIndex = -1;
+    let lastQueryValue = '';
+
+    const focusInput = () => { try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); } };
+
+    const handleSearchTrigger = () => {
+      const q = (input.value || '').trim();
+      if (!q) return;
+      const needNewSearch = !resultsPanel.classList.contains('show') || q !== lastQueryValue;
+      if (needNewSearch) {
+        const results = searchModule.search(q);
+        lastQueryValue = q;
+        if (results && results.length) {
+          cycleIndex = 0;
+          setTimeout(() => {
+            const items = resultsPanel.querySelectorAll('.sr-item');
+            if (!items.length) return;
+            const first = items[0];
+            const anchorId = first.getAttribute('data-anchor-id');
+            const targetSection = first.getAttribute('data-target') || sectionHash;
+            const sectionTarget = targetSection || sectionHash;
+            const subHash = anchorId ? `#${anchorId}` : null;
+            activateSection(sectionTarget, {
+              scrollToTop: false,
+              parentHasActiveChild: Boolean(subHash),
+              activeSubHash: subHash,
+              updateUrl: true
+            });
+            // ハイライト処理を実行してからジャンプ
+            setTimeout(() => {
+              searchModule.jumpTo(anchorId, sectionTarget);
+            }, 60);
+            focusInput();
+          }, 20);
+        } else {
+          cycleIndex = -1;
+        }
+        return;
+      }
+
+      const items = resultsPanel.querySelectorAll('.sr-item');
+      if (!items.length) return;
+      cycleIndex = (cycleIndex + 1 + items.length) % items.length;
+      const target = items[cycleIndex];
+      if (!target) return;
+      const anchorId = target.getAttribute('data-anchor-id');
+      const targetSection = target.getAttribute('data-target') || sectionHash;
+      const sectionTarget = targetSection || sectionHash;
+      const subHash = anchorId ? `#${anchorId}` : null;
+      activateSection(sectionTarget, {
+        scrollToTop: false,
+        parentHasActiveChild: Boolean(subHash),
+        activeSubHash: subHash,
+        updateUrl: true
+      });
+      // ハイライト処理を実行してからジャンプ
+      setTimeout(() => {
+        searchModule.jumpTo(anchorId, sectionTarget);
+      }, 60);
+      focusInput();
+    };
+
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSearchTrigger();
+    });
+
+    // 候補リスト上でEnterを押しても「クリック扱い」にせず、検索ボタンと同じサイクル挙動にする
+    if (resultsPanel) {
+      resultsPanel.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSearchTrigger();
+        }
+      });
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleSearchTrigger();
+      } else if (e.key === 'Escape') {
+        searchModule.clearSearch();
+        cycleIndex = -1;
+      }
+    });
+
+    input.addEventListener('input', () => {
+      cycleIndex = -1;
+      if (!(input.value || '').trim()) {
+        lastQueryValue = '';
+      }
+    });
+
+    if (clearBtn) {
+      const updateClearVisibility = () => {
+        const hasText = (input.value || '').trim().length > 0;
+        clearBtn.style.display = hasText ? 'flex' : 'none';
+      };
+      updateClearVisibility();
+      input.addEventListener('input', updateClearVisibility);
+      clearBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // 入力と結果をクリア
+        searchModule.clearSearch();
+        cycleIndex = -1;
+        lastQueryValue = '';
+        clearBtn.style.display = 'none';
+      });
+    }
+
+    resultsPanel.addEventListener('click', () => { cycleIndex = -1; });
+  }
+
+  /* ---------------- normalize labels ---------------- */
+  function normalizeLabels() {
+    const strip = s => (s || '').replace(/^\s*\d+[\.\)\s-]*\s*/, '').trim();
+    // 左TOCのテキスト部分のみ数字を削除
+    const tocSpans = document.querySelectorAll('.toc .toc-link span');
+    tocSpans.forEach(el => {
+      const text = el.textContent || '';
+      const stripped = strip(text);
+      if (text !== stripped) {
+        el.textContent = stripped;
+      }
+    });
+    // タブも数字を削除（モバイルでは非表示だが念のため）
+    document.querySelectorAll('.content-tabs .tab').forEach(el => el.textContent = strip(el.textContent));
+    // 右カラム（現在非表示）のテキストも数字削除（section1以外）
+    document.querySelectorAll('.sub-items-group h4').forEach(el => el.textContent = strip(el.textContent));
+    document.querySelectorAll('.sub-items-group a').forEach(el => {
+      // section1のリンクは数字を残す
+      const parent = el.closest('.sub-items-group');
+      if (parent && parent.id === 'sub-items-section1') {
+        return; // スキップ
+      }
+      el.textContent = strip(el.textContent);
+    });
+    // 手順項目の数字削除（section1以外）
+    document.querySelectorAll('.content-panel .procedure-item h4').forEach(el => {
+      // section1のh4は数字を残す
+      if (el.id && (el.id === 'signin-process' || el.id === 'setup-authenticator' || el.id === 'authenticate-with-app')) {
+        return; // スキップ
+      }
+      el.textContent = strip(el.textContent);
+    });
+  }
+
+  /* ---------------- placeholders for images ---------------- */
+  function insertPlaceholders() {
+    const layouts = document.querySelectorAll('.content-panel .procedure-layout');
+    layouts.forEach(layout => {
+      if (!layout.querySelector('.procedure-image')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'procedure-image';
+        const a = document.createElement('a');
+        a.href = 'https://lp.melbridge.mitsubishielectric.co.jp/manual';
+        a.target = '_blank'; a.rel = 'noopener';
+        const img = document.createElement('img');
+        img.src = IMG_SRC; img.alt = '手順イメージ'; img.loading = 'lazy';
+        a.appendChild(img); wrapper.appendChild(a);
+        const text = layout.querySelector('.procedure-text');
+        if (text) layout.insertBefore(wrapper, text); else layout.prepend(wrapper);
+      }
+    });
+  }
+
+  /* ---------------- ダミーのワンポイントアドバイスと注意事項を追加 ---------------- */
+  function addDummyContent() {
+    // この関数は無効化（ダミーコンテンツは不要）
+    return;
+    
+    // 以下は実行されない（将来的に必要になった場合のために残す）
+    const steps = document.querySelectorAll('.content-panel .step-with-image');
+    steps.forEach((step, index) => {
+      const stepText = step.querySelector('.step-text');
+      if (!stepText) return;
+      
+      // 既存のnote-cardがない場合は追加
+      if (!stepText.querySelector('.note-card')) {
+        const noteCard = document.createElement('aside');
+        noteCard.className = 'note-card is-empty';
+        noteCard.setAttribute('role', 'note');
+        noteCard.innerHTML = `
+          <h5>⚠ 注意</h5>
+          <p>ダミーの注意事項です。ここに注意事項が入ります。</p>
+        `;
+        stepText.appendChild(noteCard);
+      }
+      
+      // 既存のstep-adviceがない場合は追加
+      if (!step.querySelector('.step-advice')) {
+        const stepAdvice = document.createElement('div');
+        stepAdvice.className = 'step-advice is-empty';
+        stepAdvice.innerHTML = `
+          <h5>ワンポイントアドバイス</h5>
+          <p>ダミーのワンポイントアドバイスです。ここに役立つヒントやコツが入ります。</p>
+        `;
+        step.appendChild(stepAdvice);
+      }
+    });
+  }
+
+  // ダミー/空の注意事項・アドバイスを自動でis-emptyに
+  function markEmptyInfoCards() {
+    const isEmptyText = (txt) => {
+      const t = (txt || '').replace(/\s+/g, '').trim();
+      if (!t) return true;
+      if (/ダミー/.test(t)) return true;
+      if (/後日追記予定/.test(t)) return true;
+      if (/詳細は後日追記/.test(t)) return true;
+      if (/併用時の制限など/.test(t)) return true;
+      if (/トランスクリプト機能利用時のしゃべり描き®の制限など/.test(t)) return true;
+      if (/可能回数の制限/.test(t)) return true;
+      if (/左のマイクボタンを押して入力したら左吹き出し/.test(t)) return true;
+      if (/しゃべり描き®マイクとトランスクリプトマイクの言語は連動/.test(t)) return true;
+      if (/よく失敗するところを詳細に書いてあげる/.test(t)) return true;
+      if (/よくある質問と回答/.test(t)) return true;
+      return false;
+    };
+
+    document.querySelectorAll('.note-card').forEach(card => {
+      // pタグとliタグの両方を探す
+      const ps = Array.from(card.querySelectorAll('p'));
+      const lis = Array.from(card.querySelectorAll('li'));
+      const content = [...ps, ...lis].map(el => (el.textContent || '').trim()).join('\n');
+      
+      // ダミーコンテンツや空の場合はis-emptyを追加、そうでなければ削除
+      if (isEmptyText(content)) {
+        card.classList.add('is-empty');
+      } else {
+        card.classList.remove('is-empty');
+      }
+    });
+
+    document.querySelectorAll('.step-advice').forEach(card => {
+      // pタグとliタグの両方を探す
+      const ps = Array.from(card.querySelectorAll('p'));
+      const lis = Array.from(card.querySelectorAll('li'));
+      const content = [...ps, ...lis].map(el => (el.textContent || '').trim()).join('\n');
+      
+      // ダミーコンテンツや空の場合はis-emptyを追加、そうでなければ削除
+      if (isEmptyText(content)) {
+        card.classList.add('is-empty');
+      } else {
+        card.classList.remove('is-empty');
+      }
+    });
+  }
+
+  /* ---------------- 注意事項とワンポイントアドバイスの表示/非表示切り替え ---------------- */
+  function toggleContentVisibility(type, show) {
+    if (type === 'notes') {
+      document.querySelectorAll('.note-card').forEach(el => {
+        if (show) {
+          // ダミー(is-empty)は表示しない
+          el.style.display = el.classList.contains('is-empty') ? 'none' : '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    } else if (type === 'advice') {
+      document.querySelectorAll('.step-advice').forEach(el => {
+        if (show) {
+          el.style.display = el.classList.contains('is-empty') ? 'none' : '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    }
+  }
+  
+  // グローバルに公開（コンソールから呼び出し可能）
+  window.toggleNotes = (show = true) => toggleContentVisibility('notes', show);
+  window.toggleAdvice = (show = true) => toggleContentVisibility('advice', show);
+
+  /* ---------------- 印刷時にh3をh4の横に追加 ---------------- */
+  function addPrintH3() {
+    // 既存のprint-h3を削除
+    document.querySelectorAll('.print-h3').forEach(el => el.remove());
+    
+    // 各procedure-itemにh3を追加
+    document.querySelectorAll('.procedure-item').forEach(item => {
+      const h4 = item.querySelector('h4');
+      if (!h4) return;
+      
+      // h4が属するセクションを特定
+      const section = h4.closest('.step-section');
+      if (!section) return;
+      
+      // セクションのh2を取得
+      const h2 = section.querySelector('.step-header h2');
+      if (!h2) return;
+      
+      // 先頭の数字や記号（01. / 1) / 1- など）を除去
+      const raw = (h2.textContent || '').trim();
+      const cleaned = raw.replace(/^\s*\d+\s*[\.|\)\-]?\s*/, '');
+      
+      // h3要素を作成してh4の中に追加
+      const h3 = document.createElement('span');
+      h3.className = 'print-h3';
+      h3.textContent = cleaned;
+      
+      // h4の中に追加（h4の最後に）
+      h4.appendChild(h3);
+    });
+  }
+  
+  // 印刷前にh3を追加
+  window.addEventListener('beforeprint', addPrintH3);
+  
+  // 印刷用目次を生成する関数
+  let isPrintTOCGenerating = false;
+  function generatePrintTOC() {
+    const tocContainer = document.querySelector('.print-toc-content');
+    if (!tocContainer) {
+      return;
+    }
+    
+    // 重複実行を防ぐ（既に内容がある場合はスキップ）
+    if (isPrintTOCGenerating || tocContainer.children.length > 0) {
+      console.log('Skipping TOC generation: already generating or has content'); // デバッグ用
+      return;
+    }
+    
+    isPrintTOCGenerating = true;
+    
+    // 既存の内容をクリア
+    tocContainer.innerHTML = '';
+    console.log('Cleared container, current HTML:', tocContainer.innerHTML); // デバッグ用
+    
+    // TOCセクションが生成されるまで待機
+    setTimeout(() => {
+      // 再度チェック（タイミングの問題を回避）
+      if (tocContainer.children.length > 0) {
+        console.log('Content already added, skipping'); // デバッグ用
+        isPrintTOCGenerating = false;
+        return;
+      }
+      
+      const tocSections = document.querySelectorAll('.toc-section');
+      console.log('Found toc-sections:', tocSections.length); // デバッグ用
+      console.log('Container before adding:', tocContainer.children.length, 'children'); // デバッグ用
+    
+    tocSections.forEach((section, index) => {
+      const tocLink = section.querySelector('.toc-link');
+      if (!tocLink) return;
+      
+      const sectionHref = tocLink.getAttribute('href') || '#';
+      if (sectionHref === '#top') {
+        return;
+      }
+      
+      // セクションのタイトルとhrefを取得
+      const titleText = tocLink.querySelector('span')?.textContent || '';
+      const icon = tocLink.querySelector('i')?.className || '';
+      
+      // 印刷用セクションを作成
+      const printSection = document.createElement('div');
+      printSection.className = 'print-toc-section';
+      
+      // タイトルを作成（リンク付き）
+      const h3 = document.createElement('h3');
+      const h3Link = document.createElement('a');
+      h3Link.href = sectionHref;
+      
+      if (icon) {
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'toc-icon';
+        iconSpan.innerHTML = '●'; // シンプルな記号に置き換え
+        h3Link.appendChild(iconSpan);
+      }
+      h3Link.appendChild(document.createTextNode(' ' + titleText));
+      h3.appendChild(h3Link);
+      printSection.appendChild(h3);
+      
+      // サブリストがある場合
+      const sublist = section.querySelector('.toc-sublist');
+      if (sublist && sublist.children.length > 0) {
+        const printSublist = document.createElement('ul');
+        printSublist.className = 'print-toc-sublist';
+        
+        Array.from(sublist.children).forEach(li => {
+          const link = li.querySelector('a');
+          if (link) {
+            const printLi = document.createElement('li');
+            const printLink = document.createElement('a');
+            printLink.href = link.getAttribute('href') || '#';
+            printLink.textContent = link.textContent;
+            printLi.appendChild(printLink);
+            printSublist.appendChild(printLi);
+          }
+        });
+        
+        printSection.appendChild(printSublist);
+      }
+      
+      tocContainer.appendChild(printSection);
+    });
+    
+    console.log('Final container children:', tocContainer.children.length); // デバッグ用
+    console.log('Final container HTML length:', tocContainer.innerHTML.length); // デバッグ用
+    
+    // フラグをリセット（次回の印刷に備えて）
+    setTimeout(() => {
+      isPrintTOCGenerating = false;
+    }, 500);
+    
+    }, 100); // 100ms待機
+  }
+  
+  // 印刷前に新しい目次を生成
+  window.addEventListener('beforeprint', generatePrintTOC);
+  
+  // 印刷後にh3を削除（画面表示を元に戻す）
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll('.print-h3').forEach(el => el.remove());
+    
+    // 印刷用目次をクリア（次回の印刷に備えて）
+    const tocContainer = document.querySelector('.print-toc-content');
+    if (tocContainer) {
+      tocContainer.innerHTML = '';
+      console.log('Cleared TOC after print'); // デバッグ用
+    }
+    isPrintTOCGenerating = false;
+  });
+
+  /* ---------------- 印刷中のPDFファイル名用にタイトルを一時変更 ---------------- */
+  (function setupPrintTitleSwitcher(){
+    const SCREEN_TITLE = document.title; // 例: しゃべり描き翻訳™ Ver. 1.0 | マニュアル
+    const PDF_TITLE = 'しゃべり描き翻訳™ Ver. 1.0_ユーザーマニュアル';
+    let isSwitched = false;
+
+    function switchToPdfTitle(){
+      if (isSwitched) return;
+      try { document.title = PDF_TITLE; isSwitched = true; } catch(e) {}
+    }
+    function restoreScreenTitle(){
+      if (!isSwitched) return;
+      try { document.title = SCREEN_TITLE; isSwitched = false; } catch(e) {}
+    }
+
+    // 標準の印刷イベント
+    window.addEventListener('beforeprint', switchToPdfTitle);
+    window.addEventListener('afterprint', restoreScreenTitle);
+
+    // 一部ブラウザ向け（印刷ダイアログの検知が難しい場合のフォールバック）
+    const mq = window.matchMedia && window.matchMedia('print');
+    if (mq && typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', (e) => {
+        if (e.matches) switchToPdfTitle(); else restoreScreenTitle();
+      });
+    }
+
+    // キーボードの印刷ショートカット（Ctrl+P / Cmd+P）に先行してタイトルを切り替え
+    document.addEventListener('keydown', (ev) => {
+      const isPrintShortcut = (ev.key === 'p' || ev.key === 'P') && (ev.ctrlKey || ev.metaKey);
+      if (!isPrintShortcut) return;
+      switchToPdfTitle();
+      // 念のため少し遅れて復帰（afterprintが来ないケースの保険）
+      setTimeout(restoreScreenTitle, 8000);
+    }, { passive: true });
+  })();
+
+  /* ---------------- Search module factory ---------------- */
+  function createSearchModule({ sectionsSelector = '.content-panel .step-section', procedureSelector = '.procedure-item', searchInput, resultsPanel, onJump }) {
+    const sections = Array.from(document.querySelectorAll(sectionsSelector));
+    const index = buildIndex(sections, procedureSelector);
+
+    if (!searchInput || !resultsPanel) {
+      return { search: (q) => internalSearchAndRender(q), jumpTo: internalJumpTo, clearSearch: clearAll };
+    }
+
+    const doSearchDebounced = debounce(() => {
+      const q = searchInput.value || '';
+      if (!q.trim()) {
+        resultsPanel.classList.remove('show');
+        resultsPanel.innerHTML = '';
+        const contentRoot = document.querySelector('.content-panel') || document;
+        clearContentHighlights(contentRoot);
+        return;
+      }
+      internalSearchAndRender(q);
+    }, 160);
+
+    searchInput.addEventListener('input', doSearchDebounced);
+
+    resultsPanel.addEventListener('click', (ev) => {
+      const a = ev.target.closest('.sr-item');
+      if (!a) return;
+      ev.preventDefault();
+      const anchorId = a.getAttribute('data-anchor-id');
+      const targetHash = a.getAttribute('data-target');
+      // クリック時のみパネルを閉じる（Enter連打時は閉じないよう分岐）
+      if (ev.pointerType || ev.detail > 0) {
+        resultsPanel.classList.remove('show');
+      }
+      if (typeof onJump === 'function') onJump(anchorId, targetHash);
+      else internalJumpTo(anchorId, targetHash);
+    });
+
+    function clearAll() {
+      searchInput.value = '';
+      resultsPanel.classList.remove('show');
+      resultsPanel.innerHTML = '';
+      const contentRoot = document.querySelector('.content-panel') || document;
+      clearContentHighlights(contentRoot);
+      searchInput.focus();
+    }
+
+    function internalSearchAndRender(q) {
+      const items = internalSearch(q);
+      renderResults(items, q);
+      return items;
+    }
+
+    function internalSearch(q) {
+      const terms = tokenize(q);
+      if (!terms.length) return [];
+      const results = [];
+      for (const row of index) {
+        const s = scoreText(row.text, terms);
+        if (s > 0) results.push({ row, score: s });
+      }
+      results.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        if (a.row.type === b.row.type) return 0;
+        return a.row.type === 'section' ? -1 : 1;
+      });
+      return results.slice(0, 50).map(r => ({ row: r.row, snippet: makeSnippet(r.row.text, tokenize(q)) }));
+    }
+
+    function renderResults(list, q) {
+      if (!q || !list) {
+        resultsPanel.classList.remove('show');
+        resultsPanel.innerHTML = '';
+        return;
+      }
+      if (list.length === 0) {
+        const escQ = escapeHtml(q);
+        resultsPanel.innerHTML = `
+          <div class="sr-empty">
+            <div class="sr-empty-title">該当する結果はありません</div>
+            <div class="sr-empty-sub">「${escQ}」に一致する項目は見つかりませんでした。検索語を短くする・言い回しを変えるなどをお試しください。</div>
+          </div>
+        `;
+        resultsPanel.classList.add('show');
+        return;
+      }
+      const terms = tokenize(q);
+      const visibleTerms = terms.filter(t => normalizeKana(t).length >= 2);
+      const esc = s => escapeHtml(s || '');
+      const hl = s => {
+        let out = esc(s || '');
+        visibleTerms.forEach(t => {
+          const re = new RegExp(`(${escapeRegExp(t)})`, 'ig');
+          out = out.replace(re, '<mark class="search-hit">$1</mark>');
+        });
+        return out;
+      };
+      const html = [
+        `<div class="sr-head">${list.length} 件ヒット</div>`,
+        ...list.map(({ row, snippet }) => {
+          const secTitle = esc(row.sectionTitle || '');
+          const title = hl(row.title);
+          return `
+            <a href="#${row.sectionId}" class="sr-item" data-target="#${row.sectionId}" data-anchor-id="${row.anchorId}" tabindex="0">
+              <div class="sr-breadcrumb">${secTitle}</div>
+              <div class="sr-title">${title}</div>
+              <div class="sr-snippet">${snippet}</div>
+            </a>
+          `;
+        })
+      ].join('');
+      resultsPanel.innerHTML = html;
+      resultsPanel.classList.add('show');
+    }
+
+    function internalJumpTo(anchorId, sectionHash) {
+      console.log(`🎯 ジャンプ開始: anchorId="${anchorId}", sectionHash="${sectionHash}"`);
+      console.log(`📝 searchInput.value="${searchInput.value}"`);
+
+      const safeSectionHash = (sectionHash && String(sectionHash).trim()) || '#top';
+      const sectionEl = document.querySelector(safeSectionHash);
+      if (sectionEl) {
+        const terms = tokenize(searchInput.value || '');
+        console.log(`🔍 tokenize結果:`, terms);
+        // セクション内のハイライトのみをクリア
+        clearContentHighlights(sectionEl);
+        if (terms.length) {
+          console.log(`✨ ハイライト実行: terms=${terms.join(', ')}`);
+          highlightSectionTerms(sectionEl, terms);
+        } else {
+          console.log(`⚠️ terms が空のためハイライトスキップ`);
+        }
+      } else {
+        console.log(`❌ sectionEl が見つかりません: ${safeSectionHash}`);
+      }
+      
+      // requestAnimationFrame × 2に変更
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          let el = null;
+          
+          // 3段階フォールバック
+          // 1. document.getElementById
+          if (anchorId) {
+            el = document.getElementById(anchorId);
+          }
+          if (el) {
+            console.log(`✅ 要素を発見 (getElementById):`, el);
+          } else {
+            console.log(`❌ getElementById("${anchorId}") で要素が見つかりません`);
+            
+            // 2. data-anchor-id属性で検索
+            if (anchorId) {
+              el = document.querySelector(`[data-anchor-id="${anchorId}"]`);
+            }
+            if (el) {
+              console.log(`✅ 要素を発見 (data-anchor-id):`, el);
+            } else {
+              console.log(`❌ data-anchor-id="${anchorId}" で要素が見つかりません`);
+              
+              // 3. sectionHashで検索
+              el = document.querySelector(safeSectionHash);
+              if (el) {
+                console.log(`✅ 要素を発見 (sectionHash):`, el);
+              } else {
+                console.error(`❌ 要素が見つかりません`);
+                return;
+              }
+            }
+          }
+          
+          // procedure-item内のh4を優先
+          if (el.classList.contains('procedure-item')) {
+            const h4 = el.querySelector('h4');
+            if (h4) {
+              el = h4;
+              console.log(`✅ procedure-item内のh4を使用:`, el);
+            }
+          } else if (el.tagName !== 'H4') {
+            const directH4 = el.querySelector && el.querySelector('h4');
+            const fromClosest = el.closest && el.closest('.procedure-item');
+            const h4 = directH4 || (fromClosest ? fromClosest.querySelector('h4') : null);
+            if (h4) {
+              el = h4;
+              console.log(`✅ h4要素に変更:`, el);
+            }
+          }
+          
+          const offset = getScrollOffset();
+          const container = document.querySelector('.manual-content');
+
+          // 手順内（もしくはセクション）で最初のハイライト箇所を優先スクロール
+          const scope = (el.closest && el.closest('.procedure-item')) || document.querySelector(safeSectionHash) || el;
+          const firstMark = scope && scope.querySelector ? scope.querySelector('mark.search-hit-live') : null;
+          const scrollEl = firstMark || el;
+
+          if (container && typeof container.scrollTo === 'function') {
+            const cRect = container.getBoundingClientRect();
+            const tRect = scrollEl.getBoundingClientRect();
+            const target = container.scrollTop + (tRect.top - cRect.top) - offset - 8; // 少し余白
+            fastSmoothScrollTo({ container, target: Math.max(0, target) });
+          } else {
+            const y = Math.max(0, scrollEl.getBoundingClientRect().top + getWindowScrollY() - offset - 8);
+            fastSmoothScrollTo({ target: y });
+          }
+
+          // 遷移先のprocedure-itemをハイライト（視覚的に強調）
+          const procedureItem = el.closest && el.closest('.procedure-item');
+          if (procedureItem) {
+            document.querySelectorAll('.procedure-item.highlight-flash').forEach(item => item.classList.remove('highlight-flash'));
+            setTimeout(() => {
+              procedureItem.classList.add('highlight-flash');
+              setTimeout(() => { procedureItem.classList.remove('highlight-flash'); }, 1200);
+            }, 350);
+          }
+
+          // URLのアンカーも更新（置換）
+          if (anchorId) {
+            updateUrlHash(`#${anchorId}`, { replace: true });
+          }
+        });
+      });
+    }
+
+    return { search: internalSearchAndRender, jumpTo: internalJumpTo, clearSearch: clearAll };
+
+    /* ---------- helpers for index/search ---------- */
+    // ひらがなをカタカナに変換する関数
+    function normalizeKana(str) {
+      if (!str) return '';
+      return str.replace(/[\u3041-\u3096]/g, function(match) {
+        return String.fromCharCode(match.charCodeAt(0) + 0x60);
+      });
+    }
+
+    function buildIndex(sectionEls, procSelector) {
+      const idx = [];
+      sectionEls.forEach(section => {
+        const secId = section.id;
+        const secTitle = (section.querySelector('.step-header h2')?.textContent || '').trim();
+        
+        // セクションのインデックス：タイトルと直下の段落のみ
+        const sectionHeader = section.querySelector('.step-header h2');
+        const directParagraphs = Array.from(section.querySelectorAll('.step-content > p, .step-content > .note-card'));
+        let sectionText = '';
+        if (sectionHeader) {
+          sectionText = sectionHeader.textContent || '';
+        }
+        directParagraphs.forEach(p => {
+          sectionText += ' ' + (p.textContent || '');
+        });
+        
+        idx.push({
+          id: secId, el: section, anchorId: secId, anchorEl: section,
+          title: secTitle, sectionId: secId, sectionTitle: secTitle,
+          type: 'section', text: sectionText.replace(/\s+/g, ' ').trim()
+        });
+        
+        // 手順のインデックス
+        const items = Array.from(section.querySelectorAll(procSelector));
+        items.forEach((item, i) => {
+          const h4 = item.querySelector('h4');
+          let anchorEl = h4 || item;
+          let anchorId = (h4 && h4.id) ? h4.id : (item.id || '');
+          if (!anchorId) {
+            anchorId = `${secId}-proc-${i + 1}`;
+            anchorEl.id = anchorId;
+            item.setAttribute('data-anchor-id', anchorId);
+          }
+          const title = (h4?.textContent || ('手順 ' + (i + 1))).trim();
+          idx.push({
+            id: `${secId}__proc__${i}`, el: item, anchorEl, anchorId,
+            sectionId: secId, sectionTitle: secTitle, title,
+            type: 'procedure', text: (item.textContent || '').replace(/\s+/g, ' ').trim()
+          });
+        });
+      });
+      console.log(`📚 検索インデックス構築完了: ${idx.length}件`);
+      return idx;
+    }
+    function tokenize(q) {
+      if (!q) return [];
+      const normalized = normalizeKana(q).toLowerCase().trim();
+      const tokens = [];
+
+      // 全体をトークンに追加
+      tokens.push(normalized);
+
+      // スペース区切りで分割
+      const words = normalized.split(/\s+/).filter(Boolean);
+      words.forEach(word => {
+        if (word && !tokens.includes(word)) tokens.push(word);
+      });
+
+      // 3-gram（語長>=4の語のみ）を生成
+      words.forEach(word => {
+        if (word.length >= 4) {
+          for (let i = 0; i <= word.length - 3; i++) {
+            const ngram = word.substr(i, 3);
+            if (!tokens.includes(ngram)) tokens.push(ngram);
+          }
+        }
+      });
+
+      return tokens;
+    }
+    function scoreText(text, terms) {
+      if (!terms.length) return 0;
+      const normalizedText = normalizeKana(text || '').toLowerCase();
+      let score = 0;
+      let hasStrongHit = false; // クエリに4文字以上が含まれる場合の実ヒット
+      const requireStrongHit = terms.some(t => (normalizeKana(t) || '').toLowerCase().length >= 4);
+
+      for (const term of terms) {
+        const normalizedTerm = normalizeKana(term).toLowerCase();
+        if (!normalizedTerm) continue;
+        const escapedTerm = escapeRegExp(normalizedTerm);
+        const len = normalizedTerm.length;
+
+        // 完全一致
+        if (normalizedText === normalizedTerm) {
+          score += 100;
+          if (len >= 4) hasStrongHit = true;
+        }
+
+        // 前方一致
+        if (normalizedText.startsWith(normalizedTerm)) {
+          score += 70;
+          if (len >= 4) hasStrongHit = true;
+        }
+
+        // 部分一致（出現回数×8）
+        const matches = normalizedText.match(new RegExp(escapedTerm, 'g'));
+        if (matches) {
+          score += matches.length * 8;
+          if (len >= 4) hasStrongHit = true;
+        }
+      }
+
+      // クエリに4文字以上が含まれる場合、少なくとも4文字以上の語でヒットしていないと無効
+      if (requireStrongHit && !hasStrongHit) score = 0;
+
+      return score;
+    }
+    function makeSnippet(text, terms, radius = 60) {
+      const normalizedText = normalizeKana(text || '').toLowerCase();
+      let pos = -1;
+
+      // 2文字以上の語でマッチ位置を検索
+      const visibleTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 2);
+      for (const t of visibleTerms) {
+        const p = normalizedText.indexOf(t);
+        if (p !== -1 && (pos === -1 || p < pos)) pos = p;
+      }
+
+      if (pos === -1) return (text || '').slice(0, 120) + ((text || '').length > 120 ? '…' : '');
+
+      // 元のテキストでスニペットを作成
+      const start = Math.max(0, pos - radius);
+      const end = Math.min((text || '').length, pos + radius);
+      let snip = (start > 0 ? '…' : '') + (text || '').slice(start, end) + (end < (text || '').length ? '…' : '');
+
+      // ハイライト処理（3文字以上の語のみ）
+      visibleTerms.forEach(t => {
+        const re = new RegExp(`(${escapeRegExp(t)})`, 'ig');
+        snip = snip.replace(re, '<mark class="search-hit">$1</mark>');
+      });
+
+      return snip;
+    }
+  } // createSearchModule end
+
+  /* ---------------- highlight helpers ---------------- */
+  function clearContentHighlights(root = document) {
+    const marks = root.querySelectorAll('mark.search-hit, mark.search-hit-live');
+    marks.forEach(m => {
+      const parent = m.parentNode;
+      while (m.firstChild) parent.insertBefore(m.firstChild, m);
+      parent.removeChild(m);
+      parent.normalize && parent.normalize();
+    });
+  }
+  function highlightSectionTerms(sectionEl, terms) {
+    if (!sectionEl || !terms || !terms.length) return;
+    // termsを正規化（小文字化も適用）
+    // 1文字は除外、2文字以上はハイライト対象
+    const normalizedTerms = terms.map(t => normalizeKana(t).toLowerCase()).filter(t => t && t.length >= 2);
+
+    const targets = sectionEl.querySelectorAll(`
+      .step-header h2,
+      .step-content h3,
+      .procedure-item h4,
+      .procedure-text,
+      p, li, dt, dd
+    `);
+
+    targets.forEach(el => {
+      clearContentHighlights(el);
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          // markタグも除外
+          const parent = node.parentElement;
+          const bad = parent && parent.closest && parent.closest('code, pre, style, script, mark');
+          return bad ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(node => {
+        const originalText = node.nodeValue;
+        const normalizedNodeText = normalizeKana(originalText).toLowerCase();
+
+        // マッチ範囲を収集
+        const ranges = [];
+        normalizedTerms.forEach(term => {
+          if (!term) return;
+          const re = new RegExp(escapeRegExp(term), 'gi');
+          let m;
+          while ((m = re.exec(normalizedNodeText)) !== null) {
+            ranges.push({ start: m.index, end: m.index + m[0].length });
+          }
+        });
+
+        if (!ranges.length) return;
+
+        // 範囲を統合（重複・重なりをマージ）
+        ranges.sort((a, b) => a.start - b.start);
+        const merged = [];
+        let cur = ranges[0];
+        for (let i = 1; i < ranges.length; i++) {
+          const r = ranges[i];
+          if (r.start <= cur.end) {
+            cur.end = Math.max(cur.end, r.end);
+          } else {
+            merged.push(cur);
+            cur = r;
+          }
+        }
+        merged.push(cur);
+
+        // 元テキストを使って安全にHTMLを構築（部分ごとにescape）
+        let pos = 0;
+        let html = '';
+        merged.forEach(({ start, end }) => {
+          if (pos < start) html += escapeHtml(originalText.slice(pos, start));
+          const matched = originalText.slice(start, end);
+          html += `<mark class="search-hit-live">${escapeHtml(matched)}</mark>`;
+          pos = end;
+        });
+        if (pos < originalText.length) html += escapeHtml(originalText.slice(pos));
+
+        const span = document.createElement('span');
+        span.innerHTML = html;
+        node.parentNode.replaceChild(span, node);
+      });
+    });
+  }
+
+
+  /* ---------------- モバイル時のレイアウト調整 ---------------- */
+  // adjustMobileLayoutは無効化（HTMLの順序をそのまま使用）
+  // function adjustMobileLayout() {
+  //   const isMobile = window.innerWidth <= 768;
+  //   
+  //   document.querySelectorAll('.step-with-image').forEach(container => {
+  //     const noteCard = container.querySelector('.step-text .note-card');
+  //     const stepText = container.querySelector('.step-text');
+  //     
+  //     if (noteCard && stepText) {
+  //       if (isMobile) {
+  //         // モバイル時：note-cardをstep-with-imageの最後に移動
+  //         if (noteCard.parentElement === stepText) {
+  //           container.appendChild(noteCard);
+  //           noteCard.dataset.movedFromText = 'true';
+  //         }
+  //       } else {
+  //         // デスクトップ時：note-cardを元の位置（step-text内）に戻す
+  //         if (noteCard.dataset.movedFromText === 'true') {
+  //           stepText.appendChild(noteCard);
+  //           delete noteCard.dataset.movedFromText;
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+  // 
+  // // 初回実行とリサイズ時に実行
+  // adjustMobileLayout();
+  // let resizeTimer;
+  // window.addEventListener('resize', () => {
+  //   clearTimeout(resizeTimer);
+  //   resizeTimer = setTimeout(adjustMobileLayout, 250);
+  // });
+
+  // OSS License Table Toggle
+  function initOssTableToggle() {
+    const toggleBtn = document.getElementById('toggleOssTable');
+    const ossTable = document.querySelector('.oss-license-table tbody');
+    
+    if (!toggleBtn || !ossTable) return;
+    
+    const rows = Array.from(ossTable.querySelectorAll('tr'));
+    const visibleCount = 10;
+    const hiddenRows = rows.slice(visibleCount);
+    
+    // 初期状態：11行目以降を非表示
+    hiddenRows.forEach(row => {
+      row.classList.add('oss-row-hidden');
+    });
+    
+    // ボタンクリックで展開/折りたたみ
+    toggleBtn.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      
+      if (isExpanded) {
+        // 折りたたむ
+        hiddenRows.forEach(row => {
+          row.classList.add('oss-row-hidden');
+        });
+        this.setAttribute('aria-expanded', 'false');
+        this.querySelector('.toggle-text').textContent = 'すべて表示';
+        this.querySelector('.toggle-count').textContent = `（残り ${hiddenRows.length}個）`;
+        
+        // 表の先頭にスクロール
+        ossTable.closest('.oss-license-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        // 展開
+        hiddenRows.forEach(row => {
+          row.classList.remove('oss-row-hidden');
+        });
+        this.setAttribute('aria-expanded', 'true');
+        this.querySelector('.toggle-text').textContent = '折りたたむ';
+        this.querySelector('.toggle-count').textContent = '';
+      }
+    });
+  }
+  
+  // ページ読み込み時に初期化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOssTableToggle);
+  } else {
+    initOssTableToggle();
+  }
+
+})(); // EOF
