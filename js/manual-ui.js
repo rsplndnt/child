@@ -48,9 +48,13 @@
   }
 
   /* ===== 02) URL & path helpers (updated for path-based routing) ===== */
+  // file:// プロトコルの場合はハッシュベースルーティングを使用
+  const USE_HASH_ROUTING = window.location.protocol === 'file:';
+
   // GitHub Pagesのベースパス（リポジトリ名）
   // ローカル開発時は空文字、GitHub Pages時は '/リポジトリ名'
   const BASE_PATH = (function() {
+    if (USE_HASH_ROUTING) return '';
     const host = window.location.hostname;
     // GitHub Pagesの場合はリポジトリ名をベースパスとして使用
     if (host.endsWith('.github.io')) {
@@ -62,6 +66,23 @@
 
   function updateUrlPath(path, { replace = false } = {}) {
     if (!path) return;
+
+    // file:// プロトコルの場合はハッシュベースルーティング
+    if (USE_HASH_ROUTING) {
+      const hashValue = path.startsWith('#') ? path : `#${path.replace(/^\//, '')}`;
+      try {
+        if (replace) {
+          window.location.replace(hashValue);
+        } else {
+          window.location.hash = hashValue;
+        }
+        sendPageView(hashValue);
+      } catch (_) {
+        window.location.hash = hashValue;
+      }
+      return;
+    }
+
     // パスベースのルーティング: "/" から始まるパスに変換
     // "#xxx" 形式の場合は "/xxx" に変換
     let normalized = path;
