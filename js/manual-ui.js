@@ -58,7 +58,7 @@
     const host = window.location.hostname;
     // GitHub Pagesの場合はリポジトリ名をベースパスとして使用
     if (host.endsWith('.github.io')) {
-      return '/child';
+      return '/manual_swipeTalk_test';
     }
     // ローカル開発やその他の環境では空文字
     return '';

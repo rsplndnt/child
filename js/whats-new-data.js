@@ -14,29 +14,29 @@ const _allWhatsNewData = [
       {
         heading: "チーム機能の追加",
         text: "複数人で同じシートをリアルタイムで共有・編集できる「チームモード」が追加されました。トランスクリプトやキャンバスを複数人で同時に利用できます。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-team-mode.png",
         link: "/operation-guide#team-mode"
       },
       {
         heading: "使用時間制限の導入",
         text: "トランスクリプト機能の月間使用時間制限が導入されました。アカウント画面で残り時間を確認でき、上限に近づくと警告が表示されます。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png",
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-usage-limit.png",
         link: "/product-specs#usage-limits"
       },
       {
         heading: "テキストのみ消去できる消しゴム機能",
         text: "画像や手描きの線を残したまま、音声入力で配置したテキストだけを消すことができるようになりました。新しい「テキスト消しゴム」ツールをご利用ください。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png"
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-text-eraser.png"
       },
       {
         heading: "シート管理の改善（11枚目以降のアーカイブ）",
         text: "11枚目のシートを作成すると、古いシートが自動的にアーカイブされます。アーカイブされたシートは「シート管理」メニューから確認・復元できます。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png"
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-sheet-archive.png"
       },
       {
         heading: "PDFドキュメントのキャンバス対応",
         text: "PDFファイルをキャンバスに直接読み込めるようになりました。画像と同様に、PDFに描き込みや翻訳テキストを追加できます。技術文書や図面での利用に便利です。",
-        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/dummy-image.png"
+        image: "https://lp.melbridge.mitsubishielectric.co.jp/hubfs/images/manual/swipeTalk/img-pdf-support.png"
       },
       {
         heading: "トランスクリプト音声入力の改善",
