@@ -448,7 +448,7 @@
 
   /* 日付とバージョンを右下に追加 */
   .print-cover.only-print::after {
-    content: "Version 1.0 | 2025年11月" !important;
+    content: "Version 1.1 | 2026年1月" !important;
     position: absolute !important;
     bottom: 20mm !important;
     right: 25mm !important;

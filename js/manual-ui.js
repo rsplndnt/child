@@ -2414,8 +2414,8 @@
 
   /* ---------------- 印刷中のPDFファイル名用にタイトルを一時変更 ---------------- */
   (function setupPrintTitleSwitcher(){
-    const SCREEN_TITLE = document.title; // 例: しゃべり描き翻訳™ Ver. 1.0 | マニュアル
-    const PDF_TITLE = 'しゃべり描き翻訳™ Ver. 1.0_ユーザーマニュアル';
+    const SCREEN_TITLE = document.title; // 例: しゃべり描き翻訳™ Ver. 1.1 | マニュアル
+    const PDF_TITLE = 'しゃべり描き翻訳™ Ver. 1.1_ユーザーマニュアル';
     let isSwitched = false;
 
     function switchToPdfTitle(){
@@ -2956,22 +2956,26 @@
   function initOssTableToggle() {
     const toggleBtn = document.getElementById('toggleOssTable');
     const ossTable = document.querySelector('.oss-license-table tbody');
-    
+
     if (!toggleBtn || !ossTable) return;
-    
+
+    // 既に初期化済みの場合はスキップ
+    if (toggleBtn.dataset.initialized === 'true') return;
+    toggleBtn.dataset.initialized = 'true';
+
     const rows = Array.from(ossTable.querySelectorAll('tr'));
     const visibleCount = 10;
     const hiddenRows = rows.slice(visibleCount);
-    
+
     // 初期状態：11行目以降を非表示
     hiddenRows.forEach(row => {
       row.classList.add('oss-row-hidden');
     });
-    
+
     // ボタンクリックで展開/折りたたみ
     toggleBtn.addEventListener('click', function() {
       const isExpanded = this.getAttribute('aria-expanded') === 'true';
-      
+
       if (isExpanded) {
         // 折りたたむ
         hiddenRows.forEach(row => {
@@ -2980,7 +2984,7 @@
         this.setAttribute('aria-expanded', 'false');
         this.querySelector('.toggle-text').textContent = 'すべて表示';
         this.querySelector('.toggle-count').textContent = `（残り ${hiddenRows.length}個）`;
-        
+
         // 表の先頭にスクロール
         ossTable.closest('.oss-license-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
@@ -2994,13 +2998,22 @@
       }
     });
   }
-  
+
+  // グローバルに公開（セクション遷移時に呼び出せるように）
+  window.initOssTableToggle = initOssTableToggle;
+
   // ページ読み込み時に初期化
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOssTableToggle);
   } else {
     initOssTableToggle();
   }
+
+  // hashchange時にも初期化を試行（製品仕様ページへの遷移時用）
+  window.addEventListener('hashchange', function() {
+    // 少し遅延させてDOMの更新を待つ
+    setTimeout(initOssTableToggle, 100);
+  });
 
   // GA4: ハッシュ変更時にページビューを送信
   window.addEventListener('hashchange', function() {

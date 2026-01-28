@@ -1,10 +1,11 @@
 [
   {
-    "date": "2026-01-12",
-    "version": "1.1",
+    "date": "2025年1月12日",
+    "badge": "v1.1",
+    "badgeClass": "",
     "title": "バージョン1.1の改善",
     "modalTitle": "",
-    "manualTitle": "バージョン1.1",
+    "manualTitle": "バージョン1.1 更新内容",
     "contents": [
       {
         "heading": "安定性の向上",

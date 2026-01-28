@@ -300,6 +300,7 @@
 
                         <div class="procedure-item">
                             <h4 id="setup-authenticator">2. 二段階認証を設定する</h4>
+                            <p class="procedure-note">※ 二段階認証の設定を求められた場合に、このセクションを参照してください。</p>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -364,6 +365,7 @@
 
                         <div class="procedure-item">
                             <h4 id="authenticate-with-app">3. 二段階認証する</h4>
+                            <p class="procedure-note">※ 二段階認証を求められた場合に、このセクションを参照してください。</p>
                             <div class="procedure-steps">
                                 <div class="step-with-image">
                                     <div class="step-image">
@@ -1951,15 +1953,15 @@
                                 <p>対応言語は全30言語です。地域ごとの一覧は以下をご確認ください。</p>
                                 <dl class="spec-list">
                                     <dt>東アジア</dt>
-                                    <dd>日本語（日本）、韓国語（韓国）、中国語[簡体]、モンゴル語（モンゴル）</dd>
+                                    <dd>韓国語（韓国）、中国語[簡体]、日本語（日本）、モンゴル語（モンゴル）</dd>
                                     <dt>東南アジア</dt>
-                                    <dd>ベトナム語（ベトナム）、タイ語（タイ）、インドネシア語（インドネシア）、タガログ語（フィリピン）、マレー語（マレーシア）、ラオ語（ラオス）</dd>
+                                    <dd>インドネシア語（インドネシア）、タイ語（タイ）、タガログ語（フィリピン）、ベトナム語（ベトナム）、マレー語（マレーシア）、ラオ語（ラオス）</dd>
                                     <dt>南アジア</dt>
-                                    <dd>シンハラ語（スリランカ）、タミル語（インド）、ヒンディー語（インド）、ベンガル語（バングラデシュ）、ネパール語（ネパール）</dd>
+                                    <dd>シンハラ語（スリランカ）、タミル語（インド）、ネパール語（ネパール）、ヒンディー語（インド）、ベンガル語（バングラデシュ）</dd>
                                     <dt>西アジア（中東含む）</dt>
                                     <dd>トルコ語（トルコ）</dd>
                                     <dt>ヨーロッパ</dt>
-                                    <dd>ポルトガル語（ポルトガル）、スペイン語（スペイン）、ロシア語（ロシア）、ドイツ語（ドイツ）、ハンガリー語（ハンガリー）、チェコ語（チェコ）、ポーランド語（ポーランド）、オランダ語（オランダ）、デンマーク語（デンマーク）、フィンランド語（フィンランド）、スウェーデン語（スウェーデン）</dd>
+                                    <dd>オランダ語（オランダ）、スウェーデン語（スウェーデン）、スペイン語（スペイン）、チェコ語（チェコ）、デンマーク語（デンマーク）、ドイツ語（ドイツ）、ハンガリー語（ハンガリー）、フィンランド語（フィンランド）、ポーランド語（ポーランド）、ポルトガル語（ポルトガル）、ロシア語（ロシア）</dd>
                                     <dt>北米・南米</dt>
                                     <dd>英語（アメリカ）、ポルトガル語（ブラジル）</dd>
                                     <dt>アフリカ</dt>
@@ -2743,14 +2745,113 @@
         </div>
     </div>
 
-    <!-- Standard footer includes removed for HTML version -->
+    <!-- 更新履歴データとスクリプト（インライン） -->
+    <script>
+    // バージョン表示範囲
+    const VERSION_RANGE = { min: "1.0", max: "1.1" };
 
-    <!-- ★JSの読み込みは必ずこの形： -->
-    <script defer src="js/manual-ui.js?v=2025010520"></script>
+    // 全バージョンの新着情報データ
+    const _allWhatsNewData = [
+      {
+        date: "2026-01-12",
+        version: "1.1",
+        title: "バージョン1.1の改善",
+        modalTitle: "",
+        manualTitle: "バージョン1.1",
+        contents: [{ heading: "安定性の向上", text: "アプリケーションの安定性を向上させました。" }]
+      },
+      {
+        date: "2025-10-01",
+        version: "1.0",
+        title: "初版リリース",
+        modalTitle: "",
+        manualTitle: "バージョン1.0",
+        contents: [{ heading: "初版リリース", text: "しゃべり描き翻訳をリリースしました。" }]
+      }
+    ];
 
-    <!-- 更新履歴データとスクリプトの読み込み -->
-    <script src="js/whats-new-data.js?v=1.1.7"></script>
-    <script src="js/whats-new.js?v=1.1.7"></script>
+    // VERSION_RANGEでフィルタリング
+    const whatsNewData = _allWhatsNewData.filter(item => {
+      const v = parseFloat(item.version);
+      return v >= parseFloat(VERSION_RANGE.min) && v <= parseFloat(VERSION_RANGE.max);
+    });
+    const ITEMS_PER_PAGE = 5;
+
+    // TOCの更新履歴リストを動的生成
+    function generateWhatsNewTocList() {
+      const tocList = document.getElementById('whats-new-toc-list');
+      if (!tocList || typeof whatsNewData === 'undefined') return;
+      tocList.innerHTML = whatsNewData.map(item => {
+        const versionId = `whats-new-v${item.version.replace('.', '-')}`;
+        return `<li><a class="toc-sublink" href="#${versionId}" data-group-id="whats-new-items">v${item.version}</a></li>`;
+      }).join('');
+
+      // クリックハンドラを追加
+      tocList.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href');
+          if (!targetId) return;
+
+          // whats-newセクションを表示
+          const activateFn = window.activateSection;
+          if (activateFn) {
+            activateFn('#whats-new', { scrollToTop: false, closeMobile: true });
+          }
+
+          // 少し待ってからターゲット要素にスクロール
+          setTimeout(() => {
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+              const container = document.querySelector('.manual-content');
+              if (container) {
+                const offset = 80;
+                const cRect = container.getBoundingClientRect();
+                const eRect = targetEl.getBoundingClientRect();
+                const scrollTarget = container.scrollTop + (eRect.top - cRect.top) - offset;
+                container.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+              }
+            }
+          }, 150);
+        });
+      });
+    }
+
+    // WhatsNewManager クラス
+    class WhatsNewManager {
+      constructor() { this.currentPage = 1; this.init(); }
+      init() { this.renderMainPage(); }
+      renderMainPage() {
+        const container = document.getElementById('whatsNewContainer');
+        if (!container) return;
+        const start = (this.currentPage - 1) * ITEMS_PER_PAGE;
+        const pageData = whatsNewData.slice(start, start + ITEMS_PER_PAGE);
+        let html = '';
+        pageData.forEach((item, index) => {
+          const versionId = `whats-new-v${item.version.replace('.', '-')}`;
+          html += `<div class="news-item-wrapper" id="${versionId}"><h2 class="news-item-title">${item.manualTitle || item.title}</h2><article class="news-item"><div class="news-item-content">`;
+          if (item.contents && item.contents.length > 0) {
+            item.contents.forEach(content => {
+              html += `<div class="news-content-section"><h3 class="news-content-heading">${content.heading}</h3><p class="news-content-text">${content.text}</p>`;
+              if (content.image) html += `<div class="news-content-image"><img src="${content.image}" alt="${content.heading}" class="news-item-image" loading="lazy" style="max-width: 60%; height: auto;"></div>`;
+              if (content.link) html += `<p class="news-content-link"><a href="${content.link}" target="_blank" rel="noopener noreferrer">マニュアルを確認する <i class="material-icons">open_in_new</i></a></p>`;
+              html += `</div>`;
+            });
+          }
+          html += `</div></article></div>`;
+        });
+        container.innerHTML = html;
+      }
+    }
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', () => {
+      generateWhatsNewTocList();
+      if (typeof whatsNewData !== 'undefined' && whatsNewData.length > 0) {
+        window.whatsNewManager = new WhatsNewManager();
+      }
+    });
+    </script>
 
     <!-- TOCトグル機能 -->
     <script>
